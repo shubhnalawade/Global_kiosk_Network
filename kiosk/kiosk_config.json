@@ -1,0 +1,9 @@
+{
+    "owner": null,
+    "pricing": {
+        "A4_BW": 2,
+        "A4_Color": 5,
+        "A3_BW": 4,
+        "A3_Color": 8
+    }
+}

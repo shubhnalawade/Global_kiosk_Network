@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk {{ kiosk_id }}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            /* Dark Mode Defaults */
+            --bg-body: #121212;
+            --bg-panel: rgba(18, 18, 18, 0.95);
+            --glass-bg: rgba(33, 37, 41, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #fff;
+            --text-muted: #aaa;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-hover: rgba(255, 255, 255, 0.1);
+            --card-selected: rgba(99, 102, 241, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --qr-bg: white;
+        }
+
+        [data-bs-theme="light"] {
+            /* Light Mode Overrides */
+            --bg-body: #f3f4f6;
+            --bg-panel: rgba(255, 255, 255, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --card-bg: white;
+            --card-hover: #f9fafb;
+            --card-selected: rgba(99, 102, 241, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --qr-bg: white;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg-body);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15) 0%, transparent 25%);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Layout */
+        .wrapper {
+            height: 100vh;
+            display: flex;
+            transition: all 0.5s ease;
+        }
+
+        .left-panel {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* When files exist - Split View */
+        body.has-files .left-panel {
+            width: 350px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--glass-border);
+            box-shadow: 5px 0 25px var(--shadow-color);
+        }
+
+        .right-panel {
+            /* Default: Hidden */
+            flex: 0;
+            width: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            transition: all 0.5s ease;
+        }
+
+        /* Show when body has files */
+        body.has-files .right-panel {
+            flex: 1;
+            width: auto;
+            opacity: 1;
+            padding: 2rem;
+        }
+
+        /* Fixed Header */
+        .kiosk-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .kiosk-brand,
+        .header-controls {
+            pointer-events: auto;
+        }
+
+        /* Sync Status Removed */
+
+        /* When files exist - Show Right Panel */
+        body.has-files .right-panel {
+            flex: 1;
+            width: auto;
+            opacity: 1;
+            padding: 2rem;
+        }
+
+        /* QR Section */
+        .qr-container {
+            background: var(--qr-bg);
+            padding: 0.5rem;
+            /* --- MODIFIED: Reduced padding/white border --- */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+            transition: all 0.5s ease;
+        }
+
+        /* Larger QR when centered */
+        .left-panel:not(.has-files-active) .qr-container {
+            transform: scale(1.2);
+        }
+
+        body.has-files .qr-container {
+            transform: scale(1);
+        }
+
+        .qr-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* File List */
+        .file-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .file-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            position: relative;
+        }
+
+        .file-card:hover {
+            transform: translateY(-2px);
+            background: var(--card-hover);
+            border-color: var(--glass-border);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .file-card.selected {
+            background: var(--card-selected);
+            border-color: #6366f1;
+        }
+
+        /* Checkbox Customization */
+        .form-check-input {
+            width: 1.3em;
+            height: 1.3em;
+            cursor: pointer;
+            border-color: #666;
+            background-color: transparent;
+        }
+
+        .form-check-input:checked {
+            background-color: #6366f1;
+            border-color: #6366f1;
+        }
+
+        /* Animation class for NEW items only */
+        .animate-in {
+            animation: slideIn 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(128, 128, 128, 0.1);
+        }
+
+        .file-icon.pdf {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .file-icon.img {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            word-break: break-all;
+            color: var(--text-main);
+        }
+
+        .file-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .action-btn:hover {
+            background: rgba(128, 128, 128, 0.1);
+            color: var(--text-main);
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            /* Changed for delete btn */
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        #proceedBtn {
+            background: var(--primary-gradient);
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s;
+            color: white;
+        }
+
+        #proceedBtn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        #proceedBtn:disabled {
+            filter: grayscale(1);
+            opacity: 0.5;
+            transform: none;
+        }
+
+        /* Modal Customization */
+        .modal-content {
+            background: var(--bg-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text-main);
+        }
+
+        .modal-header {
+            border-bottom-color: var(--glass-border);
+        }
+
+        .modal-footer {
+            border-top-color: var(--glass-border);
+        }
+
+        .form-control,
+        .form-select {
+            background: var(--card-bg);
+            border-color: var(--glass-border);
+            color: var(--text-main);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: var(--card-bg);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+            color: var(--text-main);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+
+        /* Theme Toggle Btn */
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 2rem;
+            z-index: 2000;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        /* Floating Delete Button */
+        #deleteSelectedBtn {
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        #deleteSelectedBtn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- NEW: Price Animation --- */
+        @keyframes price-pop {
+            0% {
+                transform: scale(1);
+                color: var(--text-main);
+            }
+
+            50% {
+                transform: scale(1.3);
+                color: #22c55e;
+            }
+
+            /* Pop to green */
+            100% {
+                transform: scale(1);
+                color: var(--primary-color);
+            }
+        }
+
+        .price-anim {
+            animation: price-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Bouncy effect */
+        }
+
+        /* --- Preview Container (Canvas/Image) --- */
+        #previewBox {
+            cursor: grab;
+            user-select: none;
+            /* Prevent selection */
+        }
+
+        #previewBox:active {
+            cursor: grabbing;
+        }
+
+        #previewContent {
+            /* We handle transform manually in JS now */
+            transform-origin: 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease;
+            /* Smooth rotation */
+        }
+
+        .landscape-mode {
+            /* Rotate 90deg clockwise */
+            transform-origin: center center;
+            /* Implementation varies based on container size, but simple rotation is a start */
+        }
+
+        #previewContent canvas,
+        #previewContent img {
+            display: block;
+            pointer-events: none;
+            /* Drag container, not image */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Zoom/Page Controls --- */
+        .preview-controls-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            pointer-events: none;
+            /* Let clicks pass through around buttons */
+        }
+
+        /* Panels */
+        .left-panel,
+        .right-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            opacity: 1;
+        }
+
+        .right-panel {
+            opacity: 1;
+        }
+
+        .preview-controls-bar {
+            background: rgba(18, 18, 18, 0.85);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+            pointer-events: auto;
+            /* Re-enable pointer for buttons */
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .control-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.3;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            color: white;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* --- Login UI --- */
+        .login-btn-wrapper {
+            position: fixed;
+            top: 1.5rem;
+            right: 5rem;
+            /* Left of theme toggle */
+            z-index: 2000;
+        }
+
+        .login-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: all 0.3s;
+            font-weight: 500;
+            gap: 0.5rem;
+        }
+
+        .login-toggle:hover {
+            transform: translateY(-2px);
+            background: var(--card-hover);
+        }
+
+        /* Glassmorphism Modal */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .login-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            transform: translateY(-20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Bouncy */
+            backdrop-filter: blur(20px);
+            position: relative;
+        }
+
+        [data-bs-theme="light"] .login-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-overlay.active .login-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        [data-bs-theme="light"] .login-input {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .login-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        [data-bs-theme="light"] .login-input:focus {
+            background: white;
+        }
+
+        .login-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .login-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-login-blob {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login-blob:hover {
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-register-oblic {
+            background: transparent;
+            border: 2px solid #6366f1;
+            color: var(--text-main);
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform: skewX(-10deg);
+            /* Oblique style */
+            text-align: center;
+        }
+
+        .btn-register-oblic span {
+            display: block;
+            transform: skewX(10deg);
+            /* Correct text skew */
+        }
+
+        .btn-register-oblic:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: skewX(-10deg) translateY(-2px);
+        }
+
+        .close-login {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-login:hover {
+            color: var(--text-main);
+            transform: rotate(90deg);
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="kiosk-header">
+        <div class="d-flex align-items-center gap-3 kiosk-brand">
+            <div class="logo-circle">
+                <i class="fa-solid fa-print"></i>
+            </div>
+            <div>
+                <h4 class="mb-0 fw-bold">Print Kiosk</h4>
+                <div class="text-white-50 small" id="kioskIdDisplay">ID: {{ kiosk_id }}</div>
+            </div>
+        </div>
+        <div class="d-flex gap-2 align-items-center header-controls" style="pointer-events: auto;">
+            <button class="btn btn-outline-light rounded-pill px-4" onclick="toggleLoginModal()">
+                <i class="fa-solid fa-user me-2"></i>Login
+            </button>
+            <div class="form-check form-switch ms-2 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-moon text-white-50"></i>
+                <input class="form-check-input" type="checkbox" id="themeToggle"
+                    style="width: 3em; height: 1.5em; cursor: pointer;">
+                <i class="fa-solid fa-sun text-warning"></i>
+            </div>
+        </div>
+    </header>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="left-panel">
+            <h2 class="h4 mb-4 text-center fw-bold">Scan to Upload</h2>
+            <div class="qr-container"><img src="/qr/{{ kiosk_id }}" alt="QR Code"></div>
+            <div class="text-center small" style="color: var(--text-muted)">
+                <p class="mb-2"><i class="fa-solid fa-mobile-screen me-2"></i>Scan with your phone</p>
+                <p class="mb-0"><i class="fa-solid fa-wifi me-2"></i>Connect to same network</p>
+            </div>
+        </div>
+        <!-- Main Content (Right Panel) -->
+        <div class="right-panel">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <h1 class="h3 fw-light mb-0">Documents Queue</h1>
+                    <div class="form-check mb-0 ms-2"><input class="form-check-input" type="checkbox" id="selectAllBox"
+                            onchange="toggleSelectAll()"><label class="form-check-label small text-muted"
+                            for="selectAllBox">Select All</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="file-list" class="file-list-container">
+                <!-- Files will be injected here -->
+            </div>
+            <div class="bottom-bar"><button id="deleteSelectedBtn" class="btn btn-outline-danger rounded-pill px-4"
+                    onclick="deleteSelected()"><i class="fa-solid fa-trash me-2"></i>Delete Selected </button>
+                <div class="d-flex align-items-center gap-4">
+                    <div class="text-end"><small class="d-block" style="color: var(--text-muted)">Total
+                            Estimated Cost</small><span class="h3 mb-0" id="totalDisplay">₹0</span></div>
+                    <button id="proceedBtn" disabled>Proceed to Payment <i
+                            class="fa-solid fa-arrow-right ms-2"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Print Settings Modal -->
+    <div class="modal fade" id="printModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-print me-2"></i>Print Settings</h5><button
+                        type="button" class="btn-close" id="modalCloseBtn" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0 h-100">
+                        <!-- Preview Pane -->
+                        <div class="col-lg-8 d-flex align-items-center justify-content-center p-0 position-relative"
+                            style="background: #2a2a2a; min-height: 500px; overflow: hidden;"
+                            oncontextmenu="return false;">
+                            <!-- Disable Right Click on entire preview pane -->
+                            <!-- Zoom & Page Controls -->
+                            <div class="preview-controls-container">
+                                <div class="preview-controls-bar">
+                                    <!-- Page Count (Only for PDF) -->
+                                    <div class="control-group" id="pageControls" style="display: none;">
+                                        <span class="page-indicator" id="pageIndicator"
+                                            style="padding: 0 10px;">Loading...</span>
+                                    </div>
+                                    <div class="control-divider" id="pageControlsDivider" style="display: none;"></div>
+                                    <!-- Zoom Tools -->
+                                    <div class="control-group"><button class="control-btn" onclick="zoomAction(-0.2)"
+                                            title="Zoom Out"><i class="fa-solid fa-minus"></i></button><button
+                                            class="control-btn" onclick="fitToScreen('contain')"
+                                            title="Fit to Screen"><i class="fa-solid fa-expand"></i></button><button
+                                            class="control-btn" onclick="fitToScreen('width')" title="Fit Width"><i
+                                                class="fa-solid fa-text-width"></i></button><button class="control-btn"
+                                            onclick="zoomAction(0.2)" title="Zoom In"><i
+                                                class="fa-solid fa-plus"></i></button></div>
+                                </div>
+                            </div>
+                            <div id="previewBox" class="w-100 h-100 position-relative overflow-hidden">
+                                <!-- Transform Container -->
+                                <div id="previewContent">
+                                    <!-- Canvas or Img injected here -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Settings Pane -->
+                        <div class="col-lg-4 p-4 border-start" style="border-color: var(--glass-border) !important;">
+                            <h6 class="text-uppercase fw-bold mb-3 small" style="color: var(--text-muted)">Configuration
+                            </h6>
+                            <div class="mb-3">
+                                <label class="form-label">Orientation</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="orientation" id="portrait"
+                                        value="portrait" checked onchange="updateStartPreview()">
+                                    <label class="btn btn-outline-secondary" for="portrait"><i
+                                            class="fa-regular fa-file me-2"></i>Portrait</label>
+
+                                    <input type="radio" class="btn-check" name="orientation" id="landscape"
+                                        value="landscape" onchange="updateStartPreview()">
+                                    <label class="btn btn-outline-secondary" for="landscape"><i
+                                            class="fa-regular fa-file me-2 fa-rotate-90"></i>Landscape</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3"><label class="form-label">Color Mode</label>
+                                <div class="btn-group w-100" role="group"><input type="radio" class="btn-check"
+                                        name="color" id="bw" value="bw" checked onchange="updatePrice()"><label
+                                        class="btn btn-outline-secondary" for="bw">B&W</label><input type="radio"
+                                        class="btn-check" name="color" id="color" value="color"
+                                        onchange="updatePrice()"><label class="btn btn-outline-secondary"
+                                        for="color">Color</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Paper Size</label>
+                                <select class="form-select" id="paperSize" onchange="updatePrice()">
+                                    <option value="A4" selected>A4 (Standard)</option>
+                                    <option value="A3">A3 (Large)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3"><label class="form-label">Copies</label>
+                                <div class="input-group"><button class="btn btn-outline-secondary" type="button"
+                                        onclick="adjustCopies(-1)"><i class="fa-solid fa-minus"></i></button><input
+                                        type="number" class="form-control text-center" id="copies" value="1" min="1"
+                                        readonly><button class="btn btn-outline-secondary" type="button"
+                                        onclick="adjustCopies(1)"><i class="fa-solid fa-plus"></i></button></div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6"><label class="form-label">Sides</label><select class="form-select"
+                                        id="sides" onchange="updatePrice()">
+                                        <option value="single">Single</option>
+                                        <option value="duplex">Duplex</option>
+                                    </select></div>
+                                <div class="col-6"><label class="form-label">Pages per
+                                        Sheet</label><select class="form-select" id="pps" onchange="updatePrice()">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="4">4</option>
+                                    </select></div>
+                            </div>
+                            <div
+                                class="mt-5 p-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Item Cost</span><strong class="h4 mb-0 text-primary">₹<span
+                                            id="itemPrice">0</span></strong>
+                                </div><button class="btn btn-primary w-100 mt-2" onclick="partialDone()"><i
+                                        class="fa-solid fa-check me-2"></i>Confirm Settings </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Register Modal -->
+    <div class="login-overlay" id="loginOverlay" onclick="if(event.target === this) toggleLoginModal()">
+        <div class="login-card" id="loginCard">
+            <div class="close-login" onclick="toggleLoginModal()">&times;</div>
+
+            <!-- LOGIN FORM -->
+            <div id="loginFormSection">
+                <h3 class="login-title">Owner Login</h3>
+                <form onsubmit="event.preventDefault(); handleLogin();" autocomplete="off">
+                    <div class="login-input-group">
+                        <i class="fa-solid fa-user login-icon"></i>
+                        <input type="text" id="loginId" class="login-input" placeholder="Mobile Number" required
+                            autocomplete="off">
+                    </div>
+                    <div class="login-input-group login-input-wrapper">
+                        <i class="fa-solid fa-lock login-icon"></i>
+                        <input type="password" id="loginPass" class="login-input" placeholder="Password" required
+                            autocomplete="new-password">
+                        <i class="fa-solid fa-eye password-toggle" onclick="togglePass('loginPass', this)"></i>
+                    </div>
+                    <div class="login-actions">
+                        <button type="submit" class="btn-login-blob">Login</button>
+                        <button type="button" class="btn-register-oblic" id="btnShowRegister" onclick="showRegister()"
+                            style="display: none;">
+                            <span>New User? Register</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div id="registerFormSection" style="display: none;">
+                <h3 class="login-title">Owner Registration</h3>
+                <form onsubmit="event.preventDefault(); handleRegister();" autocomplete="off">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="login-input-group mb-2">
+                                <input type="text" id="regName" class="login-input ps-3" placeholder="Name" required
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="login-input-group mb-2">
+                                <input type="text" id="regSurname" class="login-input ps-3" placeholder="Surname"
+                                    required autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="login-input-group mb-2">
+                        <i class="fa-solid fa-mobile-screen login-icon"></i>
+                        <input type="tel" id="regMobile" class="login-input" placeholder="Mobile Number (Mandatory)"
+                            required autocomplete="off">
+                    </div>
+                    <div class="login-input-group mb-2">
+                        <i class="fa-solid fa-envelope login-icon"></i>
+                        <input type="email" id="regEmail" class="login-input" placeholder="Email (Optional)"
+                            autocomplete="off">
+                    </div>
+                    <div class="login-input-group mb-2 login-input-wrapper">
+                        <i class="fa-solid fa-lock login-icon"></i>
+                        <input type="password" id="regPass" class="login-input" placeholder="Password"
+                            oninput="validatePassword()" required autocomplete="new-password">
+                        <i class="fa-solid fa-eye password-toggle" onclick="togglePass('regPass', this)"></i>
+                    </div>
+                    <div class="login-input-group mb-3 login-input-wrapper">
+                        <i class="fa-solid fa-lock login-icon"></i>
+                        <input type="password" id="regPassConfirm" class="login-input" placeholder="Confirm Password"
+                            oninput="validatePassword()" required autocomplete="new-password">
+                        <i class="fa-solid fa-eye password-toggle" onclick="togglePass('regPassConfirm', this)"></i>
+                    </div>
+
+                    <!-- Password Rules -->
+                    <div class="d-flex justify-content-between mb-3 small" id="passwordRules">
+                        <span class="text-muted" id="ruleUpper"><i
+                                class="fa-regular fa-circle me-1"></i>Uppercase</span>
+                        <span class="text-muted" id="ruleLower"><i
+                                class="fa-regular fa-circle me-1"></i>Lowercase</span>
+                        <span class="text-muted" id="ruleSymbol"><i class="fa-regular fa-circle me-1"></i>Symbol</span>
+                    </div>
+
+                    <div class="login-actions mt-0">
+                        <button type="submit" class="btn-login-blob" id="btnRegisterSubmit" disabled>Register
+                            Owner</button>
+                        <button type="button" class="btn btn-link text-white text-decoration-none"
+                            onclick="showLogin()">
+                            Back to Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- PDF.js (Local) -->
+    <script src="/static/js/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/static/js/pdf.worker.min.js';
+    </script>
+
+    <!-- Bootstrap JS -->
+    <!-- Footer -->
+    <div class="footer-copyright">
+        &copy; 2025 Printing Kiosk Network. All rights reserved.
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const kioskId = "{{ kiosk_id }}";
+        let currentFile = null;
+        let previousFilesSignature = "";
+        let selectedFiles = new Set();
+        const printModal = new bootstrap.Modal(document.getElementById('printModal'));
+
+        // --- PREVIEW STATE ---
+        let pdfDoc = null;
+        // Transform State
+        let transformState = {
+            scale: 1,
+            panning: false,
+            pointX: 0,
+            pointY: 0,
+            startX: 0,
+            startY: 0
+        };
+
+        const ZOOM_SPEED = 0.2;
+        const MIN_ZOOM = 0.2;
+        const MAX_ZOOM = 5.0;
+
+        // --- EVENT LISTENERS FOR PREVIEW ---
+        const previewBox = document.getElementById('previewBox');
+        const previewContent = document.getElementById('previewContent');
+
+        previewBox.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            transformState.startX = e.clientX - transformState.pointX;
+            transformState.startY = e.clientY - transformState.pointY;
+            transformState.panning = true;
+            previewBox.style.cursor = 'grabbing';
+        });
+
+        previewBox.addEventListener('mouseup', () => {
+            transformState.panning = false;
+            previewBox.style.cursor = 'grab';
+        });
+
+        previewBox.addEventListener('mouseleave', () => {
+            transformState.panning = false;
+            previewBox.style.cursor = 'grab';
+        });
+
+        previewBox.addEventListener('mousemove', (e) => {
+            if (!transformState.panning) return;
+            e.preventDefault();
+            transformState.pointX = e.clientX - transformState.startX;
+            transformState.pointY = e.clientY - transformState.startY;
+            updateTransform();
+        });
+
+        // WHEEL: Scroll by default, Zoom if Ctrl pressed
+        previewBox.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.ctrlKey) {
+                // Zoom
+                const delta = -Math.sign(e.deltaY) * ZOOM_SPEED;
+                zoomAction(delta);
+            } else {
+                // Scroll (Pan Vertical)
+                const scrollSpeed = 1.0;
+                transformState.pointY -= e.deltaY * scrollSpeed;
+                updateTransform();
+            }
+        });
+
+        function updateTransform() {
+            previewContent.style.transform = `translate(${transformState.pointX}px, ${transformState.pointY}px) scale(${transformState.scale})`;
+        }
+
+        function resetTransform() {
+            transformState = { scale: 1, panning: false, pointX: 0, pointY: 0, startX: 0, startY: 0 };
+            updateTransform();
+        }
+
+        function zoomAction(delta) {
+            let newScale = transformState.scale + delta;
+            newScale = Math.round(newScale * 100) / 100;
+            if (newScale < MIN_ZOOM) newScale = MIN_ZOOM;
+            if (newScale > MAX_ZOOM) newScale = MAX_ZOOM;
+            transformState.scale = newScale;
+            updateTransform();
+        }
+
+        function updateStartPreview() {
+            // Called when orientation changes
+            updateOrientationVisuals();
+            fitToScreen('contain');
+        }
+
+        function updateOrientationVisuals() {
+            const orientation = document.querySelector('input[name="orientation"]:checked').value;
+            const content = document.getElementById('previewContent');
+
+            const children = content.children;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (orientation === 'landscape') {
+                    child.style.transform = 'rotate(90deg)';
+                    child.style.margin = "50px 0"; // Add spacing to avoid overlap when rotated
+                } else {
+                    child.style.transform = 'none';
+                    child.style.margin = "0 0 20px 0";
+                }
+            }
+        }
+
+        function fitToScreen(mode) {
+            updateOrientationVisuals(); // Apply rotation before measuring
+
+            const containerW = previewBox.offsetWidth;
+            const containerH = previewBox.offsetHeight;
+            let contentW, contentH;
+
+            // Measure first child (canvas or img)
+            const firstChild = previewContent.firstElementChild;
+            if (!firstChild) return;
+
+            if (firstChild.tagName === 'CANVAS') {
+                contentW = firstChild.width;
+                contentH = firstChild.height; // Height of just first page, but width matters for 'width' mode
+            } else if (firstChild.tagName === 'IMG') {
+                contentW = firstChild.naturalWidth || firstChild.width;
+                contentH = firstChild.naturalHeight || firstChild.height;
+            }
+
+            if (!contentW || !contentH) {
+                setTimeout(() => fitToScreen(mode), 100);
+                return;
+            }
+
+            resetTransform();
+
+            let scale = 1;
+            const padding = 40;
+
+            if (mode === 'width') {
+                scale = (containerW - padding) / contentW;
+                // Don't cap max zoom for fit width if content is tiny, but reasonable limit
+                if (scale > MAX_ZOOM) scale = MAX_ZOOM;
+            } else if (mode === 'contain') {
+                const scaleW = (containerW - padding) / contentW;
+                const scaleH = (containerH - padding) / contentH;
+                scale = Math.min(scaleW, scaleH);
+            }
+
+            transformState.scale = scale;
+
+            // Center Horizontally
+            transformState.pointX = (containerW - contentW * scale) / 2;
+
+            // Align Top with small padding
+            transformState.pointY = 20;
+
+            updateTransform();
+        }
+
+        // --- PDF RENDERING (ALL PAGES) ---
+        async function renderAllPages(pdf) {
+            previewContent.innerHTML = ''; // Clear previous
+
+            // Loop through all pages
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+
+                // Use consistent scale
+                const viewport = page.getViewport({ scale: 2.0 });
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                canvas.style.display = "block";
+                canvas.style.marginBottom = "20px"; // Spacing between pages
+                canvas.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+
+                previewContent.appendChild(canvas);
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+
+                await page.render(renderContext).promise;
+            }
+            // Fit Width after rendering at least the first one (or all)
+            fitToScreen('width');
+
+            const info = document.getElementById('pageIndicator');
+            if (info) info.innerText = `${pdf.numPages} Pages`;
+        }
+
+        // --- THEME ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            const closeBtn = document.getElementById('modalCloseBtn');
+            if (closeBtn) {
+                newTheme === 'light' ? closeBtn.classList.remove('btn-close-white') : closeBtn.classList.add('btn-close-white');
+            }
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (!icon) return;
+            if (theme === 'dark') {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            const closeBtn = document.getElementById('modalCloseBtn');
+            if (closeBtn && savedTheme === 'dark') closeBtn.classList.add('btn-close-white');
+            else if (closeBtn) closeBtn.classList.remove('btn-close-white');
+        })();
+
+
+        // --- MAIN APP LOGIC ---
+
+        function adjustCopies(delta) {
+            const input = document.getElementById('copies');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            input.value = val;
+            updatePrice();
+        }
+
+        function loadFiles() {
+            fetch(`/fetch/${kioskId}`)
+                .then(r => r.json())
+                .then(files => {
+                    const list = document.getElementById("file-list");
+                    const noFilesMsg = document.getElementById("noFilesMessage"); // Assuming this exists or will be added
+
+                    updateQueueVisibility(files.length > 0);
+
+                    const newSignature = JSON.stringify(files.map(f => f.name + f.price));
+                    if (newSignature === previousFilesSignature) return;
+
+                    const newFileNames = new Set(files.map(f => f.name));
+                    selectedFiles.forEach(name => {
+                        if (!newFileNames.has(name)) selectedFiles.delete(name);
+                    });
+                    updateSelectionUI();
+
+                    previousFilesSignature = newSignature;
+
+                    if (files.length === 0) {
+                        list.innerHTML = ``;
+                        if (noFilesMsg) noFilesMsg.style.display = "block";
+                        return;
+                    }
+                    if (noFilesMsg) noFilesMsg.style.display = "none";
+
+                    let newHTML = "";
+                    files.forEach((f, index) => {
+                        const ext = f.name.split('.').pop().toLowerCase();
+                        const isPdf = ext === 'pdf';
+                        const iconClass = isPdf ? 'pdf' : 'img';
+                        const icon = isPdf ? 'fa-file-pdf' : 'fa-file-image';
+                        const priceBadge = f.price ? `<span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 rounded-pill">₹${f.price}</span>` : '<span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary border-opacity-25 rounded-pill">Needs Setup</span>';
+                        const isSelected = selectedFiles.has(f.name);
+
+                        newHTML += `
+                        <div class="file-card animate-in ${isSelected ? 'selected' : ''}" onclick="openPrintUI('${f.name}')" style="animation-delay: ${index * 0.05}s">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); toggleSelection(event, '${f.name}', 'checkbox')">
+                            </div>
+                            <div class="file-icon ${iconClass}">
+                                <i class="fa-regular ${icon}"></i>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name">${f.name}</div>
+                                <div class="file-meta">${priceBadge}</div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="action-btn delete" onclick="event.stopPropagation(); deleteFile('${f.name}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                    });
+
+                    list.innerHTML = newHTML;
+                    document.getElementById('selectAllBox').checked = (files.length > 0 && selectedFiles.size === files.length);
+                });
+        }
+
+        function toggleSelection(event, filename, source) {
+            if (selectedFiles.has(filename)) {
+                selectedFiles.delete(filename);
+            } else {
+                selectedFiles.add(filename);
+            }
+            renderSelections();
+            updateSelectionUI();
+        }
+
+        function toggleSelectAll() {
+            const master = document.getElementById('selectAllBox');
+            const cards = document.querySelectorAll('.file-card .file-name');
+            if (master.checked) {
+                cards.forEach(c => selectedFiles.add(c.innerText));
+            } else {
+                selectedFiles.clear();
+            }
+            renderSelections();
+            updateSelectionUI();
+        }
+
+        function renderSelections() {
+            const cards = document.querySelectorAll('.file-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.file-name').innerText;
+                const checkbox = card.querySelector('.form-check-input');
+                if (selectedFiles.has(name)) {
+                    card.classList.add('selected');
+                    checkbox.checked = true;
+                } else {
+                    card.classList.remove('selected');
+                    checkbox.checked = false;
+                }
+            });
+        }
+
+        function updateSelectionUI() {
+            const delBtn = document.getElementById('deleteSelectedBtn');
+            if (selectedFiles.size > 0) {
+                delBtn.classList.add('show');
+                delBtn.innerHTML = `<i class="fa-solid fa-trash me-2"></i>Delete (${selectedFiles.size})`;
+            } else {
+            }
+        }
+
+        async function deleteSelected() {
+            if (!confirm(`Delete ${selectedFiles.size} selected files?`)) return;
+            const filesToDelete = Array.from(selectedFiles);
+
+            try {
+                const promises = filesToDelete.map(async name => {
+                    const response = await fetch(`/delete/${kioskId}/${name}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status} for file: ${name}`);
+                    }
+                    const jsonResponse = await response.json();
+                    if (jsonResponse.status !== 'success') { // Assuming the backend returns { status: 'success' } on success
+                        throw new Error(`API error: ${jsonResponse.message || 'Unknown error'} for file: ${name}`);
+                    }
+                    return jsonResponse;
+                });
+
+                await Promise.all(promises);
+
+                // Clear selection locally
+                selectedFiles.clear();
+                // Force reload
+                loadFiles();
+                document.getElementById('selectAllBox').checked = false;
+                updateSelectionUI();
+
+            } catch (e) {
+                console.error("Delete failed:", e);
+                alert("Some files could not be deleted. Please check the console for details.");
+            }
+        }
+
+        function deleteFile(filename) {
+            if (confirm('Are you sure you want to remove this file?')) {
+                previousFilesSignature = "";
+                fetch(`/delete/${kioskId}/${filename}`).then(() => loadFiles());
+            }
+        }
+
+        function openPrintUI(filename) {
+            currentFile = filename;
+            const ext = filename.split('.').pop().toLowerCase().trim();
+            const previewUrl = `/preview/${kioskId}/${filename}`;
+            const contentContainer = document.getElementById('previewContent');
+
+            // Reset UI
+            contentContainer.innerHTML = '<div class="text-white">Loading...</div>';
+            document.getElementById('copies').value = 1;
+            document.getElementById('bw').checked = true;
+            document.getElementById('portrait').checked = true; // Reset orientation
+            resetTransform();
+
+            // PDF Mode
+            const pageControls = document.getElementById('pageControls');
+            const pageControlsDivider = document.getElementById('pageControlsDivider');
+
+            if (pageControls) pageControls.style.display = 'flex';
+            if (pageControlsDivider) pageControlsDivider.style.display = 'block';
+
+            if (ext === "pdf") {
+                // PDF Mode
+                pdfjsLib.getDocument(previewUrl).promise.then(function (pdf) {
+                    pdfDoc = pdf;
+                    renderAllPages(pdf);
+                }).catch(function (error) {
+                    console.error('Error loading PDF:', error);
+                    contentContainer.innerHTML = '<div class="text-danger p-3">Error loading PDF</div>';
+                });
+            } else {
+                // Image Mode
+                pdfDoc = null;
+                const img = new Image();
+                img.onload = function () {
+                    fitToScreen('contain');
+                };
+                img.onerror = function () {
+                    contentContainer.innerHTML = '<div class="text-danger p-3">Error loading Image</div>';
+                };
+                img.src = previewUrl;
+                img.alt = "Preview";
+                contentContainer.innerHTML = '';
+                contentContainer.appendChild(img);
+            }
+
+            printModal.show();
+            updatePrice();
+        }
+
+        function updatePrice() {
+            if (!currentFile) return;
+            const colorMode = document.querySelector('input[name="color"]:checked').value;
+            const copies = document.getElementById('copies').value;
+            const pps = document.getElementById('pps').value;
+            // Orientation doesn't change backend price logic usually, but good to send if needed later
+            // const orientation = document.querySelector('input[name="orientation"]:checked').value; 
+
+            fetch("/price", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    kiosk_id: kioskId,
+                    filename: currentFile,
+                    color: colorMode,
+                    copies: copies,
+                    pages_per_sheet: pps,
+                    size: document.getElementById('paperSize').value
+                })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    const priceEl = document.getElementById("itemPrice");
+                    const currentPrice = priceEl.innerText;
+                    const newPrice = d.total_cost;
+                    priceEl.innerText = newPrice;
+
+                    if (currentPrice !== newPrice.toString()) {
+                        priceEl.classList.remove("price-anim");
+                        void priceEl.offsetWidth;
+                        priceEl.classList.add("price-anim");
+                    }
+                });
+        }
+
+        function partialDone() {
+            const colorMode = document.querySelector('input[name="color"]:checked').value;
+            const copies = document.getElementById('copies').value;
+            const pps = document.getElementById('pps').value;
+
+            fetch(`/settings/${kioskId}/${currentFile}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    color: colorMode,
+                    copies: copies,
+                    pages: "all",
+                    sides: document.getElementById('sides').value,
+                    pages_per_sheet: pps,
+                    size: document.getElementById('paperSize').value
+                })
+            }).then(() => {
+                previousFilesSignature = "";
+                printModal.hide();
+                loadFiles();
+                checkSession();
+            });
+        }
+
+        function checkSession() {
+            fetch(`/session/${kioskId}`)
+                .then(r => r.json())
+                .then(d => {
+                    const btn = document.getElementById("proceedBtn");
+                    const totalDisplay = document.getElementById("totalDisplay");
+                    if (d.ready) {
+                        btn.disabled = false;
+                        btn.innerHTML = `Pay & Print <i class="fa-solid fa-print ms-2"></i>`;
+                        totalDisplay.innerText = `₹${d.total}`;
+                        totalDisplay.classList.add('text-primary');
+                        totalDisplay.classList.remove('text-muted');
+                    } else {
+                        btn.disabled = true;
+                        btn.innerHTML = `Verify Settings <i class="fa-solid fa-arrow-right ms-2"></i>`;
+                    }
+                });
+        }
+
+        loadFiles();
+        setInterval(loadFiles, 3000);
+        setInterval(checkSession, 3000);
+
+        // --- THEME TOGGLE ---
+        // --- THEME TOGGLE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('themeToggle');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('change', () => {
+                    if (themeToggleBtn.checked) {
+                        document.documentElement.setAttribute('data-bs-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-bs-theme', 'dark');
+                    }
+                });
+            }
+        });
+
+        // --- LOGIN / REGISTER LOGIC ---
+        function togglePass(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        function clearLoginInputs() {
+            document.getElementById('loginId').value = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('regName').value = '';
+            document.getElementById('regSurname').value = '';
+            document.getElementById('regMobile').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPass').value = '';
+            document.getElementById('regPassConfirm').value = '';
+        }
+
+        function checkAuthStatus() {
+            fetch('/auth/status')
+                .then(r => r.json())
+                .then(d => {
+                    const btn = document.getElementById('btnShowRegister');
+                    if (d.registered) {
+                        btn.style.display = 'none';
+                    } else {
+                        btn.style.display = 'block';
+                    }
+                });
+        }
+
+        function toggleLoginModal() {
+            const overlay = document.getElementById('loginOverlay');
+            overlay.classList.toggle('active');
+            // Reset to login view
+            if (overlay.classList.contains('active')) {
+                showLogin();
+                clearLoginInputs(); // Clear inputs on open
+                checkAuthStatus();
+            }
+        }
+
+        // --- QUEUE VISIBILITY ---
+        function updateQueueVisibility(hasFiles) {
+            if (hasFiles) {
+                document.body.classList.add('has-files');
+            } else {
+                document.body.classList.remove('has-files');
+            }
+        }
+
+        function showRegister() {
+            document.getElementById('loginFormSection').style.display = 'none';
+            document.getElementById('registerFormSection').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('loginFormSection').style.display = 'block';
+            document.getElementById('registerFormSection').style.display = 'none';
+        }
+
+        function validatePassword() {
+            const p = document.getElementById('regPass').value;
+            const p2 = document.getElementById('regPassConfirm').value;
+
+            const hasUpper = /[A-Z]/.test(p);
+            const hasLower = /[a-z]/.test(p);
+            const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(p);
+
+            updateRule('ruleUpper', hasUpper);
+            updateRule('ruleLower', hasLower);
+            updateRule('ruleSymbol', hasSymbol);
+
+            const isValid = hasUpper && hasLower && hasSymbol && p.length >= 6 && p === p2;
+            document.getElementById('btnRegisterSubmit').disabled = !isValid;
+        }
+
+        function updateRule(id, valid) {
+            const el = document.getElementById(id);
+            if (valid) {
+                el.classList.remove('text-muted');
+                el.classList.add('text-success');
+                el.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>${el.innerText.trim()}`;
+            } else {
+                el.classList.add('text-muted');
+                el.classList.remove('text-success');
+                el.innerHTML = `<i class="fa-regular fa-circle me-1"></i>${el.innerText.trim()}`;
+            }
+        }
+
+        function handleRegister() {
+            const data = {
+                name: document.getElementById('regName').value,
+                surname: document.getElementById('regSurname').value,
+                mobile: document.getElementById('regMobile').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPass').value
+            };
+
+            fetch('/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.status === 'success') {
+                        alert('Registration Successful! Please Login.');
+                        showLogin();
+                    } else {
+                        alert(d.message);
+                    }
+                });
+        }
+
+        function handleLogin() {
+            const data = {
+                login_id: document.getElementById('loginId').value,
+                password: document.getElementById('loginPass').value
+            };
+
+            fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.status === 'success') {
+                        window.location.href = d.redirect;
+                    } else {
+                        alert(d.message);
+                    }
+                });
+        }
+
+        // Init check
+        checkAuthStatus();
+    </script>
+</body>
+
+</html>
