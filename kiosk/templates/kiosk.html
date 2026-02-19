@@ -135,15 +135,6 @@
             pointer-events: auto;
         }
 
-        /* Sync Status Removed */
-
-        /* When files exist - Show Right Panel */
-        body.has-files .right-panel {
-            flex: 1;
-            width: auto;
-            opacity: 1;
-            padding: 2rem;
-        }
 
         /* QR Section */
         .qr-container {
@@ -822,7 +813,7 @@
             /* width/height set via JS based on paper size */
             transition: transform 0.3s ease, width 0.3s, height 0.3s;
             transform-origin: center center;
-            background-color: white;
+            background-color: transparent;
             /* Box shadow added inline or via class */
         }
 
@@ -904,14 +895,62 @@
             background: var(--bg-panel);
         }
 
+        /* Force dropdown options to be black-on-white in dark mode.
+           Browsers render <option> with OS colours, which causes
+           white text on white background in dark themes. */
+        select option {
+            color: #111 !important;
+            background-color: #fff !important;
+        }
+
         .price-anim {
             transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .price-update {
             color: #22c55e !important;
-            /* Green flash */
             transform: scale(1.1);
+        }
+
+        /* Kiosk ID label — adapts to dark/light theme */
+        .kiosk-id-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.55);
+            margin-top: 0.15rem;
+            transition: color 0.3s;
+        }
+
+        [data-bs-theme="light"] .kiosk-id-label {
+            color: rgba(0, 0, 0, 0.45);
+        }
+
+        /* Login button — visible in both dark and light modes */
+        .btn-login-header {
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+            background: transparent;
+            border-radius: 50px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.25s, border-color 0.25s, color 0.25s;
+        }
+
+        .btn-login-header:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        [data-bs-theme="light"] .btn-login-header {
+            border-color: #6366f1;
+            background: #6366f1;
+            color: #fff;
+        }
+
+        [data-bs-theme="light"] .btn-login-header:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
         }
     </style>
 
@@ -924,17 +963,20 @@
             <div class="logo-circle"><i class="fa-solid fa-print"></i></div>
             <div>
                 <h4 class="mb-0 fw-bold">Print Kiosk</h4>
+                <div class="kiosk-id-label">ID: {{ kiosk_id }}</div>
             </div>
         </div>
 
         <div class="d-flex gap-2 align-items-center header-controls" style="pointer-events: auto;">
-            <div class="text-white-50 me-3 fw-bold small">ID: {{ kiosk_id }}</div><button
-                class="btn btn-outline-light rounded-pill px-4" onclick="toggleLoginModal()"><i
-                    class="fa-solid fa-user me-2"></i>Login </button>
-            <div class="form-check form-switch ms-2 d-flex align-items-center gap-2"><i
-                    class="fa-solid fa-moon text-white-50"></i><input class="form-check-input" type="checkbox"
-                    id="themeToggle" style="width: 3em; height: 1.5em; cursor: pointer;"><i
-                    class="fa-solid fa-sun text-warning"></i></div>
+            <button class="btn-login-header" onclick="toggleLoginModal()">
+                <i class="fa-solid fa-user me-2"></i>Login
+            </button>
+            <div class="form-check form-switch ms-2 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-moon text-white-50"></i>
+                <input class="form-check-input" type="checkbox" id="themeToggle"
+                    style="width: 3em; height: 1.5em; cursor: pointer;">
+                <i class="fa-solid fa-sun text-warning"></i>
+            </div>
         </div>
     </header>
     <div class="wrapper">
@@ -979,50 +1021,54 @@
     </div>
     <!-- Print Settings Modal -->
     <div class="modal fade" id="printModal" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 960px; width: 95vw;">
+            <div class="modal-content"
+                style="height: 82vh; max-height: 640px; display: flex; flex-direction: column; overflow: hidden;">
                 <div class="modal-header">
                     <h5 class="modal-title"><i class="fa-solid fa-print me-2"></i>Print Settings</h5><button
                         type="button" class="btn-close" id="modalCloseBtn" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-0" style="flex: 1; overflow: hidden; display: flex;">
                     <div class="row g-0 h-100 w-100 m-0">
-                        <!-- LEFT PANEL: PREVIEW (Fixed, No Scroll) -->
-                        <div class="col-lg-8 h-100 position-relative d-flex flex-column"
-                            style="background: var(--preview-bg); border-right: 1px solid var(--glass-border);">
-                            <!-- Preview Canvas Container -->
-                            <div id="previewBox" class="flex-grow-1 position-relative"
-                                style="overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                                <!-- The "Sheet" being previewed -->
-                                <div id="sheetPreview"
-                                    style="background: white; box-shadow: 0 5px 25px rgba(0,0,0,0.3); transition: transform 0.3s ease; transform-origin: center center;">
-                                    <!-- Pages will be rendered here via JS -->
-                                </div>
+                        <!-- LEFT PANEL: PREVIEW (Scrollable for long PDFs) -->
+                        <div class="col-lg-8 position-relative d-flex flex-column"
+                            style="background: var(--preview-bg); border-right: 1px solid var(--glass-border); height: 100%; min-height: 0;">
+                            <!-- Preview Canvas Container — scrolls vertically -->
+                            <!-- previewBox: only vertical scroll; JS recreates sheetPreview inside -->
+                            <div id="previewBox" class="flex-grow-1"
+                                style="overflow-y: auto; overflow-x: hidden; width: 100%; box-sizing: border-box;">
+                                <!-- clearPreviewBox() builds sheetPreview here -->
                             </div>
                             <!-- Page Navigation Controls (Floating at bottom) -->
-                            <div class="d-flex justify-content-center pb-3 pt-2"
+                            <div class="d-flex justify-content-center pb-2 pt-2 flex-shrink-0"
                                 style="background: rgba(0,0,0,0.1); backdrop-filter: blur(5px);">
                                 <div class="btn-group shadow-sm bg-dark rounded-pill" role="group">
                                     <button type="button" class="btn btn-sm btn-dark rounded-pill-start px-3"
-                                        onclick="prevSheet()" title="Previous Sheet"><i
-                                            class="fa-solid fa-chevron-left"></i></button>
+                                        onclick="zoomAction(-0.1)" title="Zoom Out"><i
+                                            class="fa-solid fa-minus"></i></button>
                                     <div
                                         class="px-3 d-flex align-items-center text-white small fw-bold bg-dark border-start border-end border-secondary">
-                                        <span id="sheetIndicator">Sheet 1 of 1</span>
+                                        <span id="sheetIndicator">Zoom: 100%</span>
                                     </div><button type="button" class="btn btn-sm btn-dark rounded-pill-end px-3"
-                                        onclick="nextSheet()" title="Next Sheet"><i
-                                            class="fa-solid fa-chevron-right"></i></button>
+                                        onclick="zoomAction(0.1)" title="Zoom In"><i
+                                            class="fa-solid fa-plus"></i></button>
                                 </div>
-                                <div class="ms-3 d-flex align-items-center gap-2"><button type="button"
-                                        class="btn btn-sm btn-dark rounded-circle" onclick="rotatePreview()"
-                                        title="Rotate View"><i class="fa-solid fa-rotate-right"></i></button><button
-                                        type="button" class="btn btn-sm btn-dark rounded-circle" onclick="fitPreview()"
-                                        title="Fit to View"><i class="fa-solid fa-expand"></i></button></div>
+                                <div class="ms-3 d-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-dark rounded-circle"
+                                        onclick="rotatePreview()" title="Rotate View"><i
+                                            class="fa-solid fa-rotate-right"></i></button>
+                                    <button type="button" class="btn btn-sm btn-dark rounded-circle"
+                                        onclick="fitPreview()" title="Fit to Page"><i
+                                            class="fa-solid fa-expand"></i></button>
+                                    <button type="button" class="btn btn-sm btn-dark rounded-circle"
+                                        onclick="fitToWidth()" title="Fit to Width"><i
+                                            class="fa-solid fa-arrows-left-right"></i></button>
+                                </div>
                             </div>
                         </div>
                         <!-- RIGHT PANEL: SETTINGS (Scrollable) -->
-                        <div class="col-lg-4 h-100 d-flex flex-column bg-panel"
-                            style="background: var(--bg-panel); color: var(--text-main);">
+                        <div class="col-lg-4 d-flex flex-column"
+                            style="background: var(--bg-panel); color: var(--text-main); height: 100%; min-height: 0;">
                             <!-- Scrollable Settings List -->
                             <div class="settings-scroll-area flex-grow-1 p-4" style="overflow-y: auto;">
                                 <!-- DESTINATION -->
@@ -1191,8 +1237,7 @@
                                                 <div class="input-group input-group-sm mt-2" id="customScaleGroup"
                                                     style="display: none;">
                                                     <input type="number" class="form-control" id="customScaleInput"
-                                                        value="100" min="10" max="200" max="200"
-                                                        oninput="updatePreviewSettings()"
+                                                        value="100" min="10" max="200" oninput="updatePreviewSettings()"
                                                         onchange="updatePreviewSettings()"><span
                                                         class="input-group-text">%</span>
                                                 </div>
@@ -1230,18 +1275,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Footer (Price & Actions) -->
-                            <div class="sidebar-footer">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-muted fw-bold">Total</span><span
-                                        class="h4 mb-0 fw-bold price-anim" id="itemPrice">₹0</span>
+                            <!-- Footer: Total + Actions (no Pay & Print) -->
+                            <div class="sidebar-footer flex-shrink-0"
+                                style="padding: 0.85rem 1.25rem; border-top: 1px solid var(--glass-border);">
+                                <!-- Total line: label left, amount right -->
+                                <div class="d-flex align-items-baseline justify-content-between mb-1">
+                                    <span class="text-muted small">Total Pages</span>
+                                    <span class="small fw-bold" id="finalPageCount">--</span>
                                 </div>
-                                <div class="d-flex gap-2 mb-2"><button class="btn btn-outline-secondary w-100"
-                                        data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary w-100"
-                                        onclick="partialDone()">Done</button>
-                                </div><button class="btn btn-lg w-100 text-white fw-bold shadow-sm"
-                                    style="background: #6366f1; border: none;" onclick="partialDone()">Pay &
-                                    Print <i class="fa-solid fa-credit-card ms-2"></i></button>
+                                <div class="d-flex align-items-baseline justify-content-between mb-2">
+                                    <span class="text-muted small">Total</span>
+                                    <span class="h5 mb-0 fw-bold price-anim" id="itemPrice">&#8377;0</span>
+                                </div>
+                                <!-- Cancel / Done row -->
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-secondary flex-fill"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-primary flex-fill" onclick="partialDone()">Done</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1364,209 +1415,6 @@
             return uniquePages.size;
         }
 
-        function updateStartPreview() {
-            const orientation = document.getElementById('layoutSelect').value;
-            const content = document.getElementById('previewContent');
-
-            // Ensure Flexbox is active (though CSS should handle it, we clear inline grid if any)
-            content.style.display = '';
-            content.style.gridTemplateColumns = '';
-            content.style.gap = '';
-
-            // Handle Orientation (Rotation)
-            const children = Array.from(content.children);
-
-            children.forEach(child => {
-                child.style.transition = "transform 0.3s ease";
-
-                if (orientation === 'landscape') {
-                    // Simple rotation for now
-                    child.style.transform = 'rotate(-90deg)';
-                }
-
-                else {
-                    child.style.transform = 'none';
-                }
-            });
-
-            // Re-calculate fit after a slight delay
-            // We default to 'width' for better readability, or 'contain' if user prefers. 
-            // Stick to previous logic (contain was used in timeout previously).
-            setTimeout(() => fitToScreen('width'), 50);
-        }
-
-        function updateOrientationVisuals() {
-            // Merged into updateStartPreview
-        }
-
-        function fitToScreen(mode) {
-            const container = document.getElementById('previewBox');
-            const content = document.getElementById('previewContent');
-            if (!content || !container) return;
-
-            // 1. Reset Transform/Zoom to get natural size
-            content.style.transition = 'none';
-            content.style.transform = 'none';
-            content.style.zoom = "1";
-
-            // Force layout calc
-            void content.offsetWidth;
-
-            // 2. Measure
-            const pad = 40; // 20px padding each side
-            const contW = container.clientWidth - pad;
-            const contH = container.clientHeight - pad;
-            const contentW = content.scrollWidth;
-            const contentH = content.scrollHeight;
-
-            if (contentW === 0 || contentH === 0) return;
-
-            // 3. Calculate Scale
-            console.log(`fitToScreen: Container $ {
-                    contW
-                }
-
-                x$ {
-                    contH
-                }
-
-                , Content $ {
-                    contentW
-                }
-
-                x$ {
-                    contentH
-                }
-
-                `);
-            const scaleX = contW / contentW;
-            const scaleY = contH / contentH;
-
-            let scale;
-
-            if (mode === 'width') {
-                scale = scaleX;
-            }
-
-            else {
-                // contain
-                scale = Math.min(scaleX, scaleY);
-            }
-
-            console.log(`fitToScreen: Mode $ {
-                    mode
-                }
-
-                , RawScale $ {
-                    scale
-                }
-
-                `);
-
-            // Clamp scale
-            if (scale > 2) scale = 2; // Allow zoom up to 2x
-            if (scale < 0.1) scale = 0.1;
-
-            // 4. Update State
-            transformState.scale = scale;
-
-            // Panning reset
-            transformState.pointX = 0;
-            transformState.pointY = 0;
-            transformState.startX = 0;
-            transformState.startY = 0;
-
-            // 5. Apply
-            content.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            updateTransform();
-        }
-
-        function updateTransform() {
-            const content = document.getElementById('previewContent');
-            if (!content) return;
-
-            // Use ZOOM for scaling to ensure layout reflows and scrollbars are correct
-            content.style.zoom = transformState.scale;
-
-            // Use TRANSFORM only for panning (if needed)
-            // Note: Translate applies visually.
-            content.style.transform = `translate($ {
-                    transformState.pointX
-                }
-
-                px, $ {
-                    transformState.pointY
-                }
-
-                px)`;
-        }
-
-
-        // --- PDF RENDERING (ALL PAGES) ---
-        async function renderAllPages(pdf) {
-            previewContent.innerHTML = ''; // Clear previous
-
-            // Loop through all pages
-            // Limit to first 5 or so for performance if large PDF? 
-            // Chrome renders all but lazily. For now render all.
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-
-                const viewport = page.getViewport({
-                    scale: 1.5
-                }); // Good quality base
-
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                // Styles handled by CSS (see #previewContent canvas)
-                canvas.className = 'preview-page-canvas'; // Add class if needed, or rely on tag selector
-
-                previewContent.appendChild(canvas);
-
-                const renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                }
-
-                    ;
-
-                await page.render(renderContext).promise;
-            }
-
-            // After render
-            // Use a small timeout to ensure DOM update is complete and modal size is stable
-            setTimeout(() => {
-                fitToScreen('width'); // DEFAULT TO WIDTH for readability
-            }
-
-                , 100);
-
-            const info = document.getElementById('pageIndicator');
-
-            if (info) info.innerText = `$ {
-            pdf.numPages
-        }
-
-        Pages`;
-
-            // Update badge
-            const badge = document.getElementById('pageIndicator');
-            const docPages = pdf.numPages;
-
-            if (badge) badge.innerText = `$ {
-            docPages
-        }
-
-        $ {
-            docPages===1 ? 'page': 'pages'
-        }
-
-        `;
-            if (badge) badge.dataset.total = docPages; // Store for calculation
-        }
-
         // --- THEME ---
         function toggleTheme() {
             const html = document.documentElement;
@@ -1606,12 +1454,9 @@
             else if (closeBtn) closeBtn.classList.remove('btn-close-white');
         })();
 
-
-        // --- MAIN APP LOGIC ---
-
-        function adjustCopies(delta) {
-            // Not used
-        }
+        // =============================================================
+        // MAIN APP LOGIC
+        // =============================================================
 
         function loadFiles() {
             fetch(`/fetch/${kioskId}`)
@@ -1758,26 +1603,22 @@
         let totalSheets = 1;
         let previewScale = 1.0;
         let rotation = 0;
-        let currentPreviewMode = 'contain';
+        let pageCards = [];   // wrapper divs for each page
+        let previewMode = 'width'; // 'width' or 'page'
 
-        // Constants for A4 at 96 DPI (approx)
-        const A4_WIDTH = 794;
-        const A4_HEIGHT = 1123;
-
+        // ----------------------------------------------------------------
+        //  OPEN
+        // ----------------------------------------------------------------
         async function openPrintUI(filename) {
-            console.log("Opening Print UI for:", filename);
             currentFile = filename;
             currentSheetIndex = 0;
             rotation = 0;
             previewScale = 1.0;
-            currentPreviewMode = 'contain';
+            pageCards = [];
 
-            // Reset UI
             printModal.show();
-            document.getElementById('sheetPreview').innerHTML = '';
+            clearPreviewBox();
             document.getElementById('sheetIndicator').innerText = 'Loading...';
-
-            // Reset Controls
             resetPrintControls();
 
             const url = `/preview/${kioskId}/${filename}`;
@@ -1785,269 +1626,327 @@
 
             try {
                 if (ext === 'pdf') {
-                    if (typeof pdfjsLib === 'undefined') {
-                        await loadPdfJs();
-                    }
-
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-                    const loadingTask = pdfjsLib.getDocument(url);
-                    pdfDoc = await loadingTask.promise;
-                    console.log("PDF Loaded. Pages:", pdfDoc.numPages);
-
+                    if (typeof pdfjsLib === 'undefined') await loadPdfJs();
+                    pdfjsLib.GlobalWorkerOptions.workerSrc =
+                        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    pdfDoc = await pdfjsLib.getDocument(url).promise;
                     updatePreviewSettings();
                 } else {
-                    // Image Mode
                     pdfDoc = null;
                     renderImagePreview(url);
                 }
                 updatePrice();
             } catch (e) {
-                console.error("Preview Error:", e);
-                document.getElementById('sheetPreview').innerHTML = `<div class="text-danger p-4 text-center">Error loading preview<br><small>${e.message}</small></div>`;
+                console.error('Preview Error:', e);
+                const box = document.getElementById('previewBox');
+                box.innerHTML =
+                    '<div class="text-danger p-4 text-center">Error loading preview<br>' +
+                    '<small>' + e.message + '</small></div>';
             }
         }
 
+        /** Wipe the preview box and build a fresh vertical-stack wrapper. */
+        function clearPreviewBox() {
+            const box = document.getElementById('previewBox');
+            box.innerHTML = '';
+            const wrap = document.createElement('div');
+            wrap.id = 'sheetPreview';
+            wrap.style.cssText =
+                'display:flex; flex-direction:column; align-items:center;' +
+                'gap:16px; padding:16px; width:100%; box-sizing:border-box;';
+            box.appendChild(wrap);
+        }
+
+        // ----------------------------------------------------------------
+        //  SETTINGS / HELPERS
+        // ----------------------------------------------------------------
         function resetPrintControls() {
-            const setVal = (id, v) => { if (document.getElementById(id)) document.getElementById(id).value = v; };
-            const setCheck = (id, v) => { if (document.getElementById(id)) document.getElementById(id).checked = v; };
-
-            setVal('copies', 1);
-            setVal('colorSelect', 'bw');
-            setVal('layoutSelect', 'portrait');
-            setVal('pagesSelect', 'all');
-            if (document.getElementById('customPagesInput')) document.getElementById('customPagesInput').style.display = 'none';
-
-            setVal('paperSize', 'a4');
-            setVal('pps', '1');
-            setVal('margins', 'default');
-            setVal('scale', 'default');
-            setCheck('sides', false);
-            setCheck('headersFooters', false);
-            setCheck('backgroundGraphics', true);
-
-            if (document.getElementById('customScaleGroup')) document.getElementById('customScaleGroup').style.display = 'none';
-
-            // Collapse More Settings
-            const moreSettings = document.getElementById('moreSettings');
-            if (moreSettings && moreSettings.classList.contains('show')) {
-                new bootstrap.Collapse(moreSettings, { hide: true });
-            }
+            const sv = function (id, v) { var el = document.getElementById(id); if (el) el.value = v; };
+            const sc = function (id, v) { var el = document.getElementById(id); if (el) el.checked = v; };
+            sv('copies', 1); sv('colorSelect', 'bw'); sv('layoutSelect', 'portrait');
+            sv('pagesSelect', 'all'); sv('paperSize', 'a4'); sv('pps', '1');
+            sv('margins', 'default'); sv('scale', 'default');
+            sc('sides', false); sc('headersFooters', false); sc('backgroundGraphics', true);
+            var pCount = document.getElementById('finalPageCount'); if (pCount) pCount.innerText = '--';
+            var cpi = document.getElementById('customPagesInput'); if (cpi) cpi.style.display = 'none';
+            var csg = document.getElementById('customScaleGroup'); if (csg) csg.style.display = 'none';
+            var ms = document.getElementById('moreSettings');
+            if (ms && ms.classList.contains('show'))
+                new bootstrap.Collapse(ms, { hide: true });
         }
 
         function loadPdfJs() {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
+            return new Promise(function (ok, err) {
+                var s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+                s.onload = ok; s.onerror = err;
+                document.head.appendChild(s);
             });
         }
 
-        // --- RENDERING LOGIC ---
-
-        function updatePreviewSettings() {
-            if (!pdfDoc) return;
-
-            const pps = parseInt(document.getElementById('pps').value) || 1;
-            const totalPages = pdfDoc.numPages;
-            totalSheets = Math.ceil(totalPages / pps);
-
-            if (currentSheetIndex >= totalSheets) currentSheetIndex = 0; // Reset urgency
-
-            updateSheetIndicator();
-            renderSheet(currentSheetIndex);
-        }
-
-        function updateSheetIndicator() {
-            document.getElementById('sheetIndicator').innerText = `Sheet ${currentSheetIndex + 1} of ${totalSheets}`;
-        }
-
         function getMargins() {
-            const val = document.getElementById('margins').value;
-            switch (val) {
-                case 'none': return 0;
-                case 'min': return 10;
-                case 'custom': return 20;
-                default: return 20;
-            }
+            var v = document.getElementById('margins').value;
+            return v === 'none' ? 0 : v === 'min' ? 10 : 20;
         }
 
         function getContentScale() {
-            const val = document.getElementById('scale').value;
-            if (val === 'custom') {
-                const num = parseFloat(document.getElementById('customScaleInput').value);
-                return (isNaN(num) ? 100 : num) / 100;
+            var v = document.getElementById('scale').value;
+            if (v === 'custom') {
+                var n = parseFloat(document.getElementById('customScaleInput').value);
+                return (isNaN(n) ? 100 : n) / 100;
             }
             return 1.0;
         }
 
-        async function renderSheet(index) {
+        // ----------------------------------------------------------------
+        //  RENDERING — all pages stacked vertically, continuous scroll
+        // ----------------------------------------------------------------
+        function updatePreviewSettings() {
             if (!pdfDoc) return;
-
-            const container = document.getElementById('sheetPreview');
-            container.innerHTML = '';
-
-            // Apply Margins
-            const margin = getMargins();
-            container.style.padding = `${margin}px`;
-            container.style.boxSizing = 'border-box';
-
-            const layout = document.getElementById('layoutSelect').value;
-            const isLandscape = layout === 'landscape';
-
-            // A4 Base Size
-            const width = isLandscape ? A4_HEIGHT : A4_WIDTH;
-            const height = isLandscape ? A4_WIDTH : A4_HEIGHT;
-
-            container.style.width = `${width}px`;
-            container.style.height = `${height}px`;
-
-            // Grid Config
-            const pps = parseInt(document.getElementById('pps').value) || 1;
-            let cols = 1, rows = 1;
-
-            switch (pps) {
-                case 2: isLandscape ? (cols = 2) : (rows = 2); break;
-                case 4: cols = 2; rows = 2; break;
-                case 6: isLandscape ? (cols = 3, rows = 2) : (cols = 2, rows = 3); break;
-                case 9: cols = 3; rows = 3; break;
-                case 16: cols = 4; rows = 4; break;
-                default: cols = 1; rows = 1;
-            }
-
-            container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-            container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-            container.style.gap = '0px';
-
-            const startPage = (index * pps) + 1;
-            const endPage = Math.min(startPage + pps - 1, pdfDoc.numPages);
-
-            for (let i = startPage; i <= endPage; i++) {
-                const pageDiv = document.createElement('div');
-                pageDiv.className = 'sheet-page';
-                pageDiv.style.width = '100%';
-                pageDiv.style.height = '100%';
-                pageDiv.style.display = 'flex';
-                pageDiv.style.justifyContent = 'center';
-                pageDiv.style.alignItems = 'center';
-                pageDiv.style.overflow = 'hidden';
-
-                container.appendChild(pageDiv);
-                renderPageOnCanvas(i, pageDiv);
-            }
-
-            applyPreviewTransform();
+            totalSheets = pdfDoc.numPages;
+            renderAllPages();
         }
 
-        async function renderPageOnCanvas(pageNum, container) {
-            try {
-                const page = await pdfDoc.getPage(pageNum);
-                const viewport = page.getViewport({ scale: 1.5 });
+        async function renderAllPages() {
+            if (!pdfDoc) return;
 
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
+            clearPreviewBox();
+            pageCards = [];
 
-                // Apply Content Scale
-                const contentScale = getContentScale();
-                canvas.style.width = '100%';
-                canvas.style.height = '100%';
-                canvas.style.objectFit = 'contain';
-                canvas.style.transform = `scale(${contentScale})`;
-                canvas.style.transformOrigin = 'center center';
+            var box = document.getElementById('previewBox');
+            var wrap = document.getElementById('sheetPreview');
 
-                container.appendChild(canvas);
+            // Wait frame for layout
+            await new Promise(function (r) { requestAnimationFrame(r); });
 
-                await page.render({
-                    canvasContext: context,
-                    viewport: viewport
-                }).promise;
-            } catch (e) {
-                console.error("Page Render Error", e);
+            // Reduce margins (padding around sheet inside box) as requested
+            var boxPadding = 12;
+            var boxW = Math.max(box.clientWidth - (boxPadding * 2), 200);
+            var boxH = Math.max(box.clientHeight - (boxPadding * 2), 200);
+            var contentScale = getContentScale();
+            var printerMargin = getMargins(); // internal margin inside sheet
+
+            // Paper & Layout Logic
+            // Simulate A4 paper (base)
+            var baseW = 595.28;
+            var baseH = 841.89;
+            var layout = document.getElementById('layoutSelect') ? document.getElementById('layoutSelect').value : 'portrait';
+
+            // If Landscape, swap base dimensions (Sheet rotates)
+            if (layout === 'landscape') {
+                var tmp = baseW; baseW = baseH; baseH = tmp;
             }
+
+            // PPS Logic (Grid)
+            var pps = 1;
+            try { pps = parseInt(document.getElementById('pps').value) || 1; } catch (e) { }
+
+            // Determine Grid Cols x Rows based on PPS and Orientation
+            var cols = 1, rows = 1;
+            if (pps === 2) {
+                // 2-up: if Landscape sheet, usually 2 cols side-by-side.
+                // If Portrait sheet, usually 2 rows (top/bottom).
+                if (layout === 'landscape') { cols = 2; rows = 1; } else { cols = 1; rows = 2; }
+            } else if (pps === 4) {
+                cols = 2; rows = 2;
+            } else if (pps === 6) {
+                cols = (layout === 'landscape') ? 3 : 2;
+                rows = (layout === 'landscape') ? 2 : 3;
+            } else if (pps >= 9) {
+                cols = 3; rows = 3;
+            }
+
+            // Calculate Cell Dimensions (available space for each page on the sheet)
+            var cellW = baseW / cols;
+            var cellH = baseH / rows;
+
+            // Determine SHEET Display Scale (Fitting the *Sheet* to the Preview Box)
+            // If 'width' mode: fit width. If 'page' mode: fit height (contain).
+            var sheetScale = 1.0;
+            if (previewMode === 'page') {
+                sheetScale = Math.min(boxW / baseW, boxH / baseH);
+            } else {
+                sheetScale = Math.min(boxW / baseW, 2.5); // Fit Width (capped)
+            }
+            sheetScale *= previewScale; // Apply Zoom
+
+            document.getElementById('sheetIndicator').innerText = 'Rendering...';
+
+            // Iterate chunks of pages (Sheets)
+            for (var i = 1; i <= pdfDoc.numPages; i += pps) {
+
+                // Create Sheet (Wrapper)
+                var sheet = document.createElement('div');
+                sheet.className = 'sheet-wrapper';
+                sheet.style.width = (baseW * sheetScale) + 'px';
+                sheet.style.height = (baseH * sheetScale) + 'px';
+                sheet.style.background = 'white'; // Paper color
+                sheet.style.boxShadow = '0 4px 24px rgba(0,0,0,0.35)';
+                sheet.style.display = 'grid';
+                sheet.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+                sheet.style.gridTemplateRows = 'repeat(' + rows + ', 1fr)';
+                sheet.style.padding = (printerMargin * sheetScale) + 'px'; // Scaled internal margins
+                sheet.style.boxSizing = 'border-box';
+                sheet.style.marginBottom = '20px'; // Gap between sheets
+                // Manual rotation applied on top of layout logic if user requests
+                sheet.style.transformOrigin = 'center center';
+                sheet.style.transition = 'transform 0.25s';
+                sheet.style.transform = 'rotate(' + rotation + 'deg)';
+
+                wrap.appendChild(sheet);
+                pageCards.push(sheet); // Track sheets for scrolling
+
+                // Render Pages into Grid Cells
+                for (var j = 0; j < pps; j++) {
+                    var pageNum = i + j;
+                    if (pageNum > pdfDoc.numPages) break;
+
+                    var cell = document.createElement('div');
+                    cell.style.display = 'flex';
+                    cell.style.alignItems = 'center';
+                    cell.style.justifyContent = 'center';
+                    cell.style.overflow = 'hidden';
+                    sheet.appendChild(cell);
+
+                    // Render Async
+                    (function (pNum, cParams, container) {
+                        pdfDoc.getPage(pNum).then(function (page) {
+                            var vpRaw = page.getViewport({ scale: 1 });
+
+                            // Fit Page into Cell (Contain logic)
+                            // We must scale the PDF page to fit inside (cellW x cellH) * sheetScale
+                            // minus a tiny gap so it doesn't touch edges if full bleed
+                            var availW = (cParams.w * cParams.scale) - 4;
+                            var availH = (cParams.h * cParams.scale) - 4;
+
+                            var scaleX = availW / vpRaw.width;
+                            var scaleY = availH / vpRaw.height;
+                            var pdfScale = Math.min(scaleX, scaleY);
+
+                            var vp = page.getViewport({ scale: pdfScale });
+                            var canvas = document.createElement('canvas');
+                            canvas.width = vp.width;
+                            canvas.height = vp.height;
+                            canvas.style.display = 'block';
+                            container.appendChild(canvas);
+
+                            page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
+                        });
+                    })(pageNum, { w: cellW, h: cellH, scale: sheetScale }, cell);
+                }
+            }
+
+            document.getElementById('sheetIndicator').innerText =
+                'Zoom: ' + Math.round(previewScale * 100) + '%';
         }
 
         function renderImagePreview(url) {
-            const container = document.getElementById('sheetPreview');
-            container.style.width = '100%';
-            container.style.height = '100%';
-            container.style.gridTemplateColumns = '1fr';
-            container.style.gridTemplateRows = '1fr';
+            clearPreviewBox();
+            var wrap = document.getElementById('sheetPreview');
 
-            container.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:contain;">`;
+            var card = document.createElement('div');
+            card.style.background = '#fff';
+            card.style.boxShadow = '0 4px 24px rgba(0,0,0,0.35)';
+            card.style.transformOrigin = 'center center';
+            card.style.transition = 'transform 0.25s';
+            card.style.transform = 'rotate(' + rotation + 'deg)';
 
-            document.getElementById('sheetIndicator').innerText = "1 Image";
+            var img = document.createElement('img');
+            img.src = url;
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.display = 'block';
+            card.appendChild(img);
+            wrap.appendChild(card);
+            pageCards = [card];
+
+            document.getElementById('sheetIndicator').innerText = '1 image';
             totalSheets = 1;
             currentSheetIndex = 0;
-            applyPreviewTransform();
         }
 
-        // --- NAVIGATION & ZOOM ---
-
+        // ----------------------------------------------------------------
+        //  NAVIGATION — scroll to specific page card
+        // ----------------------------------------------------------------
         function prevSheet() {
-            if (currentSheetIndex > 0) {
-                currentSheetIndex--;
-                renderSheet(currentSheetIndex);
-                updateSheetIndicator();
-            }
+            if (currentSheetIndex > 0) { currentSheetIndex--; scrollToPage(currentSheetIndex); }
         }
-
         function nextSheet() {
-            if (currentSheetIndex < totalSheets - 1) {
-                currentSheetIndex++;
-                renderSheet(currentSheetIndex);
-                updateSheetIndicator();
+            if (currentSheetIndex < totalSheets - 1) { currentSheetIndex++; scrollToPage(currentSheetIndex); }
+        }
+        function scrollToPage(idx) {
+            if (pageCards[idx]) {
+                pageCards[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.getElementById('sheetIndicator').innerText =
+                    'Page ' + (idx + 1) + ' of ' + totalSheets;
             }
         }
 
-        function zoomAction(delta) {
-            previewScale += delta;
-            previewScale = Math.max(0.2, Math.min(3.0, previewScale));
-            currentPreviewMode = 'zoom';
-            applyPreviewTransform();
-        }
-
-        function fitToScreen(mode) {
-            currentPreviewMode = mode;
-            previewScale = 1.0;
-            applyPreviewTransform();
-        }
-
+        // ----------------------------------------------------------------
+        //  ROTATION — transforms every page card about its own centre
+        // ----------------------------------------------------------------
         function rotatePreview() {
             rotation = (rotation + 90) % 360;
-            applyPreviewTransform();
+            updatePreviewSettings(); // Re-render to handle scale update if rotation changes aspect ratio logic
         }
 
-        function applyPreviewTransform() {
-            const container = document.getElementById('sheetPreview');
-            const box = document.getElementById('previewBox');
-
-            container.style.transform = `none`;
-            const boxRect = box.getBoundingClientRect();
-
-            const sheetW = container.offsetWidth || A4_WIDTH;
-            const sheetH = container.offsetHeight || A4_HEIGHT;
-
-            let scale = previewScale;
-
-            if (currentPreviewMode === 'contain') {
-                const scaleX = (boxRect.width - 40) / sheetW;
-                const scaleY = (boxRect.height - 40) / sheetH;
-                scale = Math.min(scaleX, scaleY);
-            } else if (currentPreviewMode === 'width') {
-                scale = (boxRect.width - 40) / sheetW;
-            }
-
-            container.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+        // ----------------------------------------------------------------
+        //  FIT / ZOOM — re-render at new scale
+        // ----------------------------------------------------------------
+        function fitPreview() { previewScale = 1.0; previewMode = 'page'; rotation = 0; updatePreviewSettings(); }
+        function fitToWidth() { previewScale = 1.0; previewMode = 'width'; rotation = 0; updatePreviewSettings(); } // 1.0 = full width
+        function fitToScreen() { fitPreview(); }
+        function zoomAction(delta) {
+            previewScale = Math.max(0.3, Math.min(3.0, previewScale + delta));
+            updatePreviewSettings();
         }
+        /** Kept for backward compatibility — no longer used */
+        function applyPreviewTransform() { }
 
-        // --- UPDATE PRICE ---
+
+        // --- UPDATE PRICE & PAGE COUNT ---
         function updatePrice() {
             if (!currentFile) return;
 
+            // 1. Calculate Physical Pages locally for display
+            var numPages = (pdfDoc) ? pdfDoc.numPages : 1;
+            var pagesSelect = document.getElementById('pagesSelect').value;
+
+            if (pagesSelect === 'custom') {
+                var rangeVal = document.getElementById('customPagesInput').value.trim();
+                // Simple parser for ranges like "1-5, 7, 9-10"
+                if (rangeVal) {
+                    try {
+                        var count = 0;
+                        var parts = rangeVal.split(',');
+                        parts.forEach(function (p) {
+                            var range = p.split('-').map(x => parseInt(x.trim()));
+                            if (range.length === 2 && !isNaN(range[0]) && !isNaN(range[1])) {
+                                count += (Math.abs(range[1] - range[0]) + 1);
+                            } else if (range.length === 1 && !isNaN(range[0])) {
+                                count++;
+                            }
+                        });
+                        if (count > 0) numPages = count;
+                    } catch (e) { }
+                }
+            }
+
+            var pps = parseInt(document.getElementById('pps') ? document.getElementById('pps').value : 1) || 1;
+            var logicalSheets = Math.ceil(numPages / pps);
+            var copies = parseInt(document.getElementById('copies').value) || 1;
+
+            var isDuplex = document.getElementById('sides') && document.getElementById('sides').checked;
+
+            // Physical sheets of paper needed
+            // If duplex, 2 logical sheets (front/back) per 1 physical sheet.
+            var physicalSheets = isDuplex ? Math.ceil(logicalSheets / 2) : logicalSheets;
+            var totalPhysical = physicalSheets * copies;
+
+            var pCountEl = document.getElementById('finalPageCount');
+            if (pCountEl) pCountEl.innerText = totalPhysical;
+
+            // 2. Fetch Price from Server
             const params = {
                 kiosk_id: kioskId,
                 filename: currentFile,
@@ -2151,20 +2050,10 @@
         setInterval(checkSession, 3000);
 
         // --- THEME TOGGLE ---
-        // --- THEME TOGGLE ---
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleBtn = document.getElementById('themeToggle');
-
             if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('change', () => {
-                    if (themeToggleBtn.checked) {
-                        document.documentElement.setAttribute('data-bs-theme', 'light');
-                    }
-
-                    else {
-                        document.documentElement.setAttribute('data-bs-theme', 'dark');
-                    }
-                });
+                themeToggleBtn.addEventListener('change', toggleTheme);
             }
         });
 
@@ -2261,27 +2150,15 @@
 
         function updateRule(id, valid) {
             const el = document.getElementById(id);
-
+            const label = el.innerText.trim();
             if (valid) {
                 el.classList.remove('text-muted');
                 el.classList.add('text-success');
-
-                el.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>$ {
-                    el.innerText.trim()
-                }
-
-                `;
-            }
-
-            else {
+                el.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>${label}`;
+            } else {
                 el.classList.add('text-muted');
                 el.classList.remove('text-success');
-
-                el.innerHTML = `<i class="fa-regular fa-circle me-1"></i>$ {
-                    el.innerText.trim()
-                }
-
-                `;
+                el.innerHTML = `<i class="fa-regular fa-circle me-1"></i>${label}`;
             }
         }
 
@@ -2292,34 +2169,22 @@
                 mobile: document.getElementById('regMobile').value,
                 email: document.getElementById('regEmail').value,
                 password: document.getElementById('regPass').value
-            }
-
-                ;
+            };
 
             console.log("Registering...", data);
 
             fetch('/auth/register', {
-
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-
-                ,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-
             }).then(r => r.json()).then(d => {
                 console.log("Registration Response:", d);
-
                 if (d.status === 'success') {
                     alert('Registration Successful! Please Login.');
                     showLogin();
-                }
-
-                else {
+                } else {
                     alert("Error: " + d.message);
                 }
-
             }).catch(err => {
                 console.error("Registration Error:", err);
                 alert("Registration failed. Check console for details.");
@@ -2330,26 +2195,16 @@
             const data = {
                 login_id: document.getElementById('loginId').value,
                 password: document.getElementById('loginPass').value
-            }
-
-                ;
+            };
 
             fetch('/auth/login', {
-
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-
-                ,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-
             }).then(r => r.json()).then(d => {
                 if (d.status === 'success') {
                     window.location.href = d.redirect;
-                }
-
-                else {
+                } else {
                     alert(d.message);
                 }
             });

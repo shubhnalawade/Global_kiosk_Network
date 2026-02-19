@@ -1,64 +1,94 @@
+"""
+run_system.py
+=============
+System launcher for the Global Kiosk Network.
+
+Each service gets its OWN console window (so logs are separated).
+Closing this launcher window OR pressing Ctrl+C will STOP all three services.
+
+Services:
+  - Cloud Server       (port 5000)  cloud_server/app.py
+  - Kiosk Server       (port 5001)  kiosk/app.py
+  - Kiosk Sync Service             kiosk/kiosk_sync.py
+"""
+
 import subprocess
 import sys
 import time
 import os
 
+
 def run_system():
     root_dir = os.path.dirname(os.path.abspath(__file__))
 
-    scripts = [
+    services = [
         {
             "description": "Cloud Server",
             "path": os.path.join(root_dir, "cloud_server", "app.py"),
-            "cwd": os.path.join(root_dir, "cloud_server")
+            "cwd":  os.path.join(root_dir, "cloud_server"),
         },
         {
             "description": "Kiosk Server",
             "path": os.path.join(root_dir, "kiosk", "app.py"),
-            "cwd": os.path.join(root_dir, "kiosk")
+            "cwd":  os.path.join(root_dir, "kiosk"),
         },
         {
             "description": "Kiosk Sync Service",
             "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"),
-            "cwd": os.path.join(root_dir, "kiosk")
+            "cwd":  os.path.join(root_dir, "kiosk"),
         },
     ]
 
     print("### GLOBAL KIOSK NETWORK - SYSTEM RUNNER ###")
-    print(f"Root Directory: {root_dir}")
-    print(f"Python: {sys.executable}")
+    print(f"Root Directory : {root_dir}")
+    print(f"Python         : {sys.executable}")
     print("-" * 50)
 
-    pids = []
+    processes = []
 
-    for script in scripts:
-        print(f"Starting {script['description']}...")
-
-        # CREATE_NEW_CONSOLE opens a new window per service.
-        # We do NOT attach processes to this launcher — they are independent.
+    for svc in services:
+        print(f"Starting {svc['description']}...")
         p = subprocess.Popen(
-            [sys.executable, script["path"]],
-            cwd=script["cwd"],
-            creationflags=subprocess.CREATE_NEW_CONSOLE
+            [sys.executable, svc["path"]],
+            cwd=svc["cwd"],
+            # Each service opens in its own console window for separate logs.
+            # We still hold the process object so we can terminate it later.
+            creationflags=subprocess.CREATE_NEW_CONSOLE,
         )
-        pids.append(p.pid)
-        print(f"  -> {script['description']} started (PID: {p.pid})")
-        time.sleep(1)  # Wait a moment for each service to bind its port
+        processes.append((svc["description"], p))
+        print(f"  -> {svc['description']} started (PID: {p.pid})")
+        time.sleep(1)   # Allow each service a moment to bind its port
 
     print("-" * 50)
-    print("All services launched in separate windows.")
-    print(f"PIDs: {pids}")
-    print("NOTE: Close the individual service windows to stop a specific service.")
-    print("      Do NOT close this window using Ctrl+C (that would terminate children).")
-    print("      You may minimize this window safely.")
+    print("All services running in separate windows.")
+    print(">>> Press Ctrl+C here to STOP all services at once. <<<")
+    print("-" * 50)
 
-    # Keep alive without monitoring — services are independent
-    # Use a simple infinite wait so this window can stay open as reference
+    # -----------------------------------------------------------------------
+    # Wait until Ctrl+C or this window is closed, then kill all children.
+    # -----------------------------------------------------------------------
     try:
         while True:
-            time.sleep(60)
+            time.sleep(1)
     except KeyboardInterrupt:
-        print("\nLauncher closed. Services continue running in their own windows.")
+        pass
+
+    print("\n[STOP] Shutting down all services...")
+
+    for name, p in processes:
+        try:
+            p.terminate()
+            p.wait(timeout=5)
+            print(f"  [OK] {name} stopped (PID: {p.pid})")
+        except Exception as e:
+            print(f"  [WARN] Could not stop {name} cleanly ({e}), forcing kill...")
+            try:
+                p.kill()
+            except Exception:
+                pass
+
+    print("\nAll services stopped. Run 'python run_system.py' to restart.\n")
+
 
 if __name__ == "__main__":
     run_system()
