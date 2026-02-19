@@ -9,16 +9,34 @@ from io import BytesIO
 from PyPDF2 import PdfReader
 
 # ---------------- CONFIG ----------------
-UPLOAD_BASE = "uploads"
+# Use absolute path so the server works correctly from any working directory
+_KIOSK_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_BASE = os.path.join(_KIOSK_DIR, "uploads")
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
-# Point to Cloud Server for valid QR code generation
-CLOUD_SERVER_URL = "http://192.168.1.8:5000" 
+import socket
+
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+# Detect local IP for QR code generation (so phone can reach it)
+LOCAL_IP = get_local_ip()
+CLOUD_SERVER_URL = f"http://{LOCAL_IP}:5000" 
+# CLOUD_SERVER_URL = "http://192.168.1.8:5000" # Old hardcoded
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Required for session management if we used sessions (using simple logic for now)
 
 # ---------------- CONFIG & STORAGE ----------------
-CONFIG_FILE = "kiosk_config.json"
+CONFIG_FILE = os.path.join(_KIOSK_DIR, "kiosk_config.json")
 
 DEFAULT_CONFIG = {
     "owner": None,  # {name, surname, mobile, password, email}
@@ -82,13 +100,18 @@ def auth_logout():
 # ---------------- QR CODE (Points to Cloud) ----------------
 @app.route("/qr/<kiosk_id>")
 def qr_code(kiosk_id):
-    # Generate QR pointing to the GLOBAL Cloud Server upload page
-    url = f"{CLOUD_SERVER_URL}/upload?kiosk_id={kiosk_id}"
-    img = qrcode.make(url)
-    buf = BytesIO()
-    img.save(buf)
-    buf.seek(0)
-    return send_file(buf, mimetype="image/png")
+    try:
+        # Generate QR pointing to the GLOBAL Cloud Server upload page
+        url = f"{CLOUD_SERVER_URL}/upload?kiosk_id={kiosk_id}"
+        print(f"Generating QR for URL: {url}")
+        img = qrcode.make(url)
+        buf = BytesIO()
+        img.save(buf, format="PNG")
+        buf.seek(0)
+        return send_file(buf, mimetype="image/png")
+    except Exception as e:
+        print(f"QR Error: {e}")
+        return str(e), 500
 
 # ---------------- LOCAL FILE MANAGEMENT ----------------
 def get_logical_pages(file_path):

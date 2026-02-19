@@ -4,72 +4,61 @@ import time
 import os
 
 def run_system():
-    # Define the scripts to run and their working directories relative to the root
-    # Using absolute paths for scripts to avoid ambiguity
     root_dir = os.path.dirname(os.path.abspath(__file__))
-    
+
     scripts = [
         {
             "description": "Cloud Server",
-            "path": os.path.join(root_dir, "cloud_server", "app.py"), 
+            "path": os.path.join(root_dir, "cloud_server", "app.py"),
             "cwd": os.path.join(root_dir, "cloud_server")
         },
         {
             "description": "Kiosk Server",
-            "path": os.path.join(root_dir, "kiosk", "app.py"), 
+            "path": os.path.join(root_dir, "kiosk", "app.py"),
             "cwd": os.path.join(root_dir, "kiosk")
         },
         {
             "description": "Kiosk Sync Service",
-            "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"), 
+            "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"),
             "cwd": os.path.join(root_dir, "kiosk")
         },
     ]
 
-    processes = []
-
     print("### GLOBAL KIOSK NETWORK - SYSTEM RUNNER ###")
     print(f"Root Directory: {root_dir}")
-    print(f"Python Executable: {sys.executable}")
+    print(f"Python: {sys.executable}")
     print("-" * 50)
 
+    pids = []
+
+    for script in scripts:
+        print(f"Starting {script['description']}...")
+
+        # CREATE_NEW_CONSOLE opens a new window per service.
+        # We do NOT attach processes to this launcher — they are independent.
+        p = subprocess.Popen(
+            [sys.executable, script["path"]],
+            cwd=script["cwd"],
+            creationflags=subprocess.CREATE_NEW_CONSOLE
+        )
+        pids.append(p.pid)
+        print(f"  -> {script['description']} started (PID: {p.pid})")
+        time.sleep(1)  # Wait a moment for each service to bind its port
+
+    print("-" * 50)
+    print("All services launched in separate windows.")
+    print(f"PIDs: {pids}")
+    print("NOTE: Close the individual service windows to stop a specific service.")
+    print("      Do NOT close this window using Ctrl+C (that would terminate children).")
+    print("      You may minimize this window safely.")
+
+    # Keep alive without monitoring — services are independent
+    # Use a simple infinite wait so this window can stay open as reference
     try:
-        for script in scripts:
-            print(f"Starting {script['description']}...")
-            
-            # Use sys.executable to ensure we use the same Python interpreter
-            p = subprocess.Popen(
-                [sys.executable, script['path']],
-                cwd=script['cwd'],
-                creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
-            )
-            processes.append(p)
-            print(f"Started {script['description']} (PID: {p.pid})")
-
-        print("-" * 50)
-        print("All services are running in separate windows.")
-        print("Press Ctrl+C in this window to stop all services.")
-
         while True:
-            time.sleep(1)
-            # Check if any process has exited
-            all_dead = True
-            for p in processes:
-                if p.poll() is None:
-                    all_dead = False
-                    break
-            if all_dead:
-                print("All services have stopped.")
-                break
-
+            time.sleep(60)
     except KeyboardInterrupt:
-        print("\nStopping all services...")
-    finally:
-        for p in processes:
-            if p.poll() is None:
-                print(f"Terminating process {p.pid}...")
-                p.terminate()
-        print("System terminated.")
+        print("\nLauncher closed. Services continue running in their own windows.")
 
 if __name__ == "__main__":
     run_system()

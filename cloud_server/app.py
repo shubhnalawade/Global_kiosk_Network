@@ -10,7 +10,8 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # ---------------- CONFIG ----------------
-UPLOAD_BASE = "cloud_uploads"
+_CLOUD_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_BASE = os.path.join(_CLOUD_DIR, "cloud_uploads")
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50 MB
 
@@ -48,12 +49,22 @@ def upload():
 
             job_id = str(uuid.uuid4())
             filename = secure_filename(file.filename)
+            
+            # Truncate filename to prevent Windows path length issues
+            if len(filename) > 50:
+                name_part, ext_part = os.path.splitext(filename)
+                filename = name_part[:50] + ext_part
 
-            file.save(os.path.join(kiosk_dir, f"{job_id}_{filename}"))
+            try:
+                save_path = os.path.join(kiosk_dir, f"{job_id}_{filename}")
+                file.save(save_path)
 
-            # Meta file (timestamp)
-            with open(os.path.join(kiosk_dir, f"{job_id}.meta"), "w") as f:
-                f.write(str(time.time()))
+                # Meta file (timestamp)
+                with open(os.path.join(kiosk_dir, f"{job_id}.meta"), "w") as f:
+                    f.write(str(time.time()))
+            except Exception as e:
+                print(f"FAILED TO SAVE FILE: {e}")
+                return f"Server Error: {str(e)}", 500
 
         return "Upload successful. Please go to kiosk."
 

@@ -32,8 +32,10 @@
             --card-bg: rgba(255, 255, 255, 0.05);
             --card-hover: rgba(255, 255, 255, 0.1);
             --card-selected: rgba(99, 102, 241, 0.15);
-            --shadow-color: rgba(0, 0, 0, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.5);
             --qr-bg: white;
+            --preview-bg: #1e1e1e;
+            /* Dark neutral for preview */
         }
 
         [data-bs-theme="light"] {
@@ -47,8 +49,10 @@
             --card-bg: white;
             --card-hover: #f9fafb;
             --card-selected: rgba(99, 102, 241, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.05);
+            --shadow-color: rgba(0, 0, 0, 0.1);
             --qr-bg: white;
+            --preview-bg: #f0f3f8;
+            /* Light neutral like Windows */
         }
 
         body {
@@ -455,37 +459,48 @@
 
         /* --- Preview Container (Canvas/Image) --- */
         #previewBox {
-            cursor: grab;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Start from top, allow scroll */
+            padding: 40px;
+            background: var(--preview-bg);
+            transition: background 0.3s ease;
+            cursor: default;
+            /* We use native scroll now */
             user-select: none;
-            /* Prevent selection */
-        }
-
-        #previewBox:active {
-            cursor: grabbing;
         }
 
         #previewContent {
-            /* We handle transform manually in JS now */
-            transform-origin: 0 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.3s ease;
-            /* Smooth rotation */
+            /* Simple Vertical Stack */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            /* Space between pages */
+            min-width: min-content;
+
+            /* Zoom handles scaling, Transform handles Panning if needed (but native scroll is better) */
+            transform-origin: top center;
+            transition: transform 0.2s ease;
         }
 
-        .landscape-mode {
-            /* Rotate 90deg clockwise */
-            transform-origin: center center;
-            /* Implementation varies based on container size, but simple rotation is a start */
-        }
-
+        /* Paper / Sheet styling */
         #previewContent canvas,
-        #previewContent img {
+        #previewContent img,
+        .preview-page-wrapper {
+            background-color: white;
+            box-shadow: 0 4px 16px var(--shadow-color);
+            /* Floating effect */
+            border-radius: 2px;
+            /* Slight rounding like paper */
             display: block;
             pointer-events: none;
-            /* Drag container, not image */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            max-width: 100%;
+            height: auto;
         }
 
         /* --- Zoom/Page Controls --- */
@@ -506,8 +521,7 @@
         }
 
         /* Panels */
-        .left-panel,
-        .right-panel {
+        .left-panel {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
@@ -515,10 +529,6 @@
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(10px);
-            opacity: 1;
-        }
-
-        .right-panel {
             opacity: 1;
         }
 
@@ -773,6 +783,136 @@
             color: var(--text-main);
             transform: rotate(90deg);
         }
+
+        /* --- MODERN PRINT UI REFINEMENTS --- */
+
+        /* Modal & Layout */
+        .modal-body {
+            background-color: var(--bg-panel);
+        }
+
+        /* Preview Pane Styles */
+        #previewBox {
+            background-image:
+                linear-gradient(45deg, #ccc 25%, transparent 25%),
+                linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ccc 75%),
+                linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: var(--preview-bg);
+            /* Fallback/Blend */
+        }
+
+        [data-bs-theme="dark"] #previewBox {
+            background-image:
+                linear-gradient(45deg, #333 25%, transparent 25%),
+                linear-gradient(-45deg, #333 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #333 75%),
+                linear-gradient(-45deg, transparent 75%, #333 75%);
+        }
+
+        #sheetPreview {
+            display: grid;
+            /* grid-template-columns/rows set via JS for N-up */
+            gap: 1mm;
+            /* Gap between pages on a sheet */
+            padding: 0;
+            margin: 0;
+            /* width/height set via JS based on paper size */
+            transition: transform 0.3s ease, width 0.3s, height 0.3s;
+            transform-origin: center center;
+            background-color: white;
+            /* Box shadow added inline or via class */
+        }
+
+        .sheet-page {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            /* Border for debugging or separation if needed */
+        }
+
+        .sheet-page canvas,
+        .sheet-page img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* OR cover, depending on scale */
+            display: block;
+        }
+
+        /* Right Panel Settings */
+        .settings-scroll-area {
+            scrollbar-width: thin;
+            scrollbar-color: var(--glass-border) transparent;
+        }
+
+        .settings-scroll-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .settings-scroll-area::-webkit-scrollbar-thumb {
+            background-color: var(--glass-border);
+            border-radius: 3px;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+        }
+
+        .form-select-sm,
+        .form-control-sm {
+            border-radius: 6px;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            /* Slight tint */
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+        }
+
+        .form-select-sm:focus,
+        .form-control-sm:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+            color: var(--text-main);
+        }
+
+        .print-sidebar .form-select option {
+            background-color: var(--bg-panel);
+            color: var(--text-main);
+        }
+
+        /* Collapsible Chevron Rotation */
+        .transition-icon {
+            transition: transform 0.3s ease;
+        }
+
+        [aria-expanded="true"] .transition-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Footer */
+        .sidebar-footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 1rem 1.5rem;
+            background: var(--bg-panel);
+        }
+
+        .price-anim {
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .price-update {
+            color: #22c55e !important;
+            /* Green flash */
+            transform: scale(1.1);
+        }
     </style>
 
 </head>
@@ -781,24 +921,20 @@
     <!-- Header -->
     <header class="kiosk-header">
         <div class="d-flex align-items-center gap-3 kiosk-brand">
-            <div class="logo-circle">
-                <i class="fa-solid fa-print"></i>
-            </div>
+            <div class="logo-circle"><i class="fa-solid fa-print"></i></div>
             <div>
                 <h4 class="mb-0 fw-bold">Print Kiosk</h4>
-                <div class="text-white-50 small" id="kioskIdDisplay">ID: {{ kiosk_id }}</div>
             </div>
         </div>
+
         <div class="d-flex gap-2 align-items-center header-controls" style="pointer-events: auto;">
-            <button class="btn btn-outline-light rounded-pill px-4" onclick="toggleLoginModal()">
-                <i class="fa-solid fa-user me-2"></i>Login
-            </button>
-            <div class="form-check form-switch ms-2 d-flex align-items-center gap-2">
-                <i class="fa-solid fa-moon text-white-50"></i>
-                <input class="form-check-input" type="checkbox" id="themeToggle"
-                    style="width: 3em; height: 1.5em; cursor: pointer;">
-                <i class="fa-solid fa-sun text-warning"></i>
-            </div>
+            <div class="text-white-50 me-3 fw-bold small">ID: {{ kiosk_id }}</div><button
+                class="btn btn-outline-light rounded-pill px-4" onclick="toggleLoginModal()"><i
+                    class="fa-solid fa-user me-2"></i>Login </button>
+            <div class="form-check form-switch ms-2 d-flex align-items-center gap-2"><i
+                    class="fa-solid fa-moon text-white-50"></i><input class="form-check-input" type="checkbox"
+                    id="themeToggle" style="width: 3em; height: 1.5em; cursor: pointer;"><i
+                    class="fa-solid fa-sun text-warning"></i></div>
         </div>
     </header>
     <div class="wrapper">
@@ -822,9 +958,13 @@
                     </div>
                 </div>
             </div>
-
             <div id="file-list" class="file-list-container">
                 <!-- Files will be injected here -->
+                <div id="noFilesMessage" class="text-center py-5" style="color: var(--text-muted);">
+                    <i class="fa-solid fa-qrcode fa-3x mb-3 d-block opacity-50"></i>
+                    <p class="mb-1 fw-semibold">No documents yet</p>
+                    <small>Scan the QR code to upload files from your phone</small>
+                </div>
             </div>
             <div class="bottom-bar"><button id="deleteSelectedBtn" class="btn btn-outline-danger rounded-pill px-4"
                     onclick="deleteSelected()"><i class="fa-solid fa-trash me-2"></i>Delete Selected </button>
@@ -845,103 +985,263 @@
                     <h5 class="modal-title"><i class="fa-solid fa-print me-2"></i>Print Settings</h5><button
                         type="button" class="btn-close" id="modalCloseBtn" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-0">
-                    <div class="row g-0 h-100">
-                        <!-- Preview Pane -->
-                        <div class="col-lg-8 d-flex align-items-center justify-content-center p-0 position-relative"
-                            style="background: #2a2a2a; min-height: 500px; overflow: hidden;"
-                            oncontextmenu="return false;">
-                            <!-- Disable Right Click on entire preview pane -->
-                            <!-- Zoom & Page Controls -->
-                            <div class="preview-controls-container">
-                                <div class="preview-controls-bar">
-                                    <!-- Page Count (Only for PDF) -->
-                                    <div class="control-group" id="pageControls" style="display: none;">
-                                        <span class="page-indicator" id="pageIndicator"
-                                            style="padding: 0 10px;">Loading...</span>
-                                    </div>
-                                    <div class="control-divider" id="pageControlsDivider" style="display: none;"></div>
-                                    <!-- Zoom Tools -->
-                                    <div class="control-group"><button class="control-btn" onclick="zoomAction(-0.2)"
-                                            title="Zoom Out"><i class="fa-solid fa-minus"></i></button><button
-                                            class="control-btn" onclick="fitToScreen('contain')"
-                                            title="Fit to Screen"><i class="fa-solid fa-expand"></i></button><button
-                                            class="control-btn" onclick="fitToScreen('width')" title="Fit Width"><i
-                                                class="fa-solid fa-text-width"></i></button><button class="control-btn"
-                                            onclick="zoomAction(0.2)" title="Zoom In"><i
-                                                class="fa-solid fa-plus"></i></button></div>
+                <div class="modal-body p-0" style="flex: 1; overflow: hidden; display: flex;">
+                    <div class="row g-0 h-100 w-100 m-0">
+                        <!-- LEFT PANEL: PREVIEW (Fixed, No Scroll) -->
+                        <div class="col-lg-8 h-100 position-relative d-flex flex-column"
+                            style="background: var(--preview-bg); border-right: 1px solid var(--glass-border);">
+                            <!-- Preview Canvas Container -->
+                            <div id="previewBox" class="flex-grow-1 position-relative"
+                                style="overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                                <!-- The "Sheet" being previewed -->
+                                <div id="sheetPreview"
+                                    style="background: white; box-shadow: 0 5px 25px rgba(0,0,0,0.3); transition: transform 0.3s ease; transform-origin: center center;">
+                                    <!-- Pages will be rendered here via JS -->
                                 </div>
                             </div>
-                            <div id="previewBox" class="w-100 h-100 position-relative overflow-hidden">
-                                <!-- Transform Container -->
-                                <div id="previewContent">
-                                    <!-- Canvas or Img injected here -->
+                            <!-- Page Navigation Controls (Floating at bottom) -->
+                            <div class="d-flex justify-content-center pb-3 pt-2"
+                                style="background: rgba(0,0,0,0.1); backdrop-filter: blur(5px);">
+                                <div class="btn-group shadow-sm bg-dark rounded-pill" role="group">
+                                    <button type="button" class="btn btn-sm btn-dark rounded-pill-start px-3"
+                                        onclick="prevSheet()" title="Previous Sheet"><i
+                                            class="fa-solid fa-chevron-left"></i></button>
+                                    <div
+                                        class="px-3 d-flex align-items-center text-white small fw-bold bg-dark border-start border-end border-secondary">
+                                        <span id="sheetIndicator">Sheet 1 of 1</span>
+                                    </div><button type="button" class="btn btn-sm btn-dark rounded-pill-end px-3"
+                                        onclick="nextSheet()" title="Next Sheet"><i
+                                            class="fa-solid fa-chevron-right"></i></button>
                                 </div>
+                                <div class="ms-3 d-flex align-items-center gap-2"><button type="button"
+                                        class="btn btn-sm btn-dark rounded-circle" onclick="rotatePreview()"
+                                        title="Rotate View"><i class="fa-solid fa-rotate-right"></i></button><button
+                                        type="button" class="btn btn-sm btn-dark rounded-circle" onclick="fitPreview()"
+                                        title="Fit to View"><i class="fa-solid fa-expand"></i></button></div>
                             </div>
                         </div>
-                        <!-- Settings Pane -->
-                        <div class="col-lg-4 p-4 border-start" style="border-color: var(--glass-border) !important;">
-                            <h6 class="text-uppercase fw-bold mb-3 small" style="color: var(--text-muted)">Configuration
-                            </h6>
-                            <div class="mb-3">
-                                <label class="form-label">Orientation</label>
-                                <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="orientation" id="portrait"
-                                        value="portrait" checked onchange="updateStartPreview()">
-                                    <label class="btn btn-outline-secondary" for="portrait"><i
-                                            class="fa-regular fa-file me-2"></i>Portrait</label>
-
-                                    <input type="radio" class="btn-check" name="orientation" id="landscape"
-                                        value="landscape" onchange="updateStartPreview()">
-                                    <label class="btn btn-outline-secondary" for="landscape"><i
-                                            class="fa-regular fa-file me-2 fa-rotate-90"></i>Landscape</label>
+                        <!-- RIGHT PANEL: SETTINGS (Scrollable) -->
+                        <div class="col-lg-4 h-100 d-flex flex-column bg-panel"
+                            style="background: var(--bg-panel); color: var(--text-main);">
+                            <!-- Scrollable Settings List -->
+                            <div class="settings-scroll-area flex-grow-1 p-4" style="overflow-y: auto;">
+                                <!-- DESTINATION -->
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-4"><label
+                                            class="form-label mb-0 fw-bold small text-muted">Destination</label>
+                                    </div>
+                                    <div class="col-8"><select class="form-select form-select-sm" id="destinationSelect"
+                                            disabled>
+                                            <option value="printer1" selected>Canon ImageRunner
+                                                Advance</option>
+                                        </select></div>
+                                </div>
+                                <!-- PAGES -->
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-4"><label
+                                            class="form-label mb-0 fw-bold small text-muted">Pages</label>
+                                    </div>
+                                    <div class="col-8"><select class="form-select form-select-sm" id="pagesSelect"
+                                            onchange="toggleCustomPages()">
+                                            <option value="all">All</option>
+                                            <option value="custom">Custom</option>
+                                        </select><input type="text" class="form-control form-control-sm mt-2"
+                                            id="customPagesInput" placeholder="e.g. 1-5, 8" style="display: none;"
+                                            oninput="updatePrice()">
+                                        <div id="pageError" class="text-danger small mt-1" style="display: none;">
+                                            Invalid page range</div>
+                                    </div>
+                                </div>
+                                <!-- COPIES -->
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-4"><label
+                                            class="form-label mb-0 fw-bold small text-muted">Copies</label>
+                                    </div>
+                                    <div class="col-8"><input type="number" class="form-control form-control-sm"
+                                            id="copies" value="1" min="1" onchange="updatePrice()">
+                                    </div>
+                                </div>
+                                <!-- LAYOUT -->
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-4"><label
+                                            class="form-label mb-0 fw-bold small text-muted">Layout</label>
+                                    </div>
+                                    <div class="col-8"><select class="form-select form-select-sm" id="layoutSelect"
+                                            onchange="updatePreviewSettings()">
+                                            <option value="portrait">Portrait
+                                            </option>
+                                            <option value="landscape">Landscape
+                                            </option>
+                                        </select></div>
+                                </div>
+                                <!-- COLOR -->
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-4"><label
+                                            class="form-label mb-0 fw-bold small text-muted">Color</label>
+                                    </div>
+                                    <div class="col-8"><select class="form-select form-select-sm" id="colorSelect"
+                                            onchange="updatePrice()">
+                                            <option value="bw">Black and white
+                                            </option>
+                                            <option value="color">Color</option>
+                                        </select></div>
+                                </div>
+                                <!-- MORE SETTINGS TOGGLE -->
+                                <div class="mb-2"><button
+                                        class="btn btn-link btn-sm text-decoration-none p-0 d-flex align-items-center gap-2"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#moreSettings"
+                                        aria-expanded="false"><i
+                                            class="fa-solid fa-chevron-right small transition-icon"></i>More
+                                        settings </button></div>
+                                <!-- COLLAPSIBLE SETTINGS -->
+                                <div class="collapse" id="moreSettings">
+                                    <div class="pt-2">
+                                        <!-- Paper Size -->
+                                        <div class="row mb-3 align-items-center">
+                                            <div class="col-4">
+                                                <label class="form-label mb-0 fw-bold small text-muted">Paper
+                                                    size</label>
+                                            </div>
+                                            <div class="col-8">
+                                                <select class="form-select form-select-sm" id="paperSize"
+                                                    onchange="updatePrice()">
+                                                    <option value="a4" selected>
+                                                        A4
+                                                    </option>
+                                                    <option value="a3">
+                                                        A3</option>
+                                                    <option value="letter">
+                                                        Letter
+                                                    </option>
+                                                    <option value="legal">
+                                                        Legal
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Pages per sheet -->
+                                        <div class="row mb-3 align-items-center">
+                                            <div class="col-4">
+                                                <label class="form-label mb-0 fw-bold small text-muted">Pages
+                                                    per
+                                                    sheet</label>
+                                            </div>
+                                            <div class="col-8">
+                                                <select class="form-select form-select-sm" id="pps"
+                                                    onchange="updatePreviewSettings(); updatePrice()">
+                                                    <option value="1">
+                                                        1
+                                                    </option>
+                                                    <option value="2">
+                                                        2
+                                                    </option>
+                                                    <option value="4">
+                                                        4
+                                                    </option>
+                                                    <option value="6">
+                                                        6
+                                                    </option>
+                                                    <option value="9">
+                                                        9
+                                                    </option>
+                                                    <option value="16">
+                                                        16
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Margins -->
+                                        <div class="row mb-3 align-items-center">
+                                            <div class="col-4">
+                                                <label class="form-label mb-0 fw-bold small text-muted">Margins</label>
+                                            </div>
+                                            <div class="col-8">
+                                                <select class="form-select form-select-sm" id="margins"
+                                                    onchange="updatePreviewSettings()">
+                                                    <option value="default">
+                                                        Default
+                                                    </option>
+                                                    <option value="none">
+                                                        None
+                                                    </option>
+                                                    <option value="min">
+                                                        Minimum
+                                                    </option>
+                                                    <option value="custom">
+                                                        Custom
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Scale -->
+                                        <div class="row mb-3 align-items-center">
+                                            <div class="col-4">
+                                                <label class="form-label mb-0 fw-bold small text-muted">Scale</label>
+                                            </div>
+                                            <div class="col-8">
+                                                <select class="form-select form-select-sm" id="scale"
+                                                    onchange="toggleCustomScale()">
+                                                    <option value="default">
+                                                        Default
+                                                    </option>
+                                                    <option value="custom">
+                                                        Custom
+                                                    </option>
+                                                </select>
+                                                <div class="input-group input-group-sm mt-2" id="customScaleGroup"
+                                                    style="display: none;">
+                                                    <input type="number" class="form-control" id="customScaleInput"
+                                                        value="100" min="10" max="200" max="200"
+                                                        oninput="updatePreviewSettings()"
+                                                        onchange="updatePreviewSettings()"><span
+                                                        class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Options -->
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label mb-0 fw-bold small text-muted">Options</label>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="headersFooters"><label class="form-check-label small"
+                                                        for="headersFooters">Headers
+                                                        and
+                                                        footers</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="backgroundGraphics" checked><label
+                                                        class="form-check-label small"
+                                                        for="backgroundGraphics">Background
+                                                        graphics</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="sides"><label
+                                                        class="form-check-label small" for="sides">Print
+                                                        on
+                                                        both
+                                                        sides</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="mb-3"><label class="form-label">Color Mode</label>
-                                <div class="btn-group w-100" role="group"><input type="radio" class="btn-check"
-                                        name="color" id="bw" value="bw" checked onchange="updatePrice()"><label
-                                        class="btn btn-outline-secondary" for="bw">B&W</label><input type="radio"
-                                        class="btn-check" name="color" id="color" value="color"
-                                        onchange="updatePrice()"><label class="btn btn-outline-secondary"
-                                        for="color">Color</label>
+                            <!-- Footer (Price & Actions) -->
+                            <div class="sidebar-footer">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted fw-bold">Total</span><span
+                                        class="h4 mb-0 fw-bold price-anim" id="itemPrice">₹0</span>
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Paper Size</label>
-                                <select class="form-select" id="paperSize" onchange="updatePrice()">
-                                    <option value="A4" selected>A4 (Standard)</option>
-                                    <option value="A3">A3 (Large)</option>
-                                </select>
-                            </div>
-                            <div class="mb-3"><label class="form-label">Copies</label>
-                                <div class="input-group"><button class="btn btn-outline-secondary" type="button"
-                                        onclick="adjustCopies(-1)"><i class="fa-solid fa-minus"></i></button><input
-                                        type="number" class="form-control text-center" id="copies" value="1" min="1"
-                                        readonly><button class="btn btn-outline-secondary" type="button"
-                                        onclick="adjustCopies(1)"><i class="fa-solid fa-plus"></i></button></div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-6"><label class="form-label">Sides</label><select class="form-select"
-                                        id="sides" onchange="updatePrice()">
-                                        <option value="single">Single</option>
-                                        <option value="duplex">Duplex</option>
-                                    </select></div>
-                                <div class="col-6"><label class="form-label">Pages per
-                                        Sheet</label><select class="form-select" id="pps" onchange="updatePrice()">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="4">4</option>
-                                    </select></div>
-                            </div>
-                            <div
-                                class="mt-5 p-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-10">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Item Cost</span><strong class="h4 mb-0 text-primary">₹<span
-                                            id="itemPrice">0</span></strong>
-                                </div><button class="btn btn-primary w-100 mt-2" onclick="partialDone()"><i
-                                        class="fa-solid fa-check me-2"></i>Confirm Settings </button>
+                                <div class="d-flex gap-2 mb-2"><button class="btn btn-outline-secondary w-100"
+                                        data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary w-100"
+                                        onclick="partialDone()">Done</button>
+                                </div><button class="btn btn-lg w-100 text-white fw-bold shadow-sm"
+                                    style="background: #6366f1; border: none;" onclick="partialDone()">Pay &
+                                    Print <i class="fa-solid fa-credit-card ms-2"></i></button>
                             </div>
                         </div>
                     </div>
@@ -949,307 +1249,322 @@
             </div>
         </div>
     </div>
-
     <!-- Login/Register Modal -->
     <div class="login-overlay" id="loginOverlay" onclick="if(event.target === this) toggleLoginModal()">
         <div class="login-card" id="loginCard">
-            <div class="close-login" onclick="toggleLoginModal()">&times;</div>
-
+            <div class="close-login" onclick="toggleLoginModal()">&times;
+            </div>
             <!-- LOGIN FORM -->
             <div id="loginFormSection">
                 <h3 class="login-title">Owner Login</h3>
                 <form onsubmit="event.preventDefault(); handleLogin();" autocomplete="off">
-                    <div class="login-input-group">
-                        <i class="fa-solid fa-user login-icon"></i>
-                        <input type="text" id="loginId" class="login-input" placeholder="Mobile Number" required
-                            autocomplete="off">
+                    <div class="login-input-group"><i class="fa-solid fa-user login-icon"></i><input type="text"
+                            id="loginId" class="login-input" placeholder="Mobile Number" required autocomplete="off">
                     </div>
-                    <div class="login-input-group login-input-wrapper">
-                        <i class="fa-solid fa-lock login-icon"></i>
-                        <input type="password" id="loginPass" class="login-input" placeholder="Password" required
-                            autocomplete="new-password">
-                        <i class="fa-solid fa-eye password-toggle" onclick="togglePass('loginPass', this)"></i>
+                    <div class="login-input-group login-input-wrapper"><i class="fa-solid fa-lock login-icon"></i><input
+                            type="password" id="loginPass" class="login-input" placeholder="Password" required
+                            autocomplete="new-password"><i class="fa-solid fa-eye password-toggle"
+                            onclick="togglePass('loginPass', this)"></i>
                     </div>
-                    <div class="login-actions">
-                        <button type="submit" class="btn-login-blob">Login</button>
-                        <button type="button" class="btn-register-oblic" id="btnShowRegister" onclick="showRegister()"
-                            style="display: none;">
-                            <span>New User? Register</span>
-                        </button>
-                    </div>
+                    <div class="login-actions"><button type="submit" class="btn-login-blob">Login</button><button
+                            type="button" class="btn-register-oblic" id="btnShowRegister" onclick="showRegister()"
+                            style="display: none;"><span>New User? Register</span></button></div>
                 </form>
             </div>
-
             <!-- REGISTER FORM -->
             <div id="registerFormSection" style="display: none;">
                 <h3 class="login-title">Owner Registration</h3>
                 <form onsubmit="event.preventDefault(); handleRegister();" autocomplete="off">
                     <div class="row g-2">
                         <div class="col-6">
-                            <div class="login-input-group mb-2">
-                                <input type="text" id="regName" class="login-input ps-3" placeholder="Name" required
-                                    autocomplete="off">
+                            <div class="login-input-group mb-2"><input type="text" id="regName" class="login-input ps-3"
+                                    placeholder="Name" required autocomplete="off">
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="login-input-group mb-2">
-                                <input type="text" id="regSurname" class="login-input ps-3" placeholder="Surname"
-                                    required autocomplete="off">
-                            </div>
+                            <div class="login-input-group mb-2"><input type="text" id="regSurname"
+                                    class="login-input ps-3" placeholder="Surname" required autocomplete="off"></div>
                         </div>
                     </div>
-                    <div class="login-input-group mb-2">
-                        <i class="fa-solid fa-mobile-screen login-icon"></i>
-                        <input type="tel" id="regMobile" class="login-input" placeholder="Mobile Number (Mandatory)"
+                    <div class="login-input-group mb-2"><i class="fa-solid fa-mobile-screen login-icon"></i><input
+                            type="tel" id="regMobile" class="login-input" placeholder="Mobile Number (Mandatory)"
                             required autocomplete="off">
                     </div>
-                    <div class="login-input-group mb-2">
-                        <i class="fa-solid fa-envelope login-icon"></i>
-                        <input type="email" id="regEmail" class="login-input" placeholder="Email (Optional)"
-                            autocomplete="off">
-                    </div>
-                    <div class="login-input-group mb-2 login-input-wrapper">
-                        <i class="fa-solid fa-lock login-icon"></i>
-                        <input type="password" id="regPass" class="login-input" placeholder="Password"
-                            oninput="validatePassword()" required autocomplete="new-password">
-                        <i class="fa-solid fa-eye password-toggle" onclick="togglePass('regPass', this)"></i>
-                    </div>
-                    <div class="login-input-group mb-3 login-input-wrapper">
-                        <i class="fa-solid fa-lock login-icon"></i>
-                        <input type="password" id="regPassConfirm" class="login-input" placeholder="Confirm Password"
-                            oninput="validatePassword()" required autocomplete="new-password">
-                        <i class="fa-solid fa-eye password-toggle" onclick="togglePass('regPassConfirm', this)"></i>
-                    </div>
-
+                    <div class="login-input-group mb-2"><i class="fa-solid fa-envelope login-icon"></i><input
+                            type="email" id="regEmail" class="login-input" placeholder="Email (Optional)"
+                            autocomplete="off"></div>
+                    <div class="login-input-group mb-2 login-input-wrapper"><i
+                            class="fa-solid fa-lock login-icon"></i><input type="password" id="regPass"
+                            class="login-input" placeholder="Password" oninput="validatePassword()" required
+                            autocomplete="new-password"><i class="fa-solid fa-eye password-toggle"
+                            onclick="togglePass('regPass', this)"></i></div>
+                    <div class="login-input-group mb-3 login-input-wrapper"><i
+                            class="fa-solid fa-lock login-icon"></i><input type="password" id="regPassConfirm"
+                            class="login-input" placeholder="Confirm Password" oninput="validatePassword()" required
+                            autocomplete="new-password"><i class="fa-solid fa-eye password-toggle"
+                            onclick="togglePass('regPassConfirm', this)"></i></div>
                     <!-- Password Rules -->
                     <div class="d-flex justify-content-between mb-3 small" id="passwordRules">
                         <span class="text-muted" id="ruleUpper"><i
-                                class="fa-regular fa-circle me-1"></i>Uppercase</span>
-                        <span class="text-muted" id="ruleLower"><i
-                                class="fa-regular fa-circle me-1"></i>Lowercase</span>
-                        <span class="text-muted" id="ruleSymbol"><i class="fa-regular fa-circle me-1"></i>Symbol</span>
+                                class="fa-regular fa-circle me-1"></i>Uppercase</span><span class="text-muted"
+                            id="ruleLower"><i class="fa-regular fa-circle me-1"></i>Lowercase</span><span
+                            class="text-muted" id="ruleSymbol"><i class="fa-regular fa-circle me-1"></i>Symbol</span>
                     </div>
-
-                    <div class="login-actions mt-0">
-                        <button type="submit" class="btn-login-blob" id="btnRegisterSubmit" disabled>Register
-                            Owner</button>
-                        <button type="button" class="btn btn-link text-white text-decoration-none"
-                            onclick="showLogin()">
-                            Back to Login
-                        </button>
-                    </div>
+                    <div class="login-actions mt-0"><button type="submit" class="btn-login-blob" id="btnRegisterSubmit"
+                            disabled>Register Owner</button><button type="button"
+                            class="btn btn-link text-white text-decoration-none" onclick="showLogin()">Back to Login
+                        </button></div>
                 </form>
             </div>
         </div>
     </div>
-
-
-    <!-- PDF.js (Local) -->
-    <script src="/static/js/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/static/js/pdf.worker.min.js';
-    </script>
-
+    <!-- PDF.js (CDN Used at top) -->
+    <!-- Removed conflicting local script tags -->
     <!-- Bootstrap JS -->
     <!-- Footer -->
-    <div class="footer-copyright">
-        &copy; 2025 Printing Kiosk Network. All rights reserved.
-    </div>
-
+    <div class="footer-copyright">&copy;
+        2025 Printing Kiosk Network. All rights reserved. </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        const kioskId = "{{ kiosk_id }}";
+    <script>const kioskId = "{{ kiosk_id }}";
         let currentFile = null;
         let previousFilesSignature = "";
         let selectedFiles = new Set();
         const printModal = new bootstrap.Modal(document.getElementById('printModal'));
 
-        // --- PREVIEW STATE ---
-        let pdfDoc = null;
-        // Transform State
-        let transformState = {
-            scale: 1,
-            panning: false,
-            pointX: 0,
-            pointY: 0,
-            startX: 0,
-            startY: 0
-        };
+        // --- OLD PREVIEW LOGIC REMOVED --- 
 
-        const ZOOM_SPEED = 0.2;
-        const MIN_ZOOM = 0.2;
-        const MAX_ZOOM = 5.0;
 
-        // --- EVENT LISTENERS FOR PREVIEW ---
-        const previewBox = document.getElementById('previewBox');
-        const previewContent = document.getElementById('previewContent');
+        function calculatePageCount(rangeString, maxPages) {
+            if (!rangeString || rangeString.trim() === "") return 0;
+            const parts = rangeString.split(',').map(p => p.trim());
+            let count = 0;
+            const uniquePages = new Set();
 
-        previewBox.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            transformState.startX = e.clientX - transformState.pointX;
-            transformState.startY = e.clientY - transformState.pointY;
-            transformState.panning = true;
-            previewBox.style.cursor = 'grabbing';
-        });
+            for (const part of parts) {
+                if (part.includes('-')) {
+                    const [start,
+                        end] = part.split('-').map(Number);
 
-        previewBox.addEventListener('mouseup', () => {
-            transformState.panning = false;
-            previewBox.style.cursor = 'grab';
-        });
+                    if (!isNaN(start) && !isNaN(end) && start <= end) {
+                        for (let i = start; i <= end; i++) {
+                            if (i >= 1 && i <= maxPages) uniquePages.add(i);
+                        }
+                    }
+                }
 
-        previewBox.addEventListener('mouseleave', () => {
-            transformState.panning = false;
-            previewBox.style.cursor = 'grab';
-        });
+                else {
+                    const page = Number(part);
 
-        previewBox.addEventListener('mousemove', (e) => {
-            if (!transformState.panning) return;
-            e.preventDefault();
-            transformState.pointX = e.clientX - transformState.startX;
-            transformState.pointY = e.clientY - transformState.startY;
-            updateTransform();
-        });
-
-        // WHEEL: Scroll by default, Zoom if Ctrl pressed
-        previewBox.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            if (e.ctrlKey) {
-                // Zoom
-                const delta = -Math.sign(e.deltaY) * ZOOM_SPEED;
-                zoomAction(delta);
-            } else {
-                // Scroll (Pan Vertical)
-                const scrollSpeed = 1.0;
-                transformState.pointY -= e.deltaY * scrollSpeed;
-                updateTransform();
+                    if (!isNaN(page) && page >= 1 && page <= maxPages) {
+                        uniquePages.add(page);
+                    }
+                }
             }
-        });
 
-        function updateTransform() {
-            previewContent.style.transform = `translate(${transformState.pointX}px, ${transformState.pointY}px) scale(${transformState.scale})`;
-        }
-
-        function resetTransform() {
-            transformState = { scale: 1, panning: false, pointX: 0, pointY: 0, startX: 0, startY: 0 };
-            updateTransform();
-        }
-
-        function zoomAction(delta) {
-            let newScale = transformState.scale + delta;
-            newScale = Math.round(newScale * 100) / 100;
-            if (newScale < MIN_ZOOM) newScale = MIN_ZOOM;
-            if (newScale > MAX_ZOOM) newScale = MAX_ZOOM;
-            transformState.scale = newScale;
-            updateTransform();
+            return uniquePages.size;
         }
 
         function updateStartPreview() {
-            // Called when orientation changes
-            updateOrientationVisuals();
-            fitToScreen('contain');
+            const orientation = document.getElementById('layoutSelect').value;
+            const content = document.getElementById('previewContent');
+
+            // Ensure Flexbox is active (though CSS should handle it, we clear inline grid if any)
+            content.style.display = '';
+            content.style.gridTemplateColumns = '';
+            content.style.gap = '';
+
+            // Handle Orientation (Rotation)
+            const children = Array.from(content.children);
+
+            children.forEach(child => {
+                child.style.transition = "transform 0.3s ease";
+
+                if (orientation === 'landscape') {
+                    // Simple rotation for now
+                    child.style.transform = 'rotate(-90deg)';
+                }
+
+                else {
+                    child.style.transform = 'none';
+                }
+            });
+
+            // Re-calculate fit after a slight delay
+            // We default to 'width' for better readability, or 'contain' if user prefers. 
+            // Stick to previous logic (contain was used in timeout previously).
+            setTimeout(() => fitToScreen('width'), 50);
         }
 
         function updateOrientationVisuals() {
-            const orientation = document.querySelector('input[name="orientation"]:checked').value;
-            const content = document.getElementById('previewContent');
-
-            const children = content.children;
-            for (let i = 0; i < children.length; i++) {
-                const child = children[i];
-                if (orientation === 'landscape') {
-                    child.style.transform = 'rotate(90deg)';
-                    child.style.margin = "50px 0"; // Add spacing to avoid overlap when rotated
-                } else {
-                    child.style.transform = 'none';
-                    child.style.margin = "0 0 20px 0";
-                }
-            }
+            // Merged into updateStartPreview
         }
 
         function fitToScreen(mode) {
-            updateOrientationVisuals(); // Apply rotation before measuring
+            const container = document.getElementById('previewBox');
+            const content = document.getElementById('previewContent');
+            if (!content || !container) return;
 
-            const containerW = previewBox.offsetWidth;
-            const containerH = previewBox.offsetHeight;
-            let contentW, contentH;
+            // 1. Reset Transform/Zoom to get natural size
+            content.style.transition = 'none';
+            content.style.transform = 'none';
+            content.style.zoom = "1";
 
-            // Measure first child (canvas or img)
-            const firstChild = previewContent.firstElementChild;
-            if (!firstChild) return;
+            // Force layout calc
+            void content.offsetWidth;
 
-            if (firstChild.tagName === 'CANVAS') {
-                contentW = firstChild.width;
-                contentH = firstChild.height; // Height of just first page, but width matters for 'width' mode
-            } else if (firstChild.tagName === 'IMG') {
-                contentW = firstChild.naturalWidth || firstChild.width;
-                contentH = firstChild.naturalHeight || firstChild.height;
-            }
+            // 2. Measure
+            const pad = 40; // 20px padding each side
+            const contW = container.clientWidth - pad;
+            const contH = container.clientHeight - pad;
+            const contentW = content.scrollWidth;
+            const contentH = content.scrollHeight;
 
-            if (!contentW || !contentH) {
-                setTimeout(() => fitToScreen(mode), 100);
-                return;
-            }
+            if (contentW === 0 || contentH === 0) return;
 
-            resetTransform();
+            // 3. Calculate Scale
+            console.log(`fitToScreen: Container $ {
+                    contW
+                }
 
-            let scale = 1;
-            const padding = 40;
+                x$ {
+                    contH
+                }
+
+                , Content $ {
+                    contentW
+                }
+
+                x$ {
+                    contentH
+                }
+
+                `);
+            const scaleX = contW / contentW;
+            const scaleY = contH / contentH;
+
+            let scale;
 
             if (mode === 'width') {
-                scale = (containerW - padding) / contentW;
-                // Don't cap max zoom for fit width if content is tiny, but reasonable limit
-                if (scale > MAX_ZOOM) scale = MAX_ZOOM;
-            } else if (mode === 'contain') {
-                const scaleW = (containerW - padding) / contentW;
-                const scaleH = (containerH - padding) / contentH;
-                scale = Math.min(scaleW, scaleH);
+                scale = scaleX;
             }
 
+            else {
+                // contain
+                scale = Math.min(scaleX, scaleY);
+            }
+
+            console.log(`fitToScreen: Mode $ {
+                    mode
+                }
+
+                , RawScale $ {
+                    scale
+                }
+
+                `);
+
+            // Clamp scale
+            if (scale > 2) scale = 2; // Allow zoom up to 2x
+            if (scale < 0.1) scale = 0.1;
+
+            // 4. Update State
             transformState.scale = scale;
 
-            // Center Horizontally
-            transformState.pointX = (containerW - contentW * scale) / 2;
+            // Panning reset
+            transformState.pointX = 0;
+            transformState.pointY = 0;
+            transformState.startX = 0;
+            transformState.startY = 0;
 
-            // Align Top with small padding
-            transformState.pointY = 20;
-
+            // 5. Apply
+            content.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             updateTransform();
         }
+
+        function updateTransform() {
+            const content = document.getElementById('previewContent');
+            if (!content) return;
+
+            // Use ZOOM for scaling to ensure layout reflows and scrollbars are correct
+            content.style.zoom = transformState.scale;
+
+            // Use TRANSFORM only for panning (if needed)
+            // Note: Translate applies visually.
+            content.style.transform = `translate($ {
+                    transformState.pointX
+                }
+
+                px, $ {
+                    transformState.pointY
+                }
+
+                px)`;
+        }
+
 
         // --- PDF RENDERING (ALL PAGES) ---
         async function renderAllPages(pdf) {
             previewContent.innerHTML = ''; // Clear previous
 
             // Loop through all pages
+            // Limit to first 5 or so for performance if large PDF? 
+            // Chrome renders all but lazily. For now render all.
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
 
-                // Use consistent scale
-                const viewport = page.getViewport({ scale: 2.0 });
+                const viewport = page.getViewport({
+                    scale: 1.5
+                }); // Good quality base
 
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
-                canvas.style.display = "block";
-                canvas.style.marginBottom = "20px"; // Spacing between pages
-                canvas.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+                // Styles handled by CSS (see #previewContent canvas)
+                canvas.className = 'preview-page-canvas'; // Add class if needed, or rely on tag selector
 
                 previewContent.appendChild(canvas);
 
                 const renderContext = {
                     canvasContext: ctx,
                     viewport: viewport
-                };
+                }
+
+                    ;
 
                 await page.render(renderContext).promise;
             }
-            // Fit Width after rendering at least the first one (or all)
-            fitToScreen('width');
+
+            // After render
+            // Use a small timeout to ensure DOM update is complete and modal size is stable
+            setTimeout(() => {
+                fitToScreen('width'); // DEFAULT TO WIDTH for readability
+            }
+
+                , 100);
 
             const info = document.getElementById('pageIndicator');
-            if (info) info.innerText = `${pdf.numPages} Pages`;
+
+            if (info) info.innerText = `$ {
+            pdf.numPages
+        }
+
+        Pages`;
+
+            // Update badge
+            const badge = document.getElementById('pageIndicator');
+            const docPages = pdf.numPages;
+
+            if (badge) badge.innerText = `$ {
+            docPages
+        }
+
+        $ {
+            docPages===1 ? 'page': 'pages'
+        }
+
+        `;
+            if (badge) badge.dataset.total = docPages; // Store for calculation
         }
 
         // --- THEME ---
@@ -1261,6 +1576,7 @@
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
             const closeBtn = document.getElementById('modalCloseBtn');
+
             if (closeBtn) {
                 newTheme === 'light' ? closeBtn.classList.remove('btn-close-white') : closeBtn.classList.add('btn-close-white');
             }
@@ -1269,10 +1585,13 @@
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
             if (!icon) return;
+
             if (theme === 'dark') {
                 icon.classList.remove('fa-sun');
                 icon.classList.add('fa-moon');
-            } else {
+            }
+
+            else {
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
             }
@@ -1291,11 +1610,7 @@
         // --- MAIN APP LOGIC ---
 
         function adjustCopies(delta) {
-            const input = document.getElementById('copies');
-            let val = parseInt(input.value) + delta;
-            if (val < 1) val = 1;
-            input.value = val;
-            updatePrice();
+            // Not used
         }
 
         function loadFiles() {
@@ -1303,7 +1618,7 @@
                 .then(r => r.json())
                 .then(files => {
                     const list = document.getElementById("file-list");
-                    const noFilesMsg = document.getElementById("noFilesMessage"); // Assuming this exists or will be added
+                    const noFilesMsg = document.getElementById("noFilesMessage");
 
                     updateQueueVisibility(files.length > 0);
 
@@ -1315,46 +1630,51 @@
                         if (!newFileNames.has(name)) selectedFiles.delete(name);
                     });
                     updateSelectionUI();
-
                     previousFilesSignature = newSignature;
 
                     if (files.length === 0) {
-                        list.innerHTML = ``;
-                        if (noFilesMsg) noFilesMsg.style.display = "block";
+                        list.innerHTML = '';
+                        if (noFilesMsg) noFilesMsg.style.display = 'block';
                         return;
                     }
-                    if (noFilesMsg) noFilesMsg.style.display = "none";
 
-                    let newHTML = "";
+                    if (noFilesMsg) noFilesMsg.style.display = 'none';
+
+                    let newHTML = '';
                     files.forEach((f, index) => {
                         const ext = f.name.split('.').pop().toLowerCase();
                         const isPdf = ext === 'pdf';
                         const iconClass = isPdf ? 'pdf' : 'img';
                         const icon = isPdf ? 'fa-file-pdf' : 'fa-file-image';
-                        const priceBadge = f.price ? `<span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 rounded-pill">₹${f.price}</span>` : '<span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary border-opacity-25 rounded-pill">Needs Setup</span>';
                         const isSelected = selectedFiles.has(f.name);
 
+                        const priceBadge = f.price
+                            ? `<span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 rounded-pill">₹${f.price}</span>`
+                            : '<span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary border-opacity-25 rounded-pill">Needs Setup</span>';
+
                         newHTML += `
-                        <div class="file-card animate-in ${isSelected ? 'selected' : ''}" onclick="openPrintUI('${f.name}')" style="animation-delay: ${index * 0.05}s">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); toggleSelection(event, '${f.name}', 'checkbox')">
-                            </div>
-                            <div class="file-icon ${iconClass}">
-                                <i class="fa-regular ${icon}"></i>
-                            </div>
-                            <div class="file-info">
-                                <div class="file-name">${f.name}</div>
-                                <div class="file-meta">${priceBadge}</div>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button class="action-btn delete" onclick="event.stopPropagation(); deleteFile('${f.name}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>`;
+                            <div class="file-card animate-in ${isSelected ? 'selected' : ''}" onclick="openPrintUI('${f.name}')" style="animation-delay: ${index * 0.05}s">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" ${isSelected ? 'checked' : ''}
+                                        onclick="event.stopPropagation(); toggleSelection(event, '${f.name}', 'checkbox')">
+                                </div>
+                                <div class="file-icon ${iconClass}"><i class="fa-regular ${icon}"></i></div>
+                                <div class="file-info">
+                                    <div class="file-name">${f.name}</div>
+                                    <div class="file-meta">${priceBadge}</div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="action-btn delete" onclick="event.stopPropagation(); deleteFile('${f.name}')" title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>`;
                     });
 
                     list.innerHTML = newHTML;
                     document.getElementById('selectAllBox').checked = (files.length > 0 && selectedFiles.size === files.length);
-                });
+                })
+                .catch(err => console.error('loadFiles error:', err));
         }
 
         function toggleSelection(event, filename, source) {
@@ -1400,136 +1720,393 @@
                 delBtn.classList.add('show');
                 delBtn.innerHTML = `<i class="fa-solid fa-trash me-2"></i>Delete (${selectedFiles.size})`;
             } else {
+                delBtn.classList.remove('show');
             }
         }
 
         async function deleteSelected() {
             if (!confirm(`Delete ${selectedFiles.size} selected files?`)) return;
             const filesToDelete = Array.from(selectedFiles);
-
             try {
                 const promises = filesToDelete.map(async name => {
                     const response = await fetch(`/delete/${kioskId}/${name}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status} for file: ${name}`);
-                    }
-                    const jsonResponse = await response.json();
-                    if (jsonResponse.status !== 'success') { // Assuming the backend returns { status: 'success' } on success
-                        throw new Error(`API error: ${jsonResponse.message || 'Unknown error'} for file: ${name}`);
-                    }
-                    return jsonResponse;
+                    if (!response.ok) throw new Error('Err');
+                    return await response.json();
                 });
-
                 await Promise.all(promises);
-
-                // Clear selection locally
                 selectedFiles.clear();
-                // Force reload
                 loadFiles();
                 document.getElementById('selectAllBox').checked = false;
                 updateSelectionUI();
-
             } catch (e) {
-                console.error("Delete failed:", e);
-                alert("Some files could not be deleted. Please check the console for details.");
+                console.error('Delete failed:', e);
+                alert('Some files could not be deleted.');
             }
         }
 
         function deleteFile(filename) {
             if (confirm('Are you sure you want to remove this file?')) {
-                previousFilesSignature = "";
+                previousFilesSignature = '';
                 fetch(`/delete/${kioskId}/${filename}`).then(() => loadFiles());
             }
         }
 
-        function openPrintUI(filename) {
+
+        /* --- PREVIEW & PRINT LOGIC --- */
+        let pdfDoc = null;
+        let currentSheetIndex = 0;
+        let totalSheets = 1;
+        let previewScale = 1.0;
+        let rotation = 0;
+        let currentPreviewMode = 'contain';
+
+        // Constants for A4 at 96 DPI (approx)
+        const A4_WIDTH = 794;
+        const A4_HEIGHT = 1123;
+
+        async function openPrintUI(filename) {
+            console.log("Opening Print UI for:", filename);
             currentFile = filename;
-            const ext = filename.split('.').pop().toLowerCase().trim();
-            const previewUrl = `/preview/${kioskId}/${filename}`;
-            const contentContainer = document.getElementById('previewContent');
+            currentSheetIndex = 0;
+            rotation = 0;
+            previewScale = 1.0;
+            currentPreviewMode = 'contain';
 
             // Reset UI
-            contentContainer.innerHTML = '<div class="text-white">Loading...</div>';
-            document.getElementById('copies').value = 1;
-            document.getElementById('bw').checked = true;
-            document.getElementById('portrait').checked = true; // Reset orientation
-            resetTransform();
-
-            // PDF Mode
-            const pageControls = document.getElementById('pageControls');
-            const pageControlsDivider = document.getElementById('pageControlsDivider');
-
-            if (pageControls) pageControls.style.display = 'flex';
-            if (pageControlsDivider) pageControlsDivider.style.display = 'block';
-
-            if (ext === "pdf") {
-                // PDF Mode
-                pdfjsLib.getDocument(previewUrl).promise.then(function (pdf) {
-                    pdfDoc = pdf;
-                    renderAllPages(pdf);
-                }).catch(function (error) {
-                    console.error('Error loading PDF:', error);
-                    contentContainer.innerHTML = '<div class="text-danger p-3">Error loading PDF</div>';
-                });
-            } else {
-                // Image Mode
-                pdfDoc = null;
-                const img = new Image();
-                img.onload = function () {
-                    fitToScreen('contain');
-                };
-                img.onerror = function () {
-                    contentContainer.innerHTML = '<div class="text-danger p-3">Error loading Image</div>';
-                };
-                img.src = previewUrl;
-                img.alt = "Preview";
-                contentContainer.innerHTML = '';
-                contentContainer.appendChild(img);
-            }
-
             printModal.show();
-            updatePrice();
+            document.getElementById('sheetPreview').innerHTML = '';
+            document.getElementById('sheetIndicator').innerText = 'Loading...';
+
+            // Reset Controls
+            resetPrintControls();
+
+            const url = `/preview/${kioskId}/${filename}`;
+            const ext = filename.split('.').pop().toLowerCase();
+
+            try {
+                if (ext === 'pdf') {
+                    if (typeof pdfjsLib === 'undefined') {
+                        await loadPdfJs();
+                    }
+
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+                    const loadingTask = pdfjsLib.getDocument(url);
+                    pdfDoc = await loadingTask.promise;
+                    console.log("PDF Loaded. Pages:", pdfDoc.numPages);
+
+                    updatePreviewSettings();
+                } else {
+                    // Image Mode
+                    pdfDoc = null;
+                    renderImagePreview(url);
+                }
+                updatePrice();
+            } catch (e) {
+                console.error("Preview Error:", e);
+                document.getElementById('sheetPreview').innerHTML = `<div class="text-danger p-4 text-center">Error loading preview<br><small>${e.message}</small></div>`;
+            }
         }
 
+        function resetPrintControls() {
+            const setVal = (id, v) => { if (document.getElementById(id)) document.getElementById(id).value = v; };
+            const setCheck = (id, v) => { if (document.getElementById(id)) document.getElementById(id).checked = v; };
+
+            setVal('copies', 1);
+            setVal('colorSelect', 'bw');
+            setVal('layoutSelect', 'portrait');
+            setVal('pagesSelect', 'all');
+            if (document.getElementById('customPagesInput')) document.getElementById('customPagesInput').style.display = 'none';
+
+            setVal('paperSize', 'a4');
+            setVal('pps', '1');
+            setVal('margins', 'default');
+            setVal('scale', 'default');
+            setCheck('sides', false);
+            setCheck('headersFooters', false);
+            setCheck('backgroundGraphics', true);
+
+            if (document.getElementById('customScaleGroup')) document.getElementById('customScaleGroup').style.display = 'none';
+
+            // Collapse More Settings
+            const moreSettings = document.getElementById('moreSettings');
+            if (moreSettings && moreSettings.classList.contains('show')) {
+                new bootstrap.Collapse(moreSettings, { hide: true });
+            }
+        }
+
+        function loadPdfJs() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // --- RENDERING LOGIC ---
+
+        function updatePreviewSettings() {
+            if (!pdfDoc) return;
+
+            const pps = parseInt(document.getElementById('pps').value) || 1;
+            const totalPages = pdfDoc.numPages;
+            totalSheets = Math.ceil(totalPages / pps);
+
+            if (currentSheetIndex >= totalSheets) currentSheetIndex = 0; // Reset urgency
+
+            updateSheetIndicator();
+            renderSheet(currentSheetIndex);
+        }
+
+        function updateSheetIndicator() {
+            document.getElementById('sheetIndicator').innerText = `Sheet ${currentSheetIndex + 1} of ${totalSheets}`;
+        }
+
+        function getMargins() {
+            const val = document.getElementById('margins').value;
+            switch (val) {
+                case 'none': return 0;
+                case 'min': return 10;
+                case 'custom': return 20;
+                default: return 20;
+            }
+        }
+
+        function getContentScale() {
+            const val = document.getElementById('scale').value;
+            if (val === 'custom') {
+                const num = parseFloat(document.getElementById('customScaleInput').value);
+                return (isNaN(num) ? 100 : num) / 100;
+            }
+            return 1.0;
+        }
+
+        async function renderSheet(index) {
+            if (!pdfDoc) return;
+
+            const container = document.getElementById('sheetPreview');
+            container.innerHTML = '';
+
+            // Apply Margins
+            const margin = getMargins();
+            container.style.padding = `${margin}px`;
+            container.style.boxSizing = 'border-box';
+
+            const layout = document.getElementById('layoutSelect').value;
+            const isLandscape = layout === 'landscape';
+
+            // A4 Base Size
+            const width = isLandscape ? A4_HEIGHT : A4_WIDTH;
+            const height = isLandscape ? A4_WIDTH : A4_HEIGHT;
+
+            container.style.width = `${width}px`;
+            container.style.height = `${height}px`;
+
+            // Grid Config
+            const pps = parseInt(document.getElementById('pps').value) || 1;
+            let cols = 1, rows = 1;
+
+            switch (pps) {
+                case 2: isLandscape ? (cols = 2) : (rows = 2); break;
+                case 4: cols = 2; rows = 2; break;
+                case 6: isLandscape ? (cols = 3, rows = 2) : (cols = 2, rows = 3); break;
+                case 9: cols = 3; rows = 3; break;
+                case 16: cols = 4; rows = 4; break;
+                default: cols = 1; rows = 1;
+            }
+
+            container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+            container.style.gap = '0px';
+
+            const startPage = (index * pps) + 1;
+            const endPage = Math.min(startPage + pps - 1, pdfDoc.numPages);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'sheet-page';
+                pageDiv.style.width = '100%';
+                pageDiv.style.height = '100%';
+                pageDiv.style.display = 'flex';
+                pageDiv.style.justifyContent = 'center';
+                pageDiv.style.alignItems = 'center';
+                pageDiv.style.overflow = 'hidden';
+
+                container.appendChild(pageDiv);
+                renderPageOnCanvas(i, pageDiv);
+            }
+
+            applyPreviewTransform();
+        }
+
+        async function renderPageOnCanvas(pageNum, container) {
+            try {
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 1.5 });
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // Apply Content Scale
+                const contentScale = getContentScale();
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                canvas.style.objectFit = 'contain';
+                canvas.style.transform = `scale(${contentScale})`;
+                canvas.style.transformOrigin = 'center center';
+
+                container.appendChild(canvas);
+
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+            } catch (e) {
+                console.error("Page Render Error", e);
+            }
+        }
+
+        function renderImagePreview(url) {
+            const container = document.getElementById('sheetPreview');
+            container.style.width = '100%';
+            container.style.height = '100%';
+            container.style.gridTemplateColumns = '1fr';
+            container.style.gridTemplateRows = '1fr';
+
+            container.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:contain;">`;
+
+            document.getElementById('sheetIndicator').innerText = "1 Image";
+            totalSheets = 1;
+            currentSheetIndex = 0;
+            applyPreviewTransform();
+        }
+
+        // --- NAVIGATION & ZOOM ---
+
+        function prevSheet() {
+            if (currentSheetIndex > 0) {
+                currentSheetIndex--;
+                renderSheet(currentSheetIndex);
+                updateSheetIndicator();
+            }
+        }
+
+        function nextSheet() {
+            if (currentSheetIndex < totalSheets - 1) {
+                currentSheetIndex++;
+                renderSheet(currentSheetIndex);
+                updateSheetIndicator();
+            }
+        }
+
+        function zoomAction(delta) {
+            previewScale += delta;
+            previewScale = Math.max(0.2, Math.min(3.0, previewScale));
+            currentPreviewMode = 'zoom';
+            applyPreviewTransform();
+        }
+
+        function fitToScreen(mode) {
+            currentPreviewMode = mode;
+            previewScale = 1.0;
+            applyPreviewTransform();
+        }
+
+        function rotatePreview() {
+            rotation = (rotation + 90) % 360;
+            applyPreviewTransform();
+        }
+
+        function applyPreviewTransform() {
+            const container = document.getElementById('sheetPreview');
+            const box = document.getElementById('previewBox');
+
+            container.style.transform = `none`;
+            const boxRect = box.getBoundingClientRect();
+
+            const sheetW = container.offsetWidth || A4_WIDTH;
+            const sheetH = container.offsetHeight || A4_HEIGHT;
+
+            let scale = previewScale;
+
+            if (currentPreviewMode === 'contain') {
+                const scaleX = (boxRect.width - 40) / sheetW;
+                const scaleY = (boxRect.height - 40) / sheetH;
+                scale = Math.min(scaleX, scaleY);
+            } else if (currentPreviewMode === 'width') {
+                scale = (boxRect.width - 40) / sheetW;
+            }
+
+            container.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+        }
+
+        // --- UPDATE PRICE ---
         function updatePrice() {
             if (!currentFile) return;
-            const colorMode = document.querySelector('input[name="color"]:checked').value;
-            const copies = document.getElementById('copies').value;
-            const pps = document.getElementById('pps').value;
-            // Orientation doesn't change backend price logic usually, but good to send if needed later
-            // const orientation = document.querySelector('input[name="orientation"]:checked').value; 
+
+            const params = {
+                kiosk_id: kioskId,
+                filename: currentFile,
+                color: document.getElementById('colorSelect').value,
+                copies: document.getElementById('copies').value,
+                pages_per_sheet: document.getElementById('pps') ? document.getElementById('pps').value : 1,
+                size: document.getElementById('paperSize') ? document.getElementById('paperSize').value : 'a4',
+                sides: document.getElementById('sides') && document.getElementById('sides').checked ? 'two-sided-long-edge' : 'one-sided'
+            };
+
+            if (document.getElementById('pagesSelect').value === 'custom') {
+                params.pages = document.getElementById('customPagesInput').value;
+            }
 
             fetch("/price", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    kiosk_id: kioskId,
-                    filename: currentFile,
-                    color: colorMode,
-                    copies: copies,
-                    pages_per_sheet: pps,
-                    size: document.getElementById('paperSize').value
-                })
-            })
-                .then(r => r.json())
-                .then(d => {
-                    const priceEl = document.getElementById("itemPrice");
-                    const currentPrice = priceEl.innerText;
-                    const newPrice = d.total_cost;
-                    priceEl.innerText = newPrice;
+                body: JSON.stringify(params)
+            }).then(r => r.json()).then(d => {
+                const priceEl = document.getElementById("itemPrice");
+                const newPrice = d.total_cost;
+                const oldPrice = priceEl.innerText;
 
-                    if (currentPrice !== newPrice.toString()) {
-                        priceEl.classList.remove("price-anim");
-                        void priceEl.offsetWidth;
-                        priceEl.classList.add("price-anim");
-                    }
-                });
+                priceEl.innerText = newPrice;
+
+                if (oldPrice !== newPrice) {
+                    priceEl.classList.remove("price-anim");
+                    void priceEl.offsetWidth;
+                    priceEl.classList.add("price-anim");
+                    priceEl.classList.add("price-update");
+                    setTimeout(() => priceEl.classList.remove("price-update"), 500);
+                }
+            }).catch(console.error);
+        }
+
+        function toggleCustomPages() {
+            const val = document.getElementById('pagesSelect').value;
+            document.getElementById('customPagesInput').style.display = val === 'custom' ? 'block' : 'none';
+            updatePrice();
+        }
+
+        function toggleCustomScale() {
+            const val = document.getElementById('scale').value;
+            document.getElementById('customScaleGroup').style.display = val === 'custom' ? 'flex' : 'none';
+            updatePreviewSettings();
         }
 
         function partialDone() {
-            const colorMode = document.querySelector('input[name="color"]:checked').value;
+            const colorMode = document.getElementById('colorSelect').value;
             const copies = document.getElementById('copies').value;
             const pps = document.getElementById('pps').value;
+            const pagesSelect = document.getElementById('pagesSelect').value;
+            const sidesEl = document.getElementById('sides');
+            const sidesVal = sidesEl && sidesEl.checked ? 'two-sided-long-edge' : 'one-sided';
+            let pages = "all";
+
+            if (pagesSelect === 'custom') {
+                pages = document.getElementById('customPagesInput').value;
+            }
 
             fetch(`/settings/${kioskId}/${currentFile}`, {
                 method: "POST",
@@ -1537,8 +2114,8 @@
                 body: JSON.stringify({
                     color: colorMode,
                     copies: copies,
-                    pages: "all",
-                    sides: document.getElementById('sides').value,
+                    pages: pages,
+                    sides: sidesVal,
                     pages_per_sheet: pps,
                     size: document.getElementById('paperSize').value
                 })
@@ -1551,22 +2128,22 @@
         }
 
         function checkSession() {
-            fetch(`/session/${kioskId}`)
-                .then(r => r.json())
-                .then(d => {
-                    const btn = document.getElementById("proceedBtn");
-                    const totalDisplay = document.getElementById("totalDisplay");
-                    if (d.ready) {
-                        btn.disabled = false;
-                        btn.innerHTML = `Pay & Print <i class="fa-solid fa-print ms-2"></i>`;
-                        totalDisplay.innerText = `₹${d.total}`;
-                        totalDisplay.classList.add('text-primary');
-                        totalDisplay.classList.remove('text-muted');
-                    } else {
-                        btn.disabled = true;
-                        btn.innerHTML = `Verify Settings <i class="fa-solid fa-arrow-right ms-2"></i>`;
-                    }
-                });
+            fetch(`/session/${kioskId}`).then(r => r.json()).then(d => {
+                const btn = document.getElementById("proceedBtn");
+                const totalDisplay = document.getElementById("totalDisplay");
+
+                if (d.ready) {
+                    btn.disabled = false;
+                    btn.innerHTML = `Pay & Print <i class="fa-solid fa-print ms-2"></i>`;
+                    totalDisplay.innerText = `\u20B9${d.total}`;
+                    totalDisplay.classList.add('text-success');
+                    totalDisplay.classList.remove('text-muted');
+                } else {
+                    btn.disabled = true;
+                    btn.innerHTML = `Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i>`;
+                    totalDisplay.classList.remove('text-success');
+                }
+            }).catch(console.error);
         }
 
         loadFiles();
@@ -1577,11 +2154,14 @@
         // --- THEME TOGGLE ---
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleBtn = document.getElementById('themeToggle');
+
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('change', () => {
                     if (themeToggleBtn.checked) {
                         document.documentElement.setAttribute('data-bs-theme', 'light');
-                    } else {
+                    }
+
+                    else {
                         document.documentElement.setAttribute('data-bs-theme', 'dark');
                     }
                 });
@@ -1591,11 +2171,14 @@
         // --- LOGIN / REGISTER LOGIC ---
         function togglePass(inputId, icon) {
             const input = document.getElementById(inputId);
+
             if (input.type === "password") {
                 input.type = "text";
                 icon.classList.remove("fa-eye");
                 icon.classList.add("fa-eye-slash");
-            } else {
+            }
+
+            else {
                 input.type = "password";
                 icon.classList.remove("fa-eye-slash");
                 icon.classList.add("fa-eye");
@@ -1614,21 +2197,23 @@
         }
 
         function checkAuthStatus() {
-            fetch('/auth/status')
-                .then(r => r.json())
-                .then(d => {
-                    const btn = document.getElementById('btnShowRegister');
-                    if (d.registered) {
-                        btn.style.display = 'none';
-                    } else {
-                        btn.style.display = 'block';
-                    }
-                });
+            fetch('/auth/status').then(r => r.json()).then(d => {
+                const btn = document.getElementById('btnShowRegister');
+
+                if (d.registered) {
+                    btn.style.display = 'none';
+                }
+
+                else {
+                    btn.style.display = 'block';
+                }
+            });
         }
 
         function toggleLoginModal() {
             const overlay = document.getElementById('loginOverlay');
             overlay.classList.toggle('active');
+
             // Reset to login view
             if (overlay.classList.contains('active')) {
                 showLogin();
@@ -1641,7 +2226,9 @@
         function updateQueueVisibility(hasFiles) {
             if (hasFiles) {
                 document.body.classList.add('has-files');
-            } else {
+            }
+
+            else {
                 document.body.classList.remove('has-files');
             }
         }
@@ -1662,7 +2249,7 @@
 
             const hasUpper = /[A-Z]/.test(p);
             const hasLower = /[a-z]/.test(p);
-            const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(p);
+            const hasSymbol = /[ !@#$%^&*(), .?":{}|<>]/.test(p);
 
             updateRule('ruleUpper', hasUpper);
             updateRule('ruleLower', hasLower);
@@ -1674,14 +2261,27 @@
 
         function updateRule(id, valid) {
             const el = document.getElementById(id);
+
             if (valid) {
                 el.classList.remove('text-muted');
                 el.classList.add('text-success');
-                el.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>${el.innerText.trim()}`;
-            } else {
+
+                el.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>$ {
+                    el.innerText.trim()
+                }
+
+                `;
+            }
+
+            else {
                 el.classList.add('text-muted');
                 el.classList.remove('text-success');
-                el.innerHTML = `<i class="fa-regular fa-circle me-1"></i>${el.innerText.trim()}`;
+
+                el.innerHTML = `<i class="fa-regular fa-circle me-1"></i>$ {
+                    el.innerText.trim()
+                }
+
+                `;
             }
         }
 
@@ -1692,43 +2292,67 @@
                 mobile: document.getElementById('regMobile').value,
                 email: document.getElementById('regEmail').value,
                 password: document.getElementById('regPass').value
-            };
+            }
+
+                ;
+
+            console.log("Registering...", data);
 
             fetch('/auth/register', {
+
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+                ,
                 body: JSON.stringify(data)
-            })
-                .then(r => r.json())
-                .then(d => {
-                    if (d.status === 'success') {
-                        alert('Registration Successful! Please Login.');
-                        showLogin();
-                    } else {
-                        alert(d.message);
-                    }
-                });
+
+            }).then(r => r.json()).then(d => {
+                console.log("Registration Response:", d);
+
+                if (d.status === 'success') {
+                    alert('Registration Successful! Please Login.');
+                    showLogin();
+                }
+
+                else {
+                    alert("Error: " + d.message);
+                }
+
+            }).catch(err => {
+                console.error("Registration Error:", err);
+                alert("Registration failed. Check console for details.");
+            });
         }
 
         function handleLogin() {
             const data = {
                 login_id: document.getElementById('loginId').value,
                 password: document.getElementById('loginPass').value
-            };
+            }
+
+                ;
 
             fetch('/auth/login', {
+
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+                ,
                 body: JSON.stringify(data)
-            })
-                .then(r => r.json())
-                .then(d => {
-                    if (d.status === 'success') {
-                        window.location.href = d.redirect;
-                    } else {
-                        alert(d.message);
-                    }
-                });
+
+            }).then(r => r.json()).then(d => {
+                if (d.status === 'success') {
+                    window.location.href = d.redirect;
+                }
+
+                else {
+                    alert(d.message);
+                }
+            });
         }
 
         // Init check
