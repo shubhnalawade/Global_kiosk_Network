@@ -1,0 +1,862 @@
+2026-02-19 13:27:08,162 - INFO - Kiosk Sync Service Started
+2026-02-19 13:27:08,163 - INFO - Kiosk ID: TB001
+2026-02-19 13:27:08,163 - INFO - Cloud URL: http://127.0.0.1:5000
+2026-02-19 13:27:08,163 - INFO - Local Dir: uploads\TB001
+2026-02-19 13:27:08,166 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,192 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:08,192 - INFO - Found 8 pending files.
+2026-02-19 13:27:08,192 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:08,194 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,195 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,195 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:08,197 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:08,198 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,201 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,201 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:08,202 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:08,203 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,222 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,222 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:08,223 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:08,223 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,239 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,239 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:08,239 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:08,239 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,254 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,255 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:08,255 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:08,255 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,270 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,270 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:08,270 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:08,271 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,285 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,286 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:08,286 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:08,287 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:08,301 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:08,301 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:11,304 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,309 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:11,310 - INFO - Found 8 pending files.
+2026-02-19 13:27:11,310 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:11,312 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,327 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,329 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:11,329 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:11,329 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,344 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,344 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:11,344 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:11,345 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,361 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,362 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:11,362 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:11,363 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,368 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,368 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:11,368 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:11,369 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,392 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,393 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:11,393 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:11,395 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,409 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,409 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:11,410 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:11,410 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,425 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,426 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:11,426 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:11,428 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:11,439 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:11,441 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:14,444 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,450 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:14,450 - INFO - Found 8 pending files.
+2026-02-19 13:27:14,450 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:14,452 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,455 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,455 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:14,456 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:14,457 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,477 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,477 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:14,479 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:14,479 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,493 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,493 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:14,493 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:14,494 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,495 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,495 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:14,497 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:14,497 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,499 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,499 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:14,499 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:14,500 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,526 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,526 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:14,528 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:14,529 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,555 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,555 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:14,556 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:14,557 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:14,571 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:14,571 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:17,572 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,598 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:17,598 - INFO - Found 8 pending files.
+2026-02-19 13:27:17,599 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:17,600 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,629 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,629 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:17,629 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:17,632 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,658 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,660 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:17,660 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:17,663 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,690 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,690 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:17,690 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:17,693 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,722 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,722 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:17,722 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:17,723 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,738 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,739 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:17,739 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:17,739 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,743 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,743 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:17,744 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:17,746 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,750 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,751 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:17,751 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:17,756 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:17,759 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:17,759 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:20,762 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,791 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:20,792 - INFO - Found 8 pending files.
+2026-02-19 13:27:20,792 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:20,794 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,818 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,819 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:20,819 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:20,820 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,835 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,836 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:20,836 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:20,837 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,850 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,851 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:20,851 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:20,853 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,882 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,883 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:20,883 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:20,885 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,890 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,890 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:20,890 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:20,893 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,897 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,898 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:20,898 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:20,899 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,927 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,927 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:20,927 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:20,929 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:20,943 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:20,944 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:23,946 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:23,949 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:23,951 - INFO - Found 8 pending files.
+2026-02-19 13:27:23,951 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:23,952 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:23,968 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:23,969 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:23,969 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:23,971 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,002 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,002 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:24,002 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:24,004 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,030 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,031 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:24,031 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:24,032 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,034 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,035 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:24,035 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:24,036 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,037 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,037 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:24,037 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:24,039 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,060 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,061 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:24,061 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:24,064 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,077 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,077 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:24,077 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:24,077 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:24,092 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:24,093 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:27,094 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,122 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:27,122 - INFO - Found 8 pending files.
+2026-02-19 13:27:27,122 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:27,123 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,135 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,135 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:27,137 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:27,137 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,152 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,153 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:27,153 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:27,156 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,182 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,183 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:27,183 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:27,185 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,198 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,199 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:27,200 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:27,200 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,215 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,215 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:27,216 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:27,216 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,230 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,230 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:27,230 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:27,231 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,246 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,246 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:27,246 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:27,248 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:27,262 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:27,262 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:30,265 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,289 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:30,289 - INFO - Found 8 pending files.
+2026-02-19 13:27:30,291 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:30,292 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,305 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,305 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:30,306 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:30,306 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,319 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,319 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:30,321 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:30,323 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,350 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,350 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:30,350 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:30,352 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,366 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,367 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:30,367 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:30,368 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,382 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,382 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:30,383 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:30,384 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,396 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,396 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:30,396 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:30,398 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,412 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,412 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:30,413 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:30,413 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:30,427 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:30,427 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:33,429 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,456 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:33,456 - INFO - Found 8 pending files.
+2026-02-19 13:27:33,456 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:33,457 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,471 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,471 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:33,473 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:33,475 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,501 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,501 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:33,502 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:33,504 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,519 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,520 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:33,520 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:33,522 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,549 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,551 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:33,552 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:33,553 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,581 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,582 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:33,582 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:33,583 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,589 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,590 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:33,591 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:33,592 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,597 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,597 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:33,597 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:33,598 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:33,611 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:33,611 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:36,614 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,621 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:36,622 - INFO - Found 8 pending files.
+2026-02-19 13:27:36,622 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:36,624 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,648 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,648 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:36,649 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:36,649 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,652 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,653 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:36,653 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:36,654 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,678 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,679 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:36,679 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:36,680 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,708 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,708 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:36,710 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:36,712 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,740 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,741 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:36,741 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:36,743 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,771 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,772 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:36,772 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:36,773 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,801 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,801 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:36,801 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:36,802 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:36,816 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:36,816 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:39,818 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,824 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:39,824 - INFO - Found 8 pending files.
+2026-02-19 13:27:39,826 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:39,827 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,854 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,854 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:39,855 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:39,856 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,858 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,859 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:39,859 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:39,861 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,886 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,887 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:39,887 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:39,888 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,916 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,916 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:39,918 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:39,919 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,947 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,948 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:39,948 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:39,949 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,963 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,964 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:39,964 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:39,965 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,979 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,979 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:39,981 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:39,982 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:39,985 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:39,985 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:42,988 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,015 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:43,016 - INFO - Found 8 pending files.
+2026-02-19 13:27:43,016 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:43,017 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,030 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,030 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:43,030 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:43,033 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,061 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,061 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:43,061 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:43,062 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,077 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,077 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:43,077 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:43,079 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,093 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,093 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:43,093 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:43,095 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,109 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,109 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:43,109 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:43,110 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,124 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,125 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:43,125 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:43,126 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,140 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,141 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:43,141 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:43,142 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:43,155 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:43,155 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:46,157 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,185 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:46,185 - INFO - Found 8 pending files.
+2026-02-19 13:27:46,186 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:46,187 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,215 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,216 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:46,216 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:46,217 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,230 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,231 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:46,232 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:46,233 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,262 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,263 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:46,263 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:46,265 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,293 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,293 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:46,293 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:46,294 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,309 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,309 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:46,309 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:46,310 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,324 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,324 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:46,324 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:46,325 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,327 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,327 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:46,327 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:46,329 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:46,356 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:46,356 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:49,358 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,373 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:49,374 - INFO - Found 8 pending files.
+2026-02-19 13:27:49,374 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:49,375 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,389 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,389 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:49,389 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:49,392 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,404 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,404 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:49,404 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:49,405 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,419 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,420 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:49,420 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:49,421 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,436 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,438 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:49,438 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:49,441 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,465 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,466 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:49,466 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:49,467 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,482 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,482 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:49,482 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:49,483 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,486 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,486 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:49,486 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:49,487 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:49,491 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:49,491 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:52,493 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,499 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:52,499 - INFO - Found 8 pending files.
+2026-02-19 13:27:52,500 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:52,501 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,504 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,505 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:52,505 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:52,506 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,518 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,518 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:52,518 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:52,519 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,533 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,534 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:52,534 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:52,534 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,537 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,537 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:52,537 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:52,538 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,540 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,540 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:52,540 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:52,540 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,564 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,564 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:52,565 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:52,565 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,580 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,580 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:52,580 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:52,581 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:52,583 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:52,583 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:55,586 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,607 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:55,607 - INFO - Found 8 pending files.
+2026-02-19 13:27:55,608 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:55,610 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,616 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,617 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:55,617 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:55,618 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,620 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,620 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:55,620 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:55,622 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,637 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,637 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:55,637 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:55,638 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,652 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,653 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:55,654 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:55,654 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,668 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,668 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:55,668 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:55,669 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,684 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,684 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:55,685 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:55,685 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,700 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,700 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:55,701 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:55,701 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:55,716 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:55,717 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:58,720 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,739 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:27:58,739 - INFO - Found 8 pending files.
+2026-02-19 13:27:58,740 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:58,742 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,766 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,766 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:58,768 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:58,769 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,782 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,782 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:27:58,783 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:58,785 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,798 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,798 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:58,799 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:58,800 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,827 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,827 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:27:58,827 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:58,829 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,842 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,843 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:27:58,843 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:58,843 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,845 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,846 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:27:58,846 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:58,847 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,849 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,849 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:27:58,849 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:27:58,849 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:27:58,850 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:27:58,852 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:01,854 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,878 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:28:01,878 - INFO - Found 8 pending files.
+2026-02-19 13:28:01,878 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:01,880 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,886 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,886 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:01,886 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:01,887 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,891 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,892 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:01,892 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:01,893 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,908 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,908 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:01,908 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:01,911 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,924 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,925 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:01,925 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:01,926 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,939 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,939 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:01,941 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:01,943 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,955 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,955 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:01,956 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:01,957 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,971 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,972 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:01,972 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:01,973 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:01,986 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:01,987 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:04,989 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,013 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:28:05,013 - INFO - Found 8 pending files.
+2026-02-19 13:28:05,013 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:05,015 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,028 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,028 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:05,028 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:05,029 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,043 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,043 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:05,044 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:05,044 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,058 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,059 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:05,059 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:05,060 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,075 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,076 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:05,076 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:05,077 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,079 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,079 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:05,079 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:05,080 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,106 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,106 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:05,106 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:05,107 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,122 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,122 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:05,123 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:05,123 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:05,137 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:05,137 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:08,140 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,168 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:28:08,168 - INFO - Found 8 pending files.
+2026-02-19 13:28:08,168 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:08,169 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,183 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,184 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:08,184 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:08,185 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,187 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,187 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:08,187 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:08,187 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,190 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,190 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:08,190 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:08,191 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,213 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,213 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:08,213 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:08,215 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,229 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,230 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:08,231 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:08,231 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,245 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,246 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:08,246 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:08,247 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,260 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,260 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:08,260 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:08,261 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:08,263 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:08,264 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:11,267 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,274 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:28:11,275 - INFO - Found 8 pending files.
+2026-02-19 13:28:11,275 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:11,278 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,296 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,297 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:11,297 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:11,300 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,325 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,325 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:11,325 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:11,327 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,341 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,342 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:11,342 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:11,343 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,356 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,357 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:11,357 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:11,358 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,372 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,373 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:11,373 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:11,375 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,387 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,388 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:11,388 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:11,389 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,403 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,404 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:11,404 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:11,405 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:11,419 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:11,419 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:14,421 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,436 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:28:14,436 - INFO - Found 8 pending files.
+2026-02-19 13:28:14,437 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:14,437 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,450 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,451 - ERROR - Download/Save Failed for 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:14,451 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:14,452 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,466 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,467 - ERROR - Download/Save Failed for 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:28:14,467 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:14,468 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,482 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,482 - ERROR - Download/Save Failed for 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:14,483 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:14,484 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,497 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,497 - ERROR - Download/Save Failed for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:28:14,498 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:14,499 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,513 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,513 - ERROR - Download/Save Failed for c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:28:14,513 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:14,515 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,529 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,529 - ERROR - Download/Save Failed for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:28:14,529 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:14,530 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,545 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,545 - ERROR - Download/Save Failed for d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:28:14,545 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:14,547 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:28:14,560 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 404 207
+2026-02-19 13:28:14,560 - ERROR - Download/Save Failed for d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf: 404 Client Error: NOT FOUND for url: http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:28:17,561 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,638 - INFO - Kiosk Sync Service Started
+2026-02-19 13:33:01,638 - INFO - Kiosk ID: TB001
+2026-02-19 13:33:01,638 - INFO - Cloud URL: http://127.0.0.1:5000
+2026-02-19 13:33:01,639 - INFO - Local Dir: uploads\TB001
+2026-02-19 13:33:01,641 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,665 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 1602
+2026-02-19 13:33:01,666 - INFO - Found 8 pending files.
+2026-02-19 13:33:01,666 - INFO - Downloading 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:33:01,666 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,725 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 200 25515046
+2026-02-19 13:33:01,830 - INFO - Saved 0333499a-f758-4652-9340-0aee6868c765_TE_SEMV_DBMS_.pdf
+2026-02-19 13:33:01,832 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,855 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/0333499a-f758-4652-9340-0aee6868c765 HTTP/1.1" 200 150
+2026-02-19 13:33:01,855 - INFO - ACK Success for 0333499a-f758-4652-9340-0aee6868c765
+2026-02-19 13:33:01,857 - INFO - Downloading 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf
+2026-02-19 13:33:01,858 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,881 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revision.pdf HTTP/1.1" 200 4177074
+2026-02-19 13:33:01,901 - INFO - Saved 394f5f77-9691-48b0-b480-cfe00b32e0cd_short_revisio.pdf
+2026-02-19 13:33:01,902 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,930 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/394f5f77-9691-48b0-b480-cfe00b32e0cd HTTP/1.1" 200 146
+2026-02-19 13:33:01,930 - INFO - ACK Success for 394f5f77-9691-48b0-b480-cfe00b32e0cd
+2026-02-19 13:33:01,930 - INFO - Downloading 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:33:01,931 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,935 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 200 1442874
+2026-02-19 13:33:01,945 - INFO - Saved 6494a770-f103-4dcd-8e3c-0be163cb5849_DBMS_ENDSEM_S.pdf
+2026-02-19 13:33:01,947 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:01,979 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/6494a770-f103-4dcd-8e3c-0be163cb5849 HTTP/1.1" 200 152
+2026-02-19 13:33:01,979 - INFO - ACK Success for 6494a770-f103-4dcd-8e3c-0be163cb5849
+2026-02-19 13:33:01,979 - INFO - Downloading 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf from http://127.0.0.1:5000/download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:33:01,980 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,008 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf HTTP/1.1" 200 1980421
+2026-02-19 13:33:02,019 - INFO - Saved 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb_DBMS_6.pdf
+2026-02-19 13:33:02,022 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,039 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb HTTP/1.1" 200 138
+2026-02-19 13:33:02,041 - INFO - ACK Success for 7b568c91-0d6d-4b16-bb8c-cfb7408ae2eb
+2026-02-19 13:33:02,041 - INFO - Downloading c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf from http://127.0.0.1:5000/download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf
+2026-02-19 13:33:02,042 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,068 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_Dcode.pdf HTTP/1.1" 200 25515046
+2026-02-19 13:33:02,208 - INFO - Saved c1f7db08-61e3-47a2-a79d-3954c8b90b68_TE_SEMV_DBMS_.pdf
+2026-02-19 13:33:02,210 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,224 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/c1f7db08-61e3-47a2-a79d-3954c8b90b68 HTTP/1.1" 200 150
+2026-02-19 13:33:02,225 - INFO - ACK Success for c1f7db08-61e3-47a2-a79d-3954c8b90b68
+2026-02-19 13:33:02,225 - INFO - Downloading c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf from http://127.0.0.1:5000/download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf
+2026-02-19 13:33:02,226 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,254 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revision.pdf HTTP/1.1" 200 4177074
+2026-02-19 13:33:02,275 - INFO - Saved c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2_short_revisio.pdf
+2026-02-19 13:33:02,276 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,280 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2 HTTP/1.1" 200 146
+2026-02-19 13:33:02,280 - INFO - ACK Success for c76b4a3f-be9e-4d7c-9202-1eb7a1c317e2
+2026-02-19 13:33:02,280 - INFO - Downloading d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf from http://127.0.0.1:5000/download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:33:02,282 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,299 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf HTTP/1.1" 200 3728774
+2026-02-19 13:33:02,318 - INFO - Saved d53acde5-fc94-457f-9d38-1e692dffd16d_DBMS_5.pdf
+2026-02-19 13:33:02,318 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,322 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/d53acde5-fc94-457f-9d38-1e692dffd16d HTTP/1.1" 200 138
+2026-02-19 13:33:02,322 - INFO - ACK Success for d53acde5-fc94-457f-9d38-1e692dffd16d
+2026-02-19 13:33:02,323 - INFO - Downloading d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf from http://127.0.0.1:5000/download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf
+2026-02-19 13:33:02,324 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,345 - DEBUG - http://127.0.0.1:5000 "GET /download/TB001/d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_SOLUTION.pdf HTTP/1.1" 200 1442874
+2026-02-19 13:33:02,352 - INFO - Saved d961e090-4f70-4614-ac21-67dd749bc335_DBMS_ENDSEM_S.pdf
+2026-02-19 13:33:02,353 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:33:02,376 - DEBUG - http://127.0.0.1:5000 "POST /ack/TB001/d961e090-4f70-4614-ac21-67dd749bc335 HTTP/1.1" 200 152
+2026-02-19 13:33:02,377 - INFO - ACK Success for d961e090-4f70-4614-ac21-67dd749bc335
+2026-02-19 13:48:30,296 - INFO - Kiosk Sync Service Started
+2026-02-19 13:48:30,296 - INFO - Kiosk ID: TB001
+2026-02-19 13:48:30,296 - INFO - Cloud URL: http://127.0.0.1:5000
+2026-02-19 13:48:30,296 - INFO - Local Dir: C:\Users\shubh\Desktop\Wendox\Global_Kiosk_Network\kiosk\uploads\TB001
+2026-02-19 13:48:30,298 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:30,324 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:33,327 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:33,344 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:36,352 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:36,381 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:39,385 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:39,391 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:42,407 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:42,444 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:45,451 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:45,469 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:48,484 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:48,541 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:51,549 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:51,564 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:54,571 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:54,582 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3
+2026-02-19 13:48:57,603 - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2026-02-19 13:48:57,693 - DEBUG - http://127.0.0.1:5000 "GET /fetch/TB001 HTTP/1.1" 200 3

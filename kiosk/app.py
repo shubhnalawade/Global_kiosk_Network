@@ -1,108 +1,178 @@
+"""
+kiosk/app.py
+============
+Kiosk Server — Flask application that runs on the local kiosk machine (port 5001).
+
+Responsibilities:
+  - Serve the kiosk UI (kiosk.html)
+  - Serve the owner dashboard (owner.html)
+  - Generate QR codes pointing to the Cloud Server upload page
+  - List, preview, and delete locally synced files
+  - Calculate and persist per-job print pricing
+  - Handle owner authentication (register, login, update credentials)
+  - Provide session status (total cost, readiness to pay)
+
+Files on disk:
+  uploads/<kiosk_id>/<job_id>_<filename>        — The print document
+  uploads/<kiosk_id>/<job_id>.settings.json     — Chosen print settings
+  uploads/<kiosk_id>/<job_id>.price.json        — Computed price
+  uploads/<kiosk_id>/<job_id>.meta              — Upload timestamp (from cloud)
+"""
+
 print("### KIOSK SERVER STARTED ###")
 
+import os
+import json
+import math
+import socket
+
+import qrcode
+from io import BytesIO
+from PyPDF2 import PdfReader
 from flask import (
     Flask, request, render_template, jsonify, session,
     send_from_directory, send_file, redirect, url_for, make_response
 )
-import os, json, qrcode, math
-from io import BytesIO
-from PyPDF2 import PdfReader
 
-# ---------------- CONFIG ----------------
-UPLOAD_BASE = "uploads"
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+# Anchor all paths to this file's directory so the server works from any CWD.
+_KIOSK_DIR   = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_BASE  = os.path.join(_KIOSK_DIR, "uploads")
+CONFIG_FILE  = os.path.join(_KIOSK_DIR, "kiosk_config.json")
+
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
-# Point to Cloud Server for valid QR code generation
-CLOUD_SERVER_URL = "http://192.168.1.8:5000" 
 
-app = Flask(__name__)
-app.secret_key = "supersecretkey"  # Required for session management if we used sessions (using simple logic for now)
-
-# ---------------- CONFIG & STORAGE ----------------
-CONFIG_FILE = "kiosk_config.json"
-
+# Default pricing (₹ per sheet)
 DEFAULT_CONFIG = {
-    "owner": None,  # {name, surname, mobile, password, email}
+    "owner": None,  # Populated after first registration
     "pricing": {
-        "A4_BW": 2,
+        "A4_BW":    2,
         "A4_Color": 5,
-        "A3_BW": 5,
-        "A3_Color": 10
+        "A3_BW":    4,
+        "A3_Color": 10,
     }
 }
 
-def load_config():
+
+def get_local_ip() -> str:
+    """Detect the machine's LAN IP for QR code generation."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("10.255.255.255", 1))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = "127.0.0.1"
+    finally:
+        s.close()
+    return ip
+
+
+LOCAL_IP         = get_local_ip()
+CLOUD_SERVER_URL = f"http://{LOCAL_IP}:5000"  # Cloud Server must be reachable at this address
+
+app = Flask(__name__)
+app.secret_key = "supersecretkey"  # Used for Flask session (owner login state)
+
+# =============================================================================
+# CONFIG HELPERS
+# =============================================================================
+
+def load_config() -> dict:
+    """Load kiosk_config.json. Returns a fresh DEFAULT_CONFIG copy on error."""
     if not os.path.exists(CONFIG_FILE):
         return DEFAULT_CONFIG.copy()
     try:
-        with open(CONFIG_FILE, 'r') as f:
+        with open(CONFIG_FILE, "r") as f:
             return json.load(f)
-    except:
+    except Exception:
         return DEFAULT_CONFIG.copy()
 
-def save_config(config):
-    with open(CONFIG_FILE, 'w') as f:
+
+def save_config(config: dict) -> None:
+    """Persist the config dictionary to kiosk_config.json."""
+    with open(CONFIG_FILE, "w") as f:
         json.dump(config, f, indent=4)
 
-# ---------------- ROOT (Kiosk UI) ----------------
+
+# =============================================================================
+# KIOSK UI ROUTES
+# =============================================================================
+
 @app.route("/")
 def redirect_home():
-    # Default to a specific kiosk ID or a selection screen
-    # For now, default to TB001
+    """Redirect root to the default kiosk screen."""
     return redirect(url_for("kiosk_home", kiosk_id="TB001"))
+
 
 @app.route("/kiosk/<kiosk_id>")
 def kiosk_home(kiosk_id):
+    """Render the main kiosk UI for the given kiosk ID."""
     os.makedirs(os.path.join(UPLOAD_BASE, kiosk_id), exist_ok=True)
     return render_template("kiosk.html", kiosk_id=kiosk_id)
 
+
 @app.route("/owner/dashboard")
 def owner_dashboard():
-    # Verify session
+    """Render the owner dashboard (requires login session)."""
     if not session.get("logged_in"):
         return redirect(url_for("redirect_home"))
 
     config = load_config()
-    owner = config.get("owner")
+    owner  = config.get("owner")
     if not owner:
-        return redirect(url_for("redirect_home")) 
-    
-    # Render with no-cache headers
+        return redirect(url_for("redirect_home"))
+
     response = make_response(render_template("owner.html", owner=owner))
+    # Prevent browser caching of the dashboard page
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    response.headers["Pragma"]        = "no-cache"
+    response.headers["Expires"]       = "0"
     return response
 
-@app.route("/auth/logout")
-def auth_logout():
-    session.pop("logged_in", None)
-    return redirect(url_for("redirect_home"))
 
+# =============================================================================
+# QR CODE
+# =============================================================================
 
-# ---------------- QR CODE (Points to Cloud) ----------------
 @app.route("/qr/<kiosk_id>")
 def qr_code(kiosk_id):
-    # Generate QR pointing to the GLOBAL Cloud Server upload page
-    url = f"{CLOUD_SERVER_URL}/upload?kiosk_id={kiosk_id}"
-    img = qrcode.make(url)
-    buf = BytesIO()
-    img.save(buf)
-    buf.seek(0)
-    return send_file(buf, mimetype="image/png")
+    """Generate a QR code image pointing to the Cloud Server upload page."""
+    try:
+        url = f"{CLOUD_SERVER_URL}/upload?kiosk_id={kiosk_id}"
+        print(f"[QR] Generating QR for: {url}")
+        img = qrcode.make(url)
+        buf = BytesIO()
+        img.save(buf, format="PNG")
+        buf.seek(0)
+        return send_file(buf, mimetype="image/png")
+    except Exception as e:
+        print(f"[QR] Error: {e}")
+        return str(e), 500
 
-# ---------------- LOCAL FILE MANAGEMENT ----------------
-def get_logical_pages(file_path):
+
+# =============================================================================
+# LOCAL FILE MANAGEMENT
+# =============================================================================
+
+def get_logical_pages(file_path: str) -> int:
+    """Return the number of pages in a document. Images always count as 1."""
     if file_path.lower().endswith((".jpg", ".jpeg", ".png")):
         return 1
     try:
-        reader = PdfReader(file_path)
-        return len(reader.pages)
-    except:
+        return len(PdfReader(file_path).pages)
+    except Exception:
         return 1
+
 
 @app.route("/fetch/<kiosk_id>")
 def fetch_local_files(kiosk_id):
-    # This fetches files from LOCAL disk (synced by kiosk_sync.py)
+    """
+    List documents synced to this kiosk's local upload directory.
+    Each entry includes the filename and its saved price (if settings are done).
+    """
     kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
     files = []
 
@@ -117,259 +187,302 @@ def fetch_local_files(kiosk_id):
         ext = f.rsplit(".", 1)[-1].lower()
         if ext not in ALLOWED_EXTENSIONS:
             continue
-            
+
+        # Every valid document file is named <job_id>_<filename>
         if "_" not in f:
             continue
         job_id = f.split("_", 1)[0]
 
-        price_file = os.path.join(kiosk_dir, f"{job_id}.price.json")
+        # Load price if settings have been saved for this job
         price = None
+        price_file = os.path.join(kiosk_dir, f"{job_id}.price.json")
         if os.path.exists(price_file):
             with open(price_file) as pf:
                 price = json.load(pf).get("price")
 
-        files.append({
-            "name": f,
-            "price": price
-        })
+        files.append({"name": f, "price": price})
 
     return jsonify(files)
 
+
 @app.route("/preview/<kiosk_id>/<filename>")
 def preview_file(kiosk_id, filename):
+    """Serve a document file for inline preview (PDF or image)."""
     directory = os.path.abspath(os.path.join(UPLOAD_BASE, kiosk_id))
     if not os.path.exists(os.path.join(directory, filename)):
         return "File not found", 404
-        
-    response = make_response(
-        send_from_directory(directory, filename)
-    )
-    if filename.lower().endswith('.pdf'):
+
+    response = make_response(send_from_directory(directory, filename))
+    if filename.lower().endswith(".pdf"):
         response.headers["Content-Type"] = "application/pdf"
-    
     response.headers["Content-Disposition"] = "inline"
     return response
 
 
 @app.route("/delete/<kiosk_id>/<filename>")
 def delete_file(kiosk_id, filename):
+    """
+    Delete a document and all its associated metadata files.
+    Deletes: the document, its .meta, .settings.json, and .price.json files.
+    """
     kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
-    job_id = filename.split("_")[0]
-    
-    # We delete locally. 
-    # NOTE: In a full sync system, we might want to tell the cloud to delete too,
-    # or the sync script might re-download it. 
-    # For now, we assume local delete is sufficient for the user session.
-    
-    targets = [filename, f"{job_id}.meta", f"{job_id}.settings.json", f"{job_id}.price.json"]
+    job_id    = filename.split("_")[0]
+
+    targets = [
+        filename,
+        f"{job_id}.meta",
+        f"{job_id}.settings.json",
+        f"{job_id}.price.json",
+    ]
     for t in targets:
         path = os.path.join(kiosk_dir, t)
         if os.path.exists(path):
             os.remove(path)
-            
-    return jsonify({"status": "success", "deleted": targets})
 
     return jsonify({"status": "success", "deleted": targets})
 
-# ---------------- AUTH & REGISTRATION ----------------
+
+# =============================================================================
+# AUTHENTICATION
+# =============================================================================
+
 @app.route("/auth/status")
 def auth_status():
+    """Check whether an owner account has been registered."""
     config = load_config()
     return jsonify({"registered": config.get("owner") is not None})
 
+
 @app.route("/auth/register", methods=["POST"])
 def auth_register():
-    data = request.json
+    """Register the first (and only) owner account for this kiosk."""
+    data   = request.json
     config = load_config()
-    
+
     if config.get("owner"):
         return jsonify({"status": "error", "message": "Owner already registered"}), 403
-        
-    # Basic validation
-    required = ["name", "surname", "mobile", "password"]
-    for field in required:
+
+    # Validate required fields
+    for field in ["name", "surname", "mobile", "password"]:
         if not data.get(field):
-            return jsonify({"status": "error", "message": f"Missing {field}"}), 400
-            
+            return jsonify({"status": "error", "message": f"Missing field: {field}"}), 400
+
     config["owner"] = {
-        "name": data["name"],
-        "surname": data["surname"],
-        "mobile": data["mobile"],
-        "email": data.get("email", ""),
-        "password": data["password"] # In production, HASH THIS!
+        "name":     data["name"],
+        "surname":  data["surname"],
+        "mobile":   data["mobile"],
+        "email":    data.get("email", ""),
+        "password": data["password"],   # TODO: Hash in production!
     }
     save_config(config)
     return jsonify({"status": "success"})
 
+
 @app.route("/auth/login", methods=["POST"])
 def auth_login():
-    data = request.json
+    """Authenticate the owner using mobile number or email + password."""
+    data   = request.json
     config = load_config()
-    owner = config.get("owner")
-    
+    owner  = config.get("owner")
+
     if not owner:
         return jsonify({"status": "error", "message": "No owner registered"}), 404
-        
-    # Check credentials
-    # Allow login via Mobile or Email
-    login_id = data.get("login_id") # Email or Mobile
+
+    login_id = data.get("login_id")  # Can be mobile or email
     password = data.get("password")
-    
-    if (login_id == owner["mobile"] or (owner["email"] and login_id == owner["email"])) and password == owner["password"]:
+
+    mobile_match = login_id == owner["mobile"]
+    email_match  = owner.get("email") and login_id == owner["email"]
+    if (mobile_match or email_match) and password == owner["password"]:
         session["logged_in"] = True
         return jsonify({"status": "success", "redirect": "/owner/dashboard"})
-        
+
     return jsonify({"status": "error", "message": "Invalid credentials"}), 401
 
-def verify_creds(data, config):
+
+@app.route("/auth/logout")
+def auth_logout():
+    """Log the owner out and redirect to the kiosk home."""
+    session.pop("logged_in", None)
+    return redirect(url_for("redirect_home"))
+
+
+def _verify_owner_credentials(data: dict, config: dict) -> bool:
+    """
+    Helper: verify the owner's current mobile + password before credential changes.
+    Returns True if credentials match, False otherwise.
+    """
     owner = config.get("owner")
-    if not owner: return False
-    
-    # Must provide CURRENT mobile and password
-    mobile = data.get("current_mobile")
-    password = data.get("password") # Verification password
-    
-    if mobile == owner["mobile"] and password == owner["password"]:
-        return True
-    return False
+    if not owner:
+        return False
+    return (
+        data.get("current_mobile") == owner["mobile"] and
+        data.get("password")       == owner["password"]
+    )
+
 
 @app.route("/auth/update/mobile", methods=["POST"])
 def auth_update_mobile():
-    data = request.json
+    """Update the owner's mobile number after verifying current credentials."""
+    data   = request.json
     config = load_config()
-    
-    if not verify_creds(data, config):
-        return jsonify({"status": "error", "message": "Invalid Current Mobile or Password"}), 403
-        
+
+    if not _verify_owner_credentials(data, config):
+        return jsonify({"status": "error", "message": "Invalid current mobile or password"}), 403
+
     new_mobile = data.get("new_mobile")
     if not new_mobile:
-        return jsonify({"status": "error", "message": "New Mobile required"}), 400
-        
+        return jsonify({"status": "error", "message": "New mobile number required"}), 400
+
     config["owner"]["mobile"] = new_mobile
     save_config(config)
-    return jsonify({"status": "success", "message": "Mobile Updated"})
+    return jsonify({"status": "success", "message": "Mobile updated"})
+
 
 @app.route("/auth/update/password", methods=["POST"])
 def auth_update_password():
-    data = request.json
+    """Update the owner's password after verifying current credentials."""
+    data   = request.json
     config = load_config()
-    
-    if not verify_creds(data, config):
-        return jsonify({"status": "error", "message": "Invalid Current Mobile or Password"}), 403
-        
+
+    if not _verify_owner_credentials(data, config):
+        return jsonify({"status": "error", "message": "Invalid current mobile or password"}), 403
+
     new_password = data.get("new_password")
     if not new_password:
-        return jsonify({"status": "error", "message": "New Password required"}), 400
-        
+        return jsonify({"status": "error", "message": "New password required"}), 400
+
     config["owner"]["password"] = new_password
     save_config(config)
-    return jsonify({"status": "success", "message": "Password Updated"})
+    return jsonify({"status": "success", "message": "Password updated"})
+
 
 @app.route("/auth/delete", methods=["POST"])
 def auth_delete():
-    data = request.json
+    """Permanently delete the owner account after credential verification."""
+    data   = request.json
     config = load_config()
-    
-    if not verify_creds(data, config):
-        return jsonify({"status": "error", "message": "Verification Failed: Invalid Credentials"}), 403
-        
+
+    if not _verify_owner_credentials(data, config):
+        return jsonify({"status": "error", "message": "Verification failed: invalid credentials"}), 403
+
     config["owner"] = None
     save_config(config)
     return jsonify({"status": "success", "redirect": "/"})
 
 
-# ---------------- PRICING API ----------------
+# =============================================================================
+# PRICING API
+# =============================================================================
+
 @app.route("/api/pricing", methods=["GET", "POST"])
 def api_pricing():
+    """
+    GET  → Return the current pricing table.
+    POST → Merge new pricing values into the config and persist.
+    """
     config = load_config()
     if request.method == "POST":
-        new_pricing = request.json
-        # Merge/Overwrite existing pricing keys
-        current_pricing = config.get("pricing", DEFAULT_CONFIG["pricing"])
-        current_pricing.update(new_pricing)
-        config["pricing"] = current_pricing
+        current = config.get("pricing", DEFAULT_CONFIG["pricing"])
+        current.update(request.json)
+        config["pricing"] = current
         save_config(config)
-        return jsonify({"status": "success", "pricing": current_pricing})
-        
+        return jsonify({"status": "success", "pricing": current})
+
     return jsonify(config.get("pricing", DEFAULT_CONFIG["pricing"]))
 
-# ---------------- PRICING CALCULATION ----------------
+
+# =============================================================================
+# PRICING CALCULATION  &  SETTINGS
+# =============================================================================
+
+def _calculate_price(kiosk_id: str, filename: str, color: str,
+                     copies: int, pps: int, paper_size: str) -> int:
+    """
+    Shared price calculation logic.
+    Formula: ceil(total_pages / pps) * copies * rate_per_sheet
+    """
+    file_path     = os.path.join(UPLOAD_BASE, kiosk_id, filename)
+    logical_pages = get_logical_pages(file_path)
+    sheets        = math.ceil(logical_pages / pps)
+
+    config  = load_config()
+    pricing = config.get("pricing", DEFAULT_CONFIG["pricing"])
+
+    # Key format: "A4_BW" / "A4_Color" / "A3_BW" / "A3_Color"
+    mode_suffix = "BW" if color == "bw" else "Color"
+    price_key   = f"{paper_size.upper()}_{mode_suffix}"
+    rate        = pricing.get(price_key, 2 if color == "bw" else 5)
+
+    return sheets * copies * rate
+
+
 @app.route("/price", methods=["POST"])
 def price_preview():
-    data = request.json
-    kiosk_id = data["kiosk_id"]
-    filename = data["filename"]
-    color = data["color"] # "bw" or "color"
-    copies = int(data["copies"])
-    pps = int(data["pages_per_sheet"])
-    # New: Paper Size
-    paper_size = data.get("size", "A4") # Default A4
-
-    file_path = os.path.join(UPLOAD_BASE, kiosk_id, filename)
-    logical_pages = get_logical_pages(file_path)
-    sheets = math.ceil(logical_pages / pps)
-    
-    # Dynamic Rate Calculation
-    config = load_config()
-    pricing = config.get("pricing", DEFAULT_CONFIG["pricing"])
-    
-    # Construct key: e.g. "A4_BW", "A3_Color"
-    # Ensure keys match config format
-    mode_suffix = "BW" if color == "bw" else "Color"
-    price_key = f"{paper_size}_{mode_suffix}"
-    
-    # Fallback if key missing, though it shouldn't be
-    rate = pricing.get(price_key, 2 if color == "bw" else 5)
-    
-    total_cost = sheets * copies * rate
-
+    """Return a live price estimate for the current print settings."""
+    data       = request.json
+    total_cost = _calculate_price(
+        kiosk_id   = data["kiosk_id"],
+        filename   = data["filename"],
+        color      = data["color"],
+        copies     = int(data["copies"]),
+        pps        = int(data["pages_per_sheet"]),
+        paper_size = data.get("size", "A4"),
+    )
     return jsonify({"total_cost": total_cost})
+
 
 @app.route("/settings/<kiosk_id>/<filename>", methods=["POST"])
 def save_settings(kiosk_id, filename):
+    """
+    Persist the chosen print settings and computed price for a job.
+    Writes:
+      <job_id>.settings.json   — Full settings object
+      <job_id>.price.json      — {"price": <int>}
+    """
     kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
-    job_id = filename.split("_")[0]
-    data = request.json
-    
-    # Calculate price again to be safe
-    color = data["color"]
-    copies = int(data["copies"])
-    pps = int(data["pages_per_sheet"])
-    paper_size = data.get("size", "A4")
-    
-    file_path = os.path.join(kiosk_dir, filename)
-    logical_pages = get_logical_pages(file_path)
-    sheets = math.ceil(logical_pages / pps)
-    
-    # Config-based Rate
-    config = load_config()
-    pricing = config.get("pricing", DEFAULT_CONFIG["pricing"])
-    mode_suffix = "BW" if color == "bw" else "Color"
-    price_key = f"{paper_size}_{mode_suffix}"
-    rate = pricing.get(price_key, 2)
-    
-    price = sheets * copies * rate
+    job_id    = filename.split("_")[0]
+    data      = request.json
 
+    price = _calculate_price(
+        kiosk_id   = kiosk_id,
+        filename   = filename,
+        color      = data["color"],
+        copies     = int(data["copies"]),
+        pps        = int(data["pages_per_sheet"]),
+        paper_size = data.get("size", "A4"),
+    )
+
+    # Save settings blob
     with open(os.path.join(kiosk_dir, f"{job_id}.settings.json"), "w") as f:
         json.dump(data, f)
+
+    # Save computed price
     with open(os.path.join(kiosk_dir, f"{job_id}.price.json"), "w") as f:
         json.dump({"price": price}, f)
 
     return jsonify({"price": price})
 
+
 @app.route("/session/<kiosk_id>")
 def session_status(kiosk_id):
+    """
+    Check if ALL documents in the queue have been configured (settings saved).
+    Returns: {"ready": True, "total": <sum_of_prices>}
+          or {"ready": False}
+    """
     kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
-    total = 0
     if not os.path.exists(kiosk_dir):
         return jsonify({"ready": False})
 
-    # Only count jobs that have a price (settings saved)
+    # Collect unique job IDs from document files
     job_ids = set()
     for f in os.listdir(kiosk_dir):
         if "_" in f and not f.endswith(".meta") and not f.endswith(".json"):
-             job_ids.add(f.split("_")[0])
+            job_ids.add(f.split("_")[0])
 
+    # Every job must have a price file; if any is missing → not ready
+    total = 0
     for jid in job_ids:
         price_file = os.path.join(kiosk_dir, f"{jid}.price.json")
         if not os.path.exists(price_file):
@@ -379,6 +492,11 @@ def session_status(kiosk_id):
 
     return jsonify({"ready": True, "total": total})
 
+
+# =============================================================================
+# ENTRY POINT
+# =============================================================================
+
 if __name__ == "__main__":
-    # Kiosk runs on port 5001 to avoid conflict with cloud server on same machine
+    # Kiosk server runs on port 5001 to avoid conflict with Cloud Server on 5000
     app.run(host="0.0.0.0", port=5001)

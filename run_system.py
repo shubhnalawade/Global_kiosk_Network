@@ -1,75 +1,94 @@
+"""
+run_system.py
+=============
+System launcher for the Global Kiosk Network.
+
+Each service gets its OWN console window (so logs are separated).
+Closing this launcher window OR pressing Ctrl+C will STOP all three services.
+
+Services:
+  - Cloud Server       (port 5000)  cloud_server/app.py
+  - Kiosk Server       (port 5001)  kiosk/app.py
+  - Kiosk Sync Service             kiosk/kiosk_sync.py
+"""
+
 import subprocess
 import sys
 import time
 import os
 
+
 def run_system():
-    # Define the scripts to run and their working directories relative to the root
-    # Using absolute paths for scripts to avoid ambiguity
     root_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    scripts = [
+
+    services = [
         {
             "description": "Cloud Server",
-            "path": os.path.join(root_dir, "cloud_server", "app.py"), 
-            "cwd": os.path.join(root_dir, "cloud_server")
+            "path": os.path.join(root_dir, "cloud_server", "app.py"),
+            "cwd":  os.path.join(root_dir, "cloud_server"),
         },
         {
             "description": "Kiosk Server",
-            "path": os.path.join(root_dir, "kiosk", "app.py"), 
-            "cwd": os.path.join(root_dir, "kiosk")
+            "path": os.path.join(root_dir, "kiosk", "app.py"),
+            "cwd":  os.path.join(root_dir, "kiosk"),
         },
         {
             "description": "Kiosk Sync Service",
-            "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"), 
-            "cwd": os.path.join(root_dir, "kiosk")
+            "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"),
+            "cwd":  os.path.join(root_dir, "kiosk"),
         },
     ]
 
-    processes = []
-
     print("### GLOBAL KIOSK NETWORK - SYSTEM RUNNER ###")
-    print(f"Root Directory: {root_dir}")
-    print(f"Python Executable: {sys.executable}")
+    print(f"Root Directory : {root_dir}")
+    print(f"Python         : {sys.executable}")
     print("-" * 50)
 
+    processes = []
+
+    for svc in services:
+        print(f"Starting {svc['description']}...")
+        p = subprocess.Popen(
+            [sys.executable, svc["path"]],
+            cwd=svc["cwd"],
+            # Each service opens in its own console window for separate logs.
+            # We still hold the process object so we can terminate it later.
+            creationflags=subprocess.CREATE_NEW_CONSOLE,
+        )
+        processes.append((svc["description"], p))
+        print(f"  -> {svc['description']} started (PID: {p.pid})")
+        time.sleep(1)   # Allow each service a moment to bind its port
+
+    print("-" * 50)
+    print("All services running in separate windows.")
+    print(">>> Press Ctrl+C here to STOP all services at once. <<<")
+    print("-" * 50)
+
+    # -----------------------------------------------------------------------
+    # Wait until Ctrl+C or this window is closed, then kill all children.
+    # -----------------------------------------------------------------------
     try:
-        for script in scripts:
-            print(f"Starting {script['description']}...")
-            
-            # Use sys.executable to ensure we use the same Python interpreter
-            p = subprocess.Popen(
-                [sys.executable, script['path']],
-                cwd=script['cwd'],
-                creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == 'win32' else 0
-            )
-            processes.append(p)
-            print(f"Started {script['description']} (PID: {p.pid})")
-
-        print("-" * 50)
-        print("All services are running in separate windows.")
-        print("Press Ctrl+C in this window to stop all services.")
-
         while True:
             time.sleep(1)
-            # Check if any process has exited
-            all_dead = True
-            for p in processes:
-                if p.poll() is None:
-                    all_dead = False
-                    break
-            if all_dead:
-                print("All services have stopped.")
-                break
-
     except KeyboardInterrupt:
-        print("\nStopping all services...")
-    finally:
-        for p in processes:
-            if p.poll() is None:
-                print(f"Terminating process {p.pid}...")
-                p.terminate()
-        print("System terminated.")
+        pass
+
+    print("\n[STOP] Shutting down all services...")
+
+    for name, p in processes:
+        try:
+            p.terminate()
+            p.wait(timeout=5)
+            print(f"  [OK] {name} stopped (PID: {p.pid})")
+        except Exception as e:
+            print(f"  [WARN] Could not stop {name} cleanly ({e}), forcing kill...")
+            try:
+                p.kill()
+            except Exception:
+                pass
+
+    print("\nAll services stopped. Run 'python run_system.py' to restart.\n")
+
 
 if __name__ == "__main__":
     run_system()

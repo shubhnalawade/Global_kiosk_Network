@@ -185,7 +185,7 @@
                 method: "POST",
                 body: formData
             })
-                .then(response => {
+                .then(async response => {
                     if (response.ok) {
                         document.getElementById("uploadForm").style.display = "none";
                         document.getElementById("successMsg").style.display = "block";
@@ -196,14 +196,15 @@
                         document.getElementById("reloadBtn").classList.remove("d-none");
                         document.getElementById("reloadBtn").style.display = "block";
                     } else {
-                        alert("Upload failed. Please try again.");
+                        const errorText = await response.text();
+                        alert("Upload failed: " + errorText);
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert("Error uploading files.");
+                    alert("Network Error: " + err.message);
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 });
