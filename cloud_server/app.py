@@ -175,6 +175,89 @@ def acknowledge_download(kiosk_id, job_id):
 
 
 # =============================================================================
+# KIOSK AGENT API
+# =============================================================================
+
+# Store kiosks in memory (in production, use a database)
+_kiosks = {}
+
+@app.route("/api/kiosks/register", methods=["POST"])
+def register_kiosk():
+    """
+    Register a new kiosk device.
+    POST body:
+    {
+        "name": "Kiosk-01",
+        "location": "Main Lobby",
+        "ip_address": "192.168.1.50",
+        "version": "1.0.0",
+        "metadata": { ... }
+    }
+    Returns:
+    { "id": "<kiosk_id>" }
+    """
+    data = request.get_json()
+    kiosk_id = str(uuid.uuid4())[:8].upper()
+    
+    _kiosks[kiosk_id] = {
+        "id": kiosk_id,
+        "name": data.get("name", "Unknown"),
+        "location": data.get("location", "Unknown"),
+        "ip_address": data.get("ip_address", "0.0.0.0"),
+        "version": data.get("version", "1.0.0"),
+        "metadata": data.get("metadata", {}),
+        "registered_at": time.time(),
+        "last_heartbeat": None,
+        "metrics": {},
+    }
+    
+    print(f"[REGISTER] Kiosk {kiosk_id} registered: {data.get('name')} at {data.get('location')}")
+    return jsonify({"id": kiosk_id}), 201
+
+
+@app.route("/api/kiosks/<kiosk_id>/heartbeat", methods=["POST"])
+def kiosk_heartbeat(kiosk_id):
+    """
+    Receive heartbeat and metrics from a kiosk agent.
+    POST body:
+    {
+        "cpu": 25.5,
+        "memory": 60.2,
+        "disk": 45.8,
+        "uptime": 830635
+    }
+    Returns:
+    { "commands": [ ... ] }
+    """
+    if kiosk_id not in _kiosks:
+        return jsonify({"error": "Kiosk not found"}), 404
+    
+    data = request.get_json()
+    _kiosks[kiosk_id]["last_heartbeat"] = time.time()
+    _kiosks[kiosk_id]["metrics"] = data
+    
+    # Return any pending commands (empty for now)
+    commands = []
+    
+    return jsonify({"commands": commands}), 200
+
+
+@app.route("/api/kiosks/<kiosk_id>/command/<cmd_id>/ack", methods=["PATCH"])
+def acknowledge_command(kiosk_id, cmd_id):
+    """
+    Acknowledge command execution from kiosk agent.
+    """
+    if kiosk_id not in _kiosks:
+        return jsonify({"error": "Kiosk not found"}), 404
+    
+    data = request.get_json()
+    status = data.get("status", "executed")
+    
+    print(f"[COMMAND ACK] Kiosk {kiosk_id} - Command {cmd_id}: {status}")
+    return jsonify({"status": "acknowledged"}), 200
+
+
+# =============================================================================
 # ENTRY POINT
 # =============================================================================
 

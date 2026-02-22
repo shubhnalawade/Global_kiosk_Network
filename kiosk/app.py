@@ -102,8 +102,14 @@ def save_config(config: dict) -> None:
 # =============================================================================
 
 @app.route("/")
+def index():
+    """Landing page with links to both Kiosk and Upload pages."""
+    return render_template("index.html")
+
+
+@app.route("/home")
 def redirect_home():
-    """Redirect root to the default kiosk screen."""
+    """Redirect to the default kiosk screen."""
     return redirect(url_for("kiosk_home", kiosk_id="TB001"))
 
 
