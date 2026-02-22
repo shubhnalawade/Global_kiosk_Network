@@ -4,12 +4,14 @@ run_system.py
 System launcher for the Global Kiosk Network.
 
 Each service gets its OWN console window (so logs are separated).
-Closing this launcher window OR pressing Ctrl+C will STOP all three services.
+Closing this launcher window OR pressing Ctrl+C will STOP all services.
 
 Services:
-  - Cloud Server       (port 5000)  cloud_server/app.py
-  - Kiosk Server       (port 5001)  kiosk/app.py
-  - Kiosk Sync Service             kiosk/kiosk_sync.py
+  - Cloud Server        (port 5000)  cloud_server/app.py
+  - Kiosk 1 Server      (port 5001)  kiosk/app.py
+  - Kiosk 1 Sync Service            kiosk/kiosk_sync.py
+  - Kiosk 2 Server      (port 5002)  kiosk2/app.py
+  - Kiosk 2 Sync Service            kiosk2/kiosk_sync.py
 """
 
 import subprocess
@@ -28,14 +30,24 @@ def run_system():
             "cwd":  os.path.join(root_dir, "cloud_server"),
         },
         {
-            "description": "Kiosk Server",
+            "description": "Kiosk 1 Server",
             "path": os.path.join(root_dir, "kiosk", "app.py"),
             "cwd":  os.path.join(root_dir, "kiosk"),
         },
         {
-            "description": "Kiosk Sync Service",
+            "description": "Kiosk 1 Sync Service",
             "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"),
             "cwd":  os.path.join(root_dir, "kiosk"),
+        },
+        {
+            "description": "Kiosk 2 Server",
+            "path": os.path.join(root_dir, "kiosk2", "app.py"),
+            "cwd":  os.path.join(root_dir, "kiosk2"),
+        },
+        {
+            "description": "Kiosk 2 Sync Service",
+            "path": os.path.join(root_dir, "kiosk2", "kiosk_sync.py"),
+            "cwd":  os.path.join(root_dir, "kiosk2"),
         },
     ]
 
@@ -68,14 +80,15 @@ def run_system():
     print("║   GLOBAL KIOSK NETWORK - SYSTEM ONLINE               ║")
     print("╠════════════════════════════════════════════════════════╣")
     print("║                                                        ║")
-    print("║  🌐 CONTROL CENTER:                                  ║")
-    print("║     http://localhost:5001                            ║")
+    print("║  KIOSK 1 (TB001):                                    ║")
+    print("║  🌐 http://localhost:5001                            ║")
+    print("║  🖨️  http://localhost:5001/kiosk/TB001               ║")
+    print("║  📱 http://localhost:5000/upload?kiosk_id=TB001      ║")
     print("║                                                        ║")
-    print("║  🖨️  KIOSK PAGE:                                      ║")
-    print("║     http://localhost:5001/kiosk/TB001                ║")
-    print("║                                                        ║")
-    print("║  📱 UPLOAD PAGE (Mobile):                            ║")
-    print("║     http://localhost:5000/upload?kiosk_id=TB001      ║")
+    print("║  KIOSK 2 (TB002):                                    ║")
+    print("║  🌐 http://localhost:5002                            ║")
+    print("║  🖨️  http://localhost:5002/kiosk/TB002               ║")
+    print("║  📱 http://localhost:5000/upload?kiosk_id=TB002      ║")
     print("║                                                        ║")
     print("║  ✨ FEATURES:                                         ║")
     print("║     • Upload PDFs and manage queue                   ║")
@@ -83,6 +96,7 @@ def run_system():
     print("║     • Live price calculation                         ║")
     print("║     • PDF preview with zoom & rotate                 ║")
     print("║     • Owner authentication & dashboard               ║")
+    print("║     • Multi-kiosk support with separate sync         ║")
     print("║                                                        ║")
     print("╚════════════════════════════════════════════════════════╝")
     print()

@@ -1,0 +1,15 @@
+{
+    "owner": {
+        "name": "Shubham",
+        "surname": "Nalawade",
+        "mobile": "8766779458",
+        "email": "shubhamnalawade1307@gmail.com",
+        "password": "Shubham@123"
+    },
+    "pricing": {
+        "A4_BW": 2,
+        "A4_Color": 5,
+        "A3_BW": 4,
+        "A3_Color": 10
+    }
+}

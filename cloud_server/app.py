@@ -106,7 +106,7 @@ def upload():
 
         return "Upload successful. Please go to the kiosk."
 
-    return render_template("upload.html")
+    return render_template("upload.html", kiosk_id=kiosk_id)
 
 
 # =============================================================================
