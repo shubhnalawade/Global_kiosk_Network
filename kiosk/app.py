@@ -25,6 +25,8 @@ import os
 import json
 import math
 import socket
+import shutil
+import subprocess
 
 import qrcode
 from io import BytesIO
@@ -53,7 +55,12 @@ DEFAULT_CONFIG = {
         "A4_Color": 5,
         "A3_BW":    4,
         "A3_Color": 10,
-    }
+    },
+    "printer": {
+        "name": "",
+        "backend": "sumatra" if os.name == "nt" else "cups",
+        "sumatra_path": "",
+    },
 }
 
 
@@ -70,8 +77,9 @@ def get_local_ip() -> str:
     return ip
 
 
-LOCAL_IP         = get_local_ip()
-CLOUD_SERVER_URL = f"http://{LOCAL_IP}:5000"  # Cloud Server must be reachable at this address
+LOCAL_IP = get_local_ip()
+# Allow override if auto-detected IP is unreachable from phones.
+CLOUD_SERVER_URL = os.getenv("CLOUD_SERVER_URL", f"http://{LOCAL_IP}:5000")
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Used for Flask session (owner login state)
@@ -97,6 +105,164 @@ def save_config(config: dict) -> None:
         json.dump(config, f, indent=4)
 
 
+def _get_printer_config(config: dict) -> dict:
+    printer = config.get("printer") or {}
+    if "name" not in printer:
+        printer["name"] = ""
+    if "backend" not in printer:
+        printer["backend"] = "sumatra" if os.name == "nt" else "cups"
+    if "sumatra_path" not in printer:
+        printer["sumatra_path"] = ""
+    return printer
+
+
+def _list_printers() -> list:
+    if os.name == "nt":
+        result = subprocess.run(
+            ["powershell", "-NoProfile", "-Command", "Get-Printer | Select-Object -ExpandProperty Name"],
+            capture_output=True,
+            text=True,
+        )
+        return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+    result = subprocess.run(
+        ["bash", "-lc", "lpstat -p | awk '{print $2}'"],
+        capture_output=True,
+        text=True,
+    )
+    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+
+def _resolve_sumatra_path(printer_cfg: dict) -> str:
+    override = (printer_cfg.get("sumatra_path") or "").strip()
+    if override and os.path.exists(override):
+        return override
+
+    for candidate in [
+        shutil.which("SumatraPDF.exe"),
+        shutil.which("SumatraPDF"),
+        r"C:\Program Files\SumatraPDF\SumatraPDF.exe",
+        r"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe",
+    ]:
+        if candidate and os.path.exists(candidate):
+            return candidate
+    return ""
+
+
+def _normalize_paper(value: str) -> str:
+    if not value:
+        return ""
+    key = value.strip().lower()
+    mapping = {
+        "a4": "A4",
+        "a3": "A3",
+        "letter": "Letter",
+        "legal": "Legal",
+    }
+    return mapping.get(key, "")
+
+
+def _load_job_settings(kiosk_dir: str, job_id: str) -> dict:
+    path = os.path.join(kiosk_dir, f"{job_id}.settings.json")
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _build_sumatra_settings(settings: dict) -> str:
+    tokens = []
+
+    pages = (settings.get("pages") or "").strip().lower()
+    if pages and pages != "all":
+        tokens.append(pages)
+
+    copies = int(settings.get("copies") or 1)
+    if copies > 1:
+        tokens.append(f"copies={copies}")
+
+    sides = settings.get("sides")
+    if sides == "two-sided-long-edge":
+        tokens.append("duplex")
+    elif sides == "two-sided-short-edge":
+        tokens.append("duplexshort")
+
+    paper = _normalize_paper(settings.get("size"))
+    if paper:
+        tokens.append(f"paper={paper}")
+
+    layout = settings.get("layout")
+    if layout == "landscape":
+        tokens.append("landscape")
+
+    pps = settings.get("pages_per_sheet")
+    try:
+        pps_val = int(pps)
+    except Exception:
+        pps_val = 1
+
+    nup_map = {
+        1: None,
+        2: "2x1" if layout == "landscape" else "1x2",
+        4: "2x2",
+        6: "3x2" if layout == "landscape" else "2x3",
+        9: "3x3",
+        16: "4x4",
+    }
+    nup = nup_map.get(pps_val)
+    if nup:
+        tokens.append(f"nup={nup}")
+
+    scale = settings.get("scale")
+    if scale == "custom":
+        custom_scale = str(settings.get("customScale") or "").strip()
+        if custom_scale:
+            tokens.append(f"scale={custom_scale}")
+
+    return ",".join(tokens)
+
+
+def _build_cups_args(settings: dict) -> list:
+    args = []
+
+    copies = int(settings.get("copies") or 1)
+    if copies > 1:
+        args.extend(["-n", str(copies)])
+
+    sides = settings.get("sides")
+    if sides == "two-sided-long-edge":
+        args.extend(["-o", "sides=two-sided-long-edge"])
+    elif sides == "two-sided-short-edge":
+        args.extend(["-o", "sides=two-sided-short-edge"])
+
+    pages = (settings.get("pages") or "").strip().lower()
+    if pages and pages != "all":
+        args.extend(["-o", f"page-ranges={pages}"])
+
+    paper = _normalize_paper(settings.get("size"))
+    if paper:
+        args.extend(["-o", f"media={paper}"])
+
+    layout = settings.get("layout")
+    if layout == "landscape":
+        args.extend(["-o", "orientation-requested=4"])
+
+    scale = settings.get("scale")
+    if scale == "custom":
+        custom_scale = str(settings.get("customScale") or "").strip()
+        if custom_scale:
+            args.extend(["-o", f"scaling={custom_scale}"])
+
+    pps = settings.get("pages_per_sheet")
+    if pps and str(pps).isdigit():
+        args.extend(["-o", f"number-up={pps}"])
+
+    return args
+
+
 # =============================================================================
 # KIOSK UI ROUTES
 # =============================================================================
@@ -117,7 +283,8 @@ def redirect_home():
 def kiosk_home(kiosk_id):
     """Render the main kiosk UI for the given kiosk ID."""
     os.makedirs(os.path.join(UPLOAD_BASE, kiosk_id), exist_ok=True)
-    return render_template("kiosk.html", kiosk_id=kiosk_id)
+    upload_url = f"{CLOUD_SERVER_URL}/upload?kiosk_id={kiosk_id}"
+    return render_template("kiosk.html", kiosk_id=kiosk_id, upload_url=upload_url)
 
 
 @app.route("/owner/dashboard")
@@ -137,6 +304,40 @@ def owner_dashboard():
     response.headers["Pragma"]        = "no-cache"
     response.headers["Expires"]       = "0"
     return response
+
+
+@app.route("/api/printers")
+def api_printers():
+    config = load_config()
+    printer_cfg = _get_printer_config(config)
+    printers = _list_printers()
+    return jsonify({
+        "printers": printers,
+        "selected": printer_cfg.get("name", ""),
+        "backend": printer_cfg.get("backend", ""),
+        "sumatra_path": printer_cfg.get("sumatra_path", ""),
+    })
+
+
+@app.route("/api/printer", methods=["GET", "POST"])
+def api_printer():
+    config = load_config()
+    printer_cfg = _get_printer_config(config)
+
+    if request.method == "GET":
+        return jsonify(printer_cfg)
+
+    data = request.json or {}
+    name = (data.get("name") or "").strip()
+    sumatra_path = (data.get("sumatra_path") or "").strip()
+
+    printer_cfg["name"] = name
+    if sumatra_path:
+        printer_cfg["sumatra_path"] = sumatra_path
+
+    config["printer"] = printer_cfg
+    save_config(config)
+    return jsonify({"status": "success", "printer": printer_cfg})
 
 
 # =============================================================================
@@ -171,6 +372,50 @@ def get_logical_pages(file_path: str) -> int:
         return len(PdfReader(file_path).pages)
     except Exception:
         return 1
+
+
+def _count_pages_from_range(pages_range, max_pages: int) -> int:
+    """Count unique pages from a human-friendly range string like "1-5, 8".
+
+    Returns max_pages for empty/"all" input, and falls back to max_pages on
+    invalid input.
+    """
+    if max_pages <= 0:
+        return 1
+    if not pages_range:
+        return max_pages
+
+    pages_range = str(pages_range).strip().lower()
+    if not pages_range or pages_range == "all":
+        return max_pages
+
+    selected = set()
+    try:
+        for part in pages_range.split(","):
+            token = part.strip()
+            if not token:
+                continue
+
+            if "-" in token:
+                a_str, b_str = token.split("-", 1)
+                a = int(a_str.strip())
+                b = int(b_str.strip())
+                start = min(a, b)
+                end = max(a, b)
+                start = max(1, start)
+                end = min(max_pages, end)
+                if start > end:
+                    continue
+                for page in range(start, end + 1):
+                    selected.add(page)
+            else:
+                page = int(token)
+                if 1 <= page <= max_pages:
+                    selected.add(page)
+    except Exception:
+        return max_pages
+
+    return len(selected) if selected else max_pages
 
 
 @app.route("/fetch/<kiosk_id>")
@@ -402,14 +647,22 @@ def api_pricing():
 # PRICING CALCULATION  &  SETTINGS
 # =============================================================================
 
-def _calculate_price(kiosk_id: str, filename: str, color: str,
-                     copies: int, pps: int, paper_size: str) -> int:
+def _calculate_price(
+    kiosk_id: str,
+    filename: str,
+    color: str,
+    copies: int,
+    pps: int,
+    paper_size: str,
+    pages=None,
+) -> int:
     """
     Shared price calculation logic.
     Formula: ceil(total_pages / pps) * copies * rate_per_sheet
     """
     file_path     = os.path.join(UPLOAD_BASE, kiosk_id, filename)
-    logical_pages = get_logical_pages(file_path)
+    max_pages = get_logical_pages(file_path)
+    logical_pages = _count_pages_from_range(pages, max_pages)
     sheets        = math.ceil(logical_pages / pps)
 
     config  = load_config()
@@ -434,6 +687,7 @@ def price_preview():
         copies     = int(data["copies"]),
         pps        = int(data["pages_per_sheet"]),
         paper_size = data.get("size", "A4"),
+        pages      = data.get("pages"),
     )
     return jsonify({"total_cost": total_cost})
 
@@ -457,6 +711,7 @@ def save_settings(kiosk_id, filename):
         copies     = int(data["copies"]),
         pps        = int(data["pages_per_sheet"]),
         paper_size = data.get("size", "A4"),
+        pages      = data.get("pages"),
     )
 
     # Save settings blob
@@ -484,8 +739,14 @@ def session_status(kiosk_id):
     # Collect unique job IDs from document files
     job_ids = set()
     for f in os.listdir(kiosk_dir):
-        if "_" in f and not f.endswith(".meta") and not f.endswith(".json"):
-            job_ids.add(f.split("_")[0])
+        if "_" not in f:
+            continue
+        if f.endswith(".meta") or f.endswith(".json"):
+            continue
+        ext = f.rsplit(".", 1)[-1].lower()
+        if ext not in ALLOWED_EXTENSIONS:
+            continue
+        job_ids.add(f.split("_")[0])
 
     # Every job must have a price file; if any is missing → not ready
     total = 0
@@ -497,6 +758,129 @@ def session_status(kiosk_id):
             total += json.load(f)["price"]
 
     return jsonify({"ready": True, "total": total})
+
+
+@app.route("/print/<kiosk_id>", methods=["POST"])
+def print_jobs(kiosk_id):
+    """
+    Send a print command for ready jobs.
+    Optionally accepts {"files": ["<job>_<name>", ...]} to limit the list.
+    """
+    kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
+    if not os.path.exists(kiosk_dir):
+        return jsonify({"status": "error", "message": "Kiosk not found"}), 404
+
+    config = load_config()
+    printer_cfg = _get_printer_config(config)
+
+    data = request.json or {}
+    requested_files = data.get("files")
+    if requested_files is not None and not isinstance(requested_files, list):
+        return jsonify({"status": "error", "message": "Invalid files list"}), 400
+
+    if requested_files:
+        candidates = requested_files
+    else:
+        candidates = os.listdir(kiosk_dir)
+
+    printable = []
+    for name in candidates:
+        if not name or "/" in name or "\\" in name:
+            continue
+        if "_" not in name or name.endswith(".meta") or name.endswith(".json"):
+            continue
+        path = os.path.join(kiosk_dir, name)
+        if os.path.isfile(path):
+            printable.append((name, path))
+
+    if not printable:
+        return jsonify({"status": "error", "message": "No printable files"}), 400
+
+    # Ensure all jobs have pricing saved before printing
+    job_ids = {name.split("_")[0] for name, _ in printable}
+    for jid in job_ids:
+        price_file = os.path.join(kiosk_dir, f"{jid}.price.json")
+        if not os.path.exists(price_file):
+            return jsonify({"status": "error", "message": "Session not ready"}), 400
+
+    printer_name = (printer_cfg.get("name") or "").strip()
+    if not printer_name:
+        return jsonify({"status": "error", "message": "No printer configured"}), 400
+
+    def _job_timestamp(job_id: str, file_path: str) -> float:
+        meta_path = os.path.join(kiosk_dir, f"{job_id}.meta")
+        if os.path.exists(meta_path):
+            return os.path.getmtime(meta_path)
+        return os.path.getmtime(file_path)
+
+    printable.sort(key=lambda item: _job_timestamp(item[0].split("_")[0], item[1]))
+
+    backend = printer_cfg.get("backend") or ("sumatra" if os.name == "nt" else "cups")
+    sumatra_path = _resolve_sumatra_path(printer_cfg) if backend == "sumatra" else ""
+
+    log_path = os.path.join(kiosk_dir, "print_debug.log")
+    printed = []
+    failed = []
+    for name, path in printable:
+        job_id = name.split("_")[0]
+        settings = _load_job_settings(kiosk_dir, job_id)
+
+        try:
+            if backend == "sumatra":
+                if not sumatra_path:
+                    raise RuntimeError("SumatraPDF not found. Set its path in the admin panel.")
+                settings_arg = _build_sumatra_settings(settings)
+                cmd = [
+                    sumatra_path,
+                    "-silent",
+                    "-exit-on-print",
+                    "-print-to", printer_name,
+                ]
+                if settings_arg:
+                    cmd.extend(["-print-settings", settings_arg])
+                cmd.append(path)
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"SUMATRA CMD: {cmd}\n")
+                    log_file.write(f"SETTINGS: {settings}\n")
+                result = subprocess.run(cmd, capture_output=True, text=True)
+                if result.stdout or result.stderr:
+                    with open(log_path, "a") as log_file:
+                        if result.stdout:
+                            log_file.write(f"SUMATRA OUT: {result.stdout}\n")
+                        if result.stderr:
+                            log_file.write(f"SUMATRA ERR: {result.stderr}\n")
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"SUMATRA RC: {result.returncode}\n")
+                if result.returncode != 0:
+                    raise RuntimeError(result.stderr.strip() or "SumatraPDF print failed")
+            else:
+                cmd = ["lp", "-d", printer_name]
+                cmd.extend(_build_cups_args(settings))
+                cmd.append(path)
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"CUPS CMD: {cmd}\n")
+                    log_file.write(f"SETTINGS: {settings}\n")
+                result = subprocess.run(cmd, capture_output=True, text=True)
+                if result.stdout or result.stderr:
+                    with open(log_path, "a") as log_file:
+                        if result.stdout:
+                            log_file.write(f"CUPS OUT: {result.stdout}\n")
+                        if result.stderr:
+                            log_file.write(f"CUPS ERR: {result.stderr}\n")
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"CUPS RC: {result.returncode}\n")
+                if result.returncode != 0:
+                    raise RuntimeError(result.stderr.strip() or "CUPS print failed")
+
+            printed.append(name)
+        except Exception as exc:
+            failed.append({"file": name, "error": str(exc)})
+
+    status = "success" if printed and not failed else "partial" if printed else "error"
+    message = None
+    if failed:
+        message = failed[0].get("error") or "Print failed"
+    return jsonify({"status": status, "printed": printed, "failed": failed, "message": message})
 
 
 # =============================================================================

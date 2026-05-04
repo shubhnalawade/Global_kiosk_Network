@@ -14,15 +14,13 @@ Run this as a standalone script; it loops forever with a configurable interval.
 
 import os
 import time
+import json
 import logging
-import requests
+
 
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
-
-# Cloud server is assumed to be on the same machine (or change to LAN IP)
-CLOUD_SERVER_URL = "http://127.0.0.1:5000"
 
 # Anchor local upload directory to this script's location
 _SYNC_DIR      = os.path.dirname(os.path.abspath(__file__))
@@ -46,6 +44,11 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
 )
 
+# =============================================================================
+
+# CLOUD SERVER CONFIGURATION
+import requests
+CLOUD_SERVER_URL = "http://127.0.0.1:5000"
 
 # =============================================================================
 # SYNC LOGIC
@@ -59,77 +62,62 @@ def _truncate_filename(filename: str, max_len: int = 50) -> str:
     return name[:max_len] + ext
 
 
+
 def sync_once(kiosk_dir: str) -> None:
     """
     Perform a single sync pass:
-      - Fetch pending files from cloud
+      - Fetch pending files from cloud server
       - Download any that are not yet local
-      - Acknowledge completed downloads so the cloud can clean up
+      - Acknowledge completed downloads so cloud can clean up
     """
-    # --- Step 1: Fetch pending file list from cloud ---
+    # --- Step 1: Fetch pending file list from cloud server ---
     try:
-        response = requests.get(
-            f"{CLOUD_SERVER_URL}/fetch/{KIOSK_ID}", timeout=10
-        )
-    except requests.exceptions.ConnectionError:
-        logging.error(f"Cannot connect to Cloud Server at {CLOUD_SERVER_URL}")
-        return
-
-    if response.status_code != 200:
-        logging.error(f"Fetch returned {response.status_code}: {response.text}")
-        return
-
-    remote_files = response.json()
-    if remote_files:
+        resp = requests.get(f"{CLOUD_SERVER_URL}/fetch/{KIOSK_ID}")
+        if resp.status_code != 200:
+            logging.error(f"Failed to fetch files from cloud: {resp.text}")
+            return
+        remote_files = resp.json()
         logging.info(f"Found {len(remote_files)} pending file(s) on cloud.")
+    except Exception as e:
+        logging.error(f"Failed to fetch files from cloud: {e}")
+        return
 
     # --- Step 2 & 3: Download new files and acknowledge ---
     for rf in remote_files:
-        job_id   = rf["job_id"]
-        filename = _truncate_filename(rf["filename"])
-
-        # Build a clean download URL (guard against double slashes)
-        safe_url     = rf["url"].lstrip("/")
-        download_url = f"{CLOUD_SERVER_URL.rstrip('/')}/{safe_url}"
+        filename = rf["filename"]
+        job_id = rf["job_id"]
+        if filename.endswith(".meta") or "_" not in filename:
+            continue
 
         local_path = os.path.join(kiosk_dir, filename)
 
         if os.path.exists(local_path):
-            # File already downloaded — just re-send ACK to ensure cloud cleanup
-            logging.info(f"Already have '{filename}'. Sending ACK.")
-            try:
-                requests.post(
-                    f"{CLOUD_SERVER_URL}/ack/{KIOSK_ID}/{job_id}", timeout=5
-                )
-            except Exception as e:
-                logging.error(f"ACK error for existing file ({job_id}): {e}")
+            logging.info(f"Already have '{filename}'. Skipping download.")
             continue
 
         # Download the file
-        logging.info(f"Downloading '{filename}' from {download_url}")
+        logging.info(f"Downloading '{filename}' from cloud server")
         try:
-            file_resp = requests.get(download_url, timeout=30)
-            file_resp.raise_for_status()
-
-            with open(local_path, "wb") as f:
-                f.write(file_resp.content)
-            logging.info(f"Saved '{filename}' ({len(file_resp.content)} bytes)")
-
-            # Acknowledge successful download to cloud
-            ack_resp = requests.post(
-                f"{CLOUD_SERVER_URL}/ack/{KIOSK_ID}/{job_id}", timeout=5
-            )
-            if ack_resp.status_code == 200:
-                logging.info(f"ACK OK for job {job_id}")
+            file_url = f"{CLOUD_SERVER_URL}/download/{KIOSK_ID}/{filename}"
+            file_resp = requests.get(file_url)
+            if file_resp.status_code == 200:
+                with open(local_path, "wb") as f:
+                    f.write(file_resp.content)
+                logging.info(f"Saved '{filename}' ({len(file_resp.content)} bytes)")
+                # Acknowledge download
+                ack_url = f"{CLOUD_SERVER_URL}/ack/{KIOSK_ID}/{job_id}"
+                try:
+                    requests.post(ack_url)
+                except Exception as e:
+                    logging.error(f"Failed to acknowledge file '{filename}': {e}")
             else:
-                logging.warning(f"ACK failed for job {job_id}: {ack_resp.status_code}")
-
+                logging.error(f"Failed to download '{filename}': {file_resp.text}")
         except Exception as e:
             logging.error(f"Failed to download/save '{filename}': {e}")
 
 
 def sync_loop() -> None:
-    """Main sync loop — runs forever, polling the cloud every POLL_INTERVAL seconds."""
+    """Main sync loop — runs forever, polling Supabase every POLL_INTERVAL seconds."""
     kiosk_dir = os.path.join(LOCAL_BASE_DIR, KIOSK_ID)
     os.makedirs(kiosk_dir, exist_ok=True)
 

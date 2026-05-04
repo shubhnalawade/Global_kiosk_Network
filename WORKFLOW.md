@@ -13,27 +13,27 @@
 ┌──────────────────────────────────────────────────────────────┐
 │                   CLOUD SERVER :5000                        │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │ • Receive PDF uploads from mobile                    │   │
-│  │ • Store in cloud_uploads/TB001/                      │   │
-│  │ • Provide file listing API                           │   │
+│  │ • Receive PDF uploads from mobile                    │
+│  │ • Store in local server storage                      │
+│  │ • Serve upload.html (Mobile UI)                      │
 │  └──────────────────────────────────────────────────────┘   │
-│                upload.html (Mobile UI)                      │
 └────────────────┬─────────────────────────────────────────────┘
                  │ Files uploaded here
                  ↓
         ┌────────────────────┐
-        │ cloud_uploads/     │
-        │  └─ TB001/         │
-        │     └─ <uuid>_file │
+        │ Local Storage      │
+        │  └─ cloud_uploads/ │
+        │     └─ TB001/      │
+        │        └─ <uuid>_file
         └────────────────────┘
                  ↑
                  │ Kiosk Sync polls every 3s
                  │
 ┌────────────────┴─────────────────────────────────────────────┐
 │              KIOSK SYNC SERVICE (Background)                 │
-│  • Polls /fetch/<kiosk_id> from cloud                        │
+│  • Lists files in local cloud_uploads for kiosk_id           │
 │  • Downloads files to kiosk/uploads/TB001/                   │
-│  • Sends /ack/ to clean up cloud                             │
+│  • Cleanup can be done via cloud server if needed            │
 └────────────────┬─────────────────────────────────────────────┘
                  ↓
         ┌────────────────────┐
@@ -101,8 +101,8 @@ Mobile User:
 3. Opens http://localhost:5000/upload?kiosk_id=TB001
 4. Uploads 3 PDFs: Document1.pdf, Document2.pdf, Document3.pdf
 
-Cloud Server stores:
-cloud_uploads/TB001/
+Supabase Storage stores:
+kiosk_files/TB001/
   ├── uuid1_Document1.pdf         ← 10 pages
   ├── uuid1.meta                  ← timestamp
   ├── uuid2_Document2.pdf         ← 5 pages
@@ -114,11 +114,10 @@ cloud_uploads/TB001/
 ### STEP 3: Sync Service Downloads Files
 ```
 Kiosk Sync Service:
-- Every 3 seconds: GET /fetch/TB001 from Cloud
+- Every 3 seconds: List Supabase bucket path TB001/
 - Detects new files
 - Downloads to: kiosk/uploads/TB001/
-- Sends: POST /ack/uuid1, /ack/uuid2, /ack/uuid3
-- Cloud deletes after acknowledgment
+- Optional cleanup can be done via cloud server if needed
 
 Local Storage:
 kiosk/uploads/TB001/
@@ -351,12 +350,12 @@ Scenario C: 5-page PDF, B&W, A4, 4-up, 1 copy
 ### File Lifecycle
 ```
 Stage 1: UPLOAD (Cloud)
-  User uploads PDF → Stored in cloud_uploads/TB001/
+  User uploads PDF → Stored in Supabase bucket path TB001/
   Files: <uuid>_<original_name>.pdf, <uuid>.meta
 
 Stage 2: SYNC (Local)
   Kiosk downloads → Stored in kiosk/uploads/TB001/
-  Cloud files deleted after acknowledgment
+  Optional cleanup can be done via cloud server if needed
 
 Stage 3: QUEUE (Display)
   PDF listed in Kiosk's right panel

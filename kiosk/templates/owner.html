@@ -68,6 +68,14 @@
             backdrop-filter: blur(10px);
         }
 
+        .printer-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
         .table-custom {
             width: 100%;
             border-collapse: separate;
@@ -185,6 +193,35 @@
                     <!-- Rows injected by JS -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- Printer Configuration -->
+        <div class="printer-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0 fw-light"><i class="fa-solid fa-print me-3"></i>Printer Configuration</h3>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-light" onclick="loadPrinters()">
+                        <i class="fa-solid fa-rotate me-2"></i>Refresh
+                    </button>
+                    <button class="btn-save" onclick="savePrinter()">
+                        <i class="fa-solid fa-check me-2"></i>Save Printer
+                    </button>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="small text-muted">Connected Printers</label>
+                    <select class="form-select" id="printerSelect"></select>
+                </div>
+                <div class="col-md-4">
+                    <label class="small text-muted">Backend</label>
+                    <input class="form-control" id="printerBackend" disabled>
+                </div>
+                <div class="col-md-12">
+                    <label class="small text-muted">SumatraPDF Path (Windows)</label>
+                    <input class="form-control" id="sumatraPath" placeholder="C:\\Program Files\\SumatraPDF\\SumatraPDF.exe">
+                </div>
+            </div>
         </div>
 
         <!-- Account Management -->
@@ -451,7 +488,55 @@
                 });
         }
 
+        function loadPrinters() {
+            fetch('/api/printers')
+                .then(r => r.json())
+                .then(data => {
+                    const select = document.getElementById('printerSelect');
+                    const backend = document.getElementById('printerBackend');
+                    const sumatraPath = document.getElementById('sumatraPath');
+
+                    select.innerHTML = '';
+                    (data.printers || []).forEach(name => {
+                        const opt = document.createElement('option');
+                        opt.value = name;
+                        opt.textContent = name;
+                        if (data.selected === name) {
+                            opt.selected = true;
+                        }
+                        select.appendChild(opt);
+                    });
+
+                    backend.value = data.backend || '';
+                    sumatraPath.value = data.sumatra_path || '';
+                });
+        }
+
+        function savePrinter() {
+            const select = document.getElementById('printerSelect');
+            const sumatraPath = document.getElementById('sumatraPath');
+
+            fetch('/api/printer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: select.value,
+                    sumatra_path: sumatraPath.value
+                })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.status === 'success') {
+                        alert('Printer updated successfully.');
+                    } else {
+                        alert('Printer update failed.');
+                    }
+                })
+                .catch(() => alert('Printer update failed.'));
+        }
+
         loadPricing();
+        loadPrinters();
     </script>
 </body>
 

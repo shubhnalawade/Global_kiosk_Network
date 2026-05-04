@@ -25,9 +25,12 @@ print("### CLOUD SERVER STARTED ###")
 import os
 import uuid
 import time
+import json
+from io import BytesIO
 
-from flask import Flask, request, render_template, jsonify, send_from_directory
+from flask import Flask, request, render_template, jsonify, send_file
 from werkzeug.utils import secure_filename
+
 
 # =============================================================================
 # CONFIGURATION
@@ -35,8 +38,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-_CLOUD_DIR   = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_BASE  = os.path.join(_CLOUD_DIR, "cloud_uploads")
+_CLOUD_DIR = os.path.dirname(os.path.abspath(__file__))
 
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
 
@@ -60,6 +62,12 @@ def home():
 
 
 # =============================================================================
+
+# LOCAL STORAGE CONFIGURATION
+LOCAL_UPLOAD_BASE = os.path.join(_CLOUD_DIR, "cloud_uploads")
+
+
+# =============================================================================
 # UPLOAD (MOBILE USER)
 # =============================================================================
 
@@ -67,19 +75,20 @@ def home():
 def upload():
     """
     GET  → Render the upload form (kiosk_id passed as query param).
-    POST → Save uploaded files to cloud_uploads/<kiosk_id>/.
+    POST → Save uploaded files to local storage.
     """
     kiosk_id = request.args.get("kiosk_id")
     if not kiosk_id:
         return "Missing kiosk_id parameter.", 400
 
-    kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
-    os.makedirs(kiosk_dir, exist_ok=True)
 
     if request.method == "POST":
         files = request.files.getlist("files")
         if not files:
             return "No files received.", 400
+
+        kiosk_dir = os.path.join(LOCAL_UPLOAD_BASE, kiosk_id)
+        os.makedirs(kiosk_dir, exist_ok=True)
 
         for file in files:
             if not file.filename or not allowed_file(file.filename):
@@ -94,11 +103,14 @@ def upload():
                 filename  = stem[:50] + ext
 
             try:
-                file.save(os.path.join(kiosk_dir, f"{job_id}_{filename}"))
+                # Save file locally
+                file_path = os.path.join(kiosk_dir, f"{job_id}_{filename}")
+                file.save(file_path)
 
-                # Write a timestamp meta file so the kiosk can track upload time
-                with open(os.path.join(kiosk_dir, f"{job_id}.meta"), "w") as mf:
-                    mf.write(str(time.time()))
+                # Write a timestamp meta file locally
+                meta_path = os.path.join(kiosk_dir, f"{job_id}.meta")
+                with open(meta_path, "w") as meta_file:
+                    meta_file.write(str(time.time()))
 
             except Exception as e:
                 print(f"[UPLOAD] Failed to save file: {e}")
@@ -119,26 +131,25 @@ def fetch_files(kiosk_id):
     Return a JSON list of files pending download for a given kiosk.
     Excludes .meta files and any entries without an underscore (not a real job).
     """
-    kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
-    files = []
+    try:
+        kiosk_dir = os.path.join(LOCAL_UPLOAD_BASE, kiosk_id)
+        files = []
+        if not os.path.exists(kiosk_dir):
+            return jsonify(files)
 
-    if not os.path.exists(kiosk_dir):
+        for fname in os.listdir(kiosk_dir):
+            if fname.endswith(".meta") or "_" not in fname:
+                continue
+            job_id = fname.split("_", 1)[0]
+            files.append({
+                "job_id": job_id,
+                "filename": fname,
+                "url": f"/download/{kiosk_id}/{fname}"
+            })
         return jsonify(files)
-
-    for f in os.listdir(kiosk_dir):
-        if f.endswith(".meta") or "_" not in f:
-            continue
-        if not os.path.isfile(os.path.join(kiosk_dir, f)):
-            continue
-
-        job_id = f.split("_", 1)[0]
-        files.append({
-            "job_id":   job_id,
-            "filename": f,
-            "url":      f"/download/{kiosk_id}/{f}",
-        })
-
-    return jsonify(files)
+    except Exception as e:
+        print(f"[FETCH] Failed to list files: {e}")
+        return jsonify([]), 500
 
 
 # =============================================================================
@@ -148,7 +159,19 @@ def fetch_files(kiosk_id):
 @app.route("/download/<kiosk_id>/<filename>")
 def download_file(kiosk_id, filename):
     """Serve a stored file for the Kiosk Sync Service to download."""
-    return send_from_directory(os.path.join(UPLOAD_BASE, kiosk_id), filename)
+    try:
+        kiosk_dir = os.path.join(LOCAL_UPLOAD_BASE, kiosk_id)
+        file_path = os.path.join(kiosk_dir, filename)
+        if not os.path.exists(file_path):
+            return "File not found.", 404
+        return send_file(
+            file_path,
+            download_name=filename,
+            as_attachment=True,
+        )
+    except Exception as e:
+        print(f"[DOWNLOAD] Failed to download file: {e}")
+        return "File not found.", 404
 
 
 # =============================================================================
@@ -161,17 +184,21 @@ def acknowledge_download(kiosk_id, job_id):
     Called by the Kiosk Sync Service after a successful file download.
     Deletes all files for this job_id from the cloud so they aren't re-synced.
     """
-    kiosk_dir = os.path.join(UPLOAD_BASE, kiosk_id)
-    if not os.path.exists(kiosk_dir):
-        return jsonify({"status": "kiosk_not_found"}), 404
-
-    deleted = []
-    for f in os.listdir(kiosk_dir):
-        if f.startswith(job_id):
-            os.remove(os.path.join(kiosk_dir, f))
-            deleted.append(f)
-
-    return jsonify({"status": "acknowledged", "deleted_files": deleted})
+    try:
+        kiosk_dir = os.path.join(LOCAL_UPLOAD_BASE, kiosk_id)
+        deleted = []
+        for fname in os.listdir(kiosk_dir):
+            if fname.startswith(job_id):
+                fpath = os.path.join(kiosk_dir, fname)
+                try:
+                    os.remove(fpath)
+                    deleted.append(fname)
+                except Exception as e:
+                    print(f"[ACK] Failed to delete {fname}: {e}")
+        return jsonify({"status": "acknowledged", "deleted_files": deleted})
+    except Exception as e:
+        print(f"[ACK] Failed to delete files: {e}")
+        return jsonify({"status": "error", "error": str(e)}), 500
 
 
 # =============================================================================

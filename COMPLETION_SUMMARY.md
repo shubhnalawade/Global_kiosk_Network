@@ -162,13 +162,13 @@ Button Enabled! Total cost = ₹XXX
 
 ## 📁 FILE MANAGEMENT
 
-### **Cloud (Temporary - Auto-cleaned)**
+### **Supabase Storage**
 ```
-cloud_uploads/TB001/
+kiosk_files/TB001/
 ├── [uuid]_Document.pdf     ← User's file
 ├── [uuid].meta             ← Upload timestamp
 ├── ...more PDFs...
-└── → Auto-deleted after sync acknowledgement
+└── → Optional cleanup after sync
 ```
 
 ### **Local (Persistent - User-managed)**
@@ -414,7 +414,8 @@ python --version  # Should be 3.8+
 
 ### **If Files Not Syncing:**
 - Check `kiosk_sync.py` output
-- Verify `cloud_uploads/TB001/` has files
+- Verify Supabase bucket has files under `TB001/`
+- Check `config/supabase_config.json` values
 - Wait 5+ seconds and refresh page
 
 ### **If Preview Not Loading:**

@@ -20,10 +20,10 @@ A modern, distributed printing vending machine system with:
 ### 2. **Upload Documents**
    - Mobile user selects PDF/Image files
    - Uploads to cloud server at `http://localhost:5000/upload?kiosk_id=TB001`
-   - Files stored temporarily in `cloud_uploads/TB001/`
+   - Files stored locally on the server under `cloud_server/cloud_uploads/TB001/`
 
 ### 3. **Automatic Sync**
-   - Kiosk Sync Service polls cloud server every 3 seconds
+   - Kiosk Sync Service polls the cloud server every 3 seconds
    - Downloads new files to `kiosk/uploads/TB001/`
    - Files appear instantly in queue on Kiosk Page
 
@@ -95,7 +95,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Run the System
+### 2. Supabase Configuration
+Edit the shared config file and add your Supabase credentials:
+`config/supabase_config.json`
+
+```json
+{
+   "SUPABASE_URL": "https://your-project.supabase.co",
+   "SUPABASE_KEY": "your-anon-key",
+   "BUCKET_NAME": "kiosk_files"
+}
+```
+
+### 3. Run the System
 ```bash
 # Make sure you're in the project root with venv activated
 python run_system.py
@@ -107,7 +119,7 @@ This will:
 - Start Sync Service
 - Display access URLs
 
-### 3. Access the System
+### 4. Access the System
 Open your browser:
 - **Control Center**: http://localhost:5001
 - **Kiosk Page**: http://localhost:5001/kiosk/TB001
@@ -119,10 +131,10 @@ Open your browser:
 
 ```
 Global_Kiosk_Network/
+├── config/
+│   └── supabase_config.json   # Supabase credentials (shared)
 ├── cloud_server/
 │   ├── app.py                  # Cloud server (port 5000)
-│   ├── cloud_uploads/          # Uploaded files (temp storage)
-│   │   └── TB001/             # Kiosk-specific uploads
 │   └── templates/
 │       └── upload.html        # Mobile upload interface
 │
@@ -194,12 +206,21 @@ Once logged in, access:
 
 Each document creates multiple files during the workflow:
 
+Supabase Storage (bucket):
+```
+kiosk_files/
+└── TB001/
+   ├── <uuid>_document.pdf          # Uploaded document
+   └── <uuid>.meta                  # Upload timestamp
+```
+
+Local kiosk (persistent):
 ```
 kiosk/uploads/TB001/
 ├── <uuid>_document.pdf              # Uploaded document
 ├── <uuid>.meta                      # Upload timestamp
 ├── <uuid>.settings.json             # User's print settings (saved after "Done")
-└── <uuid>.price.json               # Calculated price (saved after "Done")
+└── <uuid>.price.json                # Calculated price (saved after "Done")
 ```
 
 **Deletion**: When user deletes a document, all related files are removed
@@ -264,7 +285,8 @@ lsof -i :5000                  # Linux/Mac
 
 ### Files Not Syncing
 - Check `kiosk_sync.py` console output
-- Verify `cloud_uploads/TB001/` has files
+- Verify Supabase bucket has files under `TB001/`
+- Check `config/supabase_config.json` values
 - Check network connectivity between services
 
 ### Preview Not Loading
@@ -296,6 +318,9 @@ lsof -i :5000                  # Linux/Mac
 | POST | `/auth/login` | Owner login |
 
 ### Cloud Server (5000)
+
+Note: The cloud server stores uploads in Supabase Storage. The sync service reads
+from Supabase directly.
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|

@@ -10,8 +10,6 @@ Services:
   - Cloud Server        (port 5000)  cloud_server/app.py
   - Kiosk 1 Server      (port 5001)  kiosk/app.py
   - Kiosk 1 Sync Service            kiosk/kiosk_sync.py
-  - Kiosk 2 Server      (port 5002)  kiosk2/app.py
-  - Kiosk 2 Sync Service            kiosk2/kiosk_sync.py
 """
 
 import subprocess
@@ -39,16 +37,7 @@ def run_system():
             "path": os.path.join(root_dir, "kiosk", "kiosk_sync.py"),
             "cwd":  os.path.join(root_dir, "kiosk"),
         },
-        {
-            "description": "Kiosk 2 Server",
-            "path": os.path.join(root_dir, "kiosk2", "app.py"),
-            "cwd":  os.path.join(root_dir, "kiosk2"),
-        },
-        {
-            "description": "Kiosk 2 Sync Service",
-            "path": os.path.join(root_dir, "kiosk2", "kiosk_sync.py"),
-            "cwd":  os.path.join(root_dir, "kiosk2"),
-        },
+        
     ]
 
     print("### GLOBAL KIOSK NETWORK - SYSTEM RUNNER ###")
@@ -84,11 +73,6 @@ def run_system():
     print("║  🌐 http://localhost:5001                            ║")
     print("║  🖨️  http://localhost:5001/kiosk/TB001               ║")
     print("║  📱 http://localhost:5000/upload?kiosk_id=TB001      ║")
-    print("║                                                        ║")
-    print("║  KIOSK 2 (TB002):                                    ║")
-    print("║  🌐 http://localhost:5002                            ║")
-    print("║  🖨️  http://localhost:5002/kiosk/TB002               ║")
-    print("║  📱 http://localhost:5000/upload?kiosk_id=TB002      ║")
     print("║                                                        ║")
     print("║  ✨ FEATURES:                                         ║")
     print("║     • Upload PDFs and manage queue                   ║")

@@ -7,12 +7,24 @@
 pip install -r requirements.txt
 ```
 
-### 2. Run the System
+### 2. Configure Supabase
+Edit the shared config file and add your Supabase credentials:
+`config/supabase_config.json`
+
+```json
+{
+   "SUPABASE_URL": "https://your-project.supabase.co",
+   "SUPABASE_KEY": "your-anon-key",
+   "BUCKET_NAME": "kiosk_files"
+}
+```
+
+### 3. Run the System
 ```bash
 python run_system.py
 ```
 
-### 3. Open in Browser
+### 4. Open in Browser
 - **Control Center**: http://localhost:5001
 - **Direct Kiosk**: http://localhost:5001/kiosk/TB001
 - **Mobile Upload**: http://localhost:5000/upload?kiosk_id=TB001
@@ -25,8 +37,8 @@ python run_system.py
 
 **Port 5000 - Cloud Server**
 - Receives PDFs from mobile users
-- Temporary storage for uploads
-- File listing API for sync service
+- Stores files in Supabase Storage
+- Serves upload UI
 - Lightweight, stateless
 
 **Port 5001 - Kiosk Server**
@@ -36,7 +48,7 @@ python run_system.py
 - Receipt & payment interface
 
 **Background - Sync Service**
-- Polls cloud every 3 seconds
+- Polls Supabase Storage every 3 seconds
 - Downloads files to local kiosk
 - Maintains file consistency
 
@@ -50,10 +62,10 @@ python run_system.py
 - User at kiosk sees QR code on left panel
 - Scans with phone → Opens upload page
 - Selects PDFs on phone → Uploads to cloud server
-- Cloud stores: `cloud_uploads/TB001/<job_id>_filename.pdf`
+- Supabase stores: `kiosk_files/TB001/<job_id>_filename.pdf`
 
 **2. SYNC PHASE**
-- Kiosk Sync Service detects new files (polls every 3s)
+- Kiosk Sync Service detects new files (polls Supabase every 3s)
 - Downloads to local: `kiosk/uploads/TB001/`
 - Acknowledges to cloud → Cloud auto-deletes
 - Documents instantly appear in kiosk queue
@@ -139,15 +151,15 @@ A3 - Color:          ₹10 per sheet
 
 ## 📁 FILE STORAGE STRUCTURE
 
-### Cloud (Temporary)
+### Supabase Storage
 ```
-cloud_uploads/
+kiosk_files/
 └── TB001/
     ├── a1b2c3d4_Document1.pdf     (Uploaded PDF)
     ├── a1b2c3d4.meta              (Timestamp)
     ├── e5f6g7h8_Document2.pdf
     ├── e5f6g7h8.meta
-    └── ... (deleted after sync)
+   └── ... (optional cleanup after sync)
 ```
 
 ### Local Kiosk (Persistent)
@@ -297,7 +309,8 @@ taskkill /PID <PID> /F
 
 ### Issue: Files Not Syncing
 - Check if Sync Service console shows errors
-- Verify `cloud_uploads/TB001/` has files
+- Verify Supabase bucket has files under `TB001/`
+- Check `config/supabase_config.json` values
 - Wait 5 seconds and refresh kiosk page
 - Check network connectivity
 

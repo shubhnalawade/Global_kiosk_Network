@@ -11,5 +11,10 @@
         "A4_Color": 5,
         "A3_BW": 4,
         "A3_Color": 10
+    },
+    "printer": {
+        "name": "RICOH SP 210 DDST Subh1",
+        "backend": "sumatra",
+        "sumatra_path": "C:\\Users\\shubh\\AppData\\Local\\SumatraPDF\\SumatraPDF.exe"
     }
 }

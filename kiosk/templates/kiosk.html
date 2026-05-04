@@ -36,6 +36,7 @@
             --qr-bg: white;
             --preview-bg: #1e1e1e;
             /* Dark neutral for preview */
+            --qr-size: 200px;
         }
 
         [data-bs-theme="light"] {
@@ -90,6 +91,22 @@
             background: var(--bg-panel);
             border-right: 1px solid var(--glass-border);
             box-shadow: 5px 0 25px var(--shadow-color);
+            padding-top: 8.5rem;
+            justify-content: flex-start;
+        }
+
+        body.has-files {
+            --qr-size: 185px;
+        }
+
+        /* When the left panel becomes a sidebar, keep QR steady and avoid header overlap */
+        body.has-files .qr-container {
+            animation: none;
+        }
+
+        body.has-files .qr-float-frame {
+            animation: none !important;
+            transform: none !important;
         }
 
         .right-panel {
@@ -138,14 +155,18 @@
 
         /* QR Section */
         .qr-container {
-            background: var(--qr-bg);
-            padding: 0.5rem;
-            /* --- MODIFIED: Reduced padding/white border --- */
-            border-radius: 20px;
+            background: var(--card-bg);
+            padding: 0.25rem;
+            border-radius: 16px;
             box-shadow: 0 10px 30px var(--shadow-color);
-            margin-bottom: 2rem;
+            margin: 0.5rem 0;
             animation: float 6s ease-in-out infinite;
             transition: all 0.5s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--glass-border);
         }
 
         /* Larger QR when centered */
@@ -161,6 +182,12 @@
             display: block;
             width: 100%;
             height: auto;
+        }
+
+        /* QR size control (larger when centered; slightly smaller in sidebar) */
+        .qr-container img {
+            width: var(--qr-size);
+            height: var(--qr-size);
         }
 
         @keyframes float {
@@ -339,6 +366,124 @@
             transform: none;
         }
 
+        /* Payment Overlay */
+        .payment-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 3000;
+        }
+
+        .payment-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .payment-card {
+            width: min(420px, 92vw);
+            background: var(--bg-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            padding: 24px;
+            color: var(--text-main);
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .payment-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .payment-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .payment-amount {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .payment-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .payment-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .payment-qr {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .payment-qr-box {
+            width: 220px;
+            height: 220px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: inset 0 0 0 1px #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-qr-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            background:
+                linear-gradient(#111 0 0) 8px 8px / 32px 32px,
+                linear-gradient(#111 0 0) calc(100% - 40px) 8px / 32px 32px,
+                linear-gradient(#111 0 0) 8px calc(100% - 40px) / 32px 32px,
+                repeating-linear-gradient(45deg, #111 0 6px, #fff 6px 12px);
+            background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #111;
+        }
+
+        .payment-timer {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .payment-actions .btn {
+            flex: 1;
+            border-radius: 999px;
+        }
+
         /* Modal Customization */
         .modal-content {
             background: var(--bg-panel);
@@ -446,6 +591,36 @@
         .price-anim {
             animation: price-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             /* Bouncy effect */
+        }
+
+        /* Bounce animation for pointing emoji */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Modal maximize state */
+        #printModalDialog.modal-maximized {
+            max-width: 100vw !important;
+            width: 100vw !important;
+            margin: 0 !important;
+        }
+
+        #printModalDialog.modal-maximized .modal-content {
+            height: 100vh !important;
+            border-radius: 0 !important;
+        }
+
+        #maximizeBtn i {
+            transition: transform 0.2s;
+        }
+
+        #maximizeBtn.minimized i::before {
+            content: '\f422';
         }
 
         /* --- Preview Container (Canvas/Image) --- */
@@ -914,11 +1089,11 @@
 
         /* Kiosk ID label — adapts to dark/light theme */
         .kiosk-id-label {
-            font-size: 0.7rem;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
             letter-spacing: 0.05em;
-            color: rgba(255, 255, 255, 0.55);
-            margin-top: 0.15rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin-top: 0.25rem;
             transition: color 0.3s;
         }
 
@@ -959,17 +1134,24 @@
 <body>
     <!-- Header -->
     <header class="kiosk-header">
+        <!-- LEFT: VENDOX BRANDING WITH LIVE DATE/TIME -->
         <div class="d-flex align-items-center gap-3 kiosk-brand">
-            <div class="logo-circle"><i class="fa-solid fa-print"></i></div>
-            <div>
-                <h4 class="mb-0 fw-bold">Print Kiosk</h4>
-                <div class="kiosk-id-label">ID: {{ kiosk_id }}</div>
+            <img src="/static/img/vendox_logo.png" alt="Vendox Logo" style="height: 48px; width: 48px; object-fit: contain; border-radius: 12px; background: #fff; padding: 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <div style="text-align: left;">
+                <h4 class="mb-0 fw-bold" style="font-size: 1.8rem; letter-spacing: -0.5px;">VENDOX</h4>
+                <div class="kiosk-id-label" id="liveDateTime" style="text-align: left;">
+                    <div style="line-height: 1.2;">
+                        <div>-- --- ----</div>
+                        <div style="font-size: 0.95rem;">--:--</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="d-flex gap-2 align-items-center header-controls" style="pointer-events: auto;">
+        <!-- RIGHT: ADMIN LOGIN & THEME TOGGLE -->
+        <div class="d-flex gap-3 align-items-center header-controls" style="pointer-events: auto;">
             <button class="btn-login-header" onclick="toggleLoginModal()">
-                <i class="fa-solid fa-user me-2"></i>Login
+                <i class="fa-solid fa-lock me-2"></i>Admin Login
             </button>
             <div class="form-check form-switch ms-2 d-flex align-items-center gap-2">
                 <i class="fa-solid fa-moon text-white-50"></i>
@@ -981,14 +1163,143 @@
     </header>
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="left-panel">
-            <h2 class="h4 mb-4 text-center fw-bold">Scan to Upload</h2>
-            <div class="qr-container"><img src="/qr/{{ kiosk_id }}" alt="QR Code"></div>
-            <div class="text-center small" style="color: var(--text-muted)">
-                <p class="mb-2"><i class="fa-solid fa-mobile-screen me-2"></i>Scan with your phone</p>
-                <p class="mb-0"><i class="fa-solid fa-wifi me-2"></i>Connect to same network</p>
+        <div class="left-panel d-flex flex-column align-items-center" style="gap: 2.5rem; min-width: 340px;">
+            <!-- QR Frame with Title (floating) -->
+            <div style="display: flex; flex-direction: column; align-items: center; margin-top: 2.5rem;">
+                <div class="qr-float-frame">
+                    <div style="font-weight: 700; font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.7rem; letter-spacing: 0.5px; text-align: center;">Scan me to upload</div>
+                    <div style="border: 4px solid #6366f1; border-radius: 22px; padding: 28px 28px 18px 28px; background: var(--card-bg); box-shadow: 0 8px 32px rgba(99,102,241,0.10); display: flex; flex-direction: column; align-items: center; overflow: hidden;">
+                        <div class="qr-container" style="box-shadow: none; border: none; margin: 0; padding: 16px; background: var(--qr-bg); border-radius: 16px;">
+                            <img src="/qr/{{ kiosk_id }}" alt="QR Code" style="display: block; border-radius: 10px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="max-width: 300px; text-align: center; margin-top: 1.2rem;">
+                <div style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.4;">
+                    If QR does not scan, open this URL on your phone:
+                </div>
+                <div style="color: var(--text-main); font-size: 0.85rem; word-break: break-all;">
+                    {{ upload_url }}
+                </div>
+            </div>
+            <!-- Progress Bar -->
+            <div id="progressBarSteps" style="width: 100%; max-width: 420px; margin: 0.4rem auto 0.1rem auto;">
+                <div class="progress-steps d-flex align-items-center justify-content-between">
+                    <div class="step-circle step-1">1</div>
+                    <div class="step-line step-line-1"></div>
+                    <div class="step-circle step-2">2</div>
+                    <div class="step-line step-line-2"></div>
+                    <div class="step-circle step-3">3</div>
+                    <div class="step-line step-line-3"></div>
+                    <div class="step-circle step-4">4</div>
+                    <div class="step-line step-line-4"></div>
+                    <div class="step-circle step-5">5</div>
+                </div>
+                <div class="progress-labels d-flex justify-content-between" style="font-size: 0.95rem; color: var(--text-muted);">
+                    <div style="width: 44px; text-align: center;">Upload</div>
+                    <div style="width: 44px; text-align: center;">Setup</div>
+                    <div style="width: 44px; text-align: center;">Payment</div>
+                    <div style="width: 44px; text-align: center;">Printing</div>
+                    <div style="width: 44px; text-align: center;">Done</div>
+                </div>
             </div>
         </div>
+            <style>
+                @keyframes qrFloat {
+                    0% { transform: translateY(0); }
+                    100% { transform: translateY(-18px); }
+                }
+                .progress-steps {
+                    position: relative;
+                    width: 100%;
+                    margin: 0 auto;
+                }
+
+                .progress-labels {
+                    margin-top: 0.45rem;
+                }
+
+                #progressBarSteps {
+                    padding-bottom: env(safe-area-inset-bottom, 0px);
+                }
+                .step-circle {
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    background: #232946;
+                    border: 3px solid #6366f1;
+                    color: #6366f1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 700;
+                    font-size: 1.25rem;
+                    z-index: 2;
+                    transition: background 0.3s, color 0.3s, border 0.3s;
+                }
+                .step-circle.active, .step-circle.completed {
+                    background: #22c55e;
+                    color: #fff;
+                    border-color: #22c55e;
+                }
+                .step-line {
+                    flex: 1 1 0;
+                    height: 5px;
+                    background: #6366f1;
+                    margin: 0 2px;
+                    border-radius: 3px;
+                    transition: background 0.3s;
+                }
+                .step-line.completed {
+                    background: #22c55e;
+                }
+                .step-circle.inactive {
+                    background: #232946;
+                    color: #6366f1;
+                    border-color: #6366f1;
+                    opacity: 0.5;
+                }
+                .step-line.inactive {
+                    background: #6366f1;
+                    opacity: 0.3;
+                }
+
+                @media (max-width: 480px), (max-height: 820px) {
+                    #progressBarSteps {
+                        margin-top: 0rem !important;
+                        max-width: 380px;
+                    }
+                    .step-circle {
+                        width: 34px;
+                        height: 34px;
+                        font-size: 1.1rem;
+                    }
+                    .step-line {
+                        height: 4px;
+                    }
+                    .progress-labels {
+                        margin-top: 0.15rem !important;
+                        font-size: 0.85rem !important;
+                    }
+                }
+
+                @media (max-height: 720px) {
+                    #progressBarSteps {
+                        margin-top: -0.15rem !important;
+                        max-width: 360px;
+                    }
+                    .step-circle {
+                        width: 30px;
+                        height: 30px;
+                        font-size: 1rem;
+                    }
+                    .progress-labels {
+                        margin-top: 0.05rem !important;
+                        font-size: 0.78rem !important;
+                    }
+                }
+            </style>
         <!-- Main Content (Right Panel) -->
         <div class="right-panel">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1008,25 +1319,63 @@
                     <small>Scan the QR code to upload files from your phone</small>
                 </div>
             </div>
-            <div class="bottom-bar"><button id="deleteSelectedBtn" class="btn btn-outline-danger rounded-pill px-4"
-                    onclick="deleteSelected()"><i class="fa-solid fa-trash me-2"></i>Delete Selected </button>
+            <div class="bottom-bar">
+                <button id="deleteSelectedBtn" class="btn btn-outline-danger rounded-pill px-4" onclick="deleteSelected()">
+                    <i class="fa-solid fa-trash me-2"></i>Delete Selected
+                </button>
                 <div class="d-flex align-items-center gap-4">
-                    <div class="text-end"><small class="d-block" style="color: var(--text-muted)">Total
-                            Estimated Cost</small><span class="h3 mb-0" id="totalDisplay">₹0</span></div>
-                    <button id="proceedBtn" disabled>Proceed to Payment <i
-                            class="fa-solid fa-arrow-right ms-2"></i></button>
+                    <div class="text-end">
+                        <small class="d-block" style="color: var(--text-muted)">Total Estimated Cost</small>
+                        <span class="h3 mb-0" id="totalDisplay">₹0</span>
+                    </div>
+                    <button id="proceedBtn" disabled>Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i></button>
                 </div>
             </div>
+            <script>
+                // Progress bar logic (update these hooks in your JS file as needed)
+                function updateProgressBar(step) {
+                    // step: 1 (upload), 2 (setup), 3 (payment), 4 (printing), 5 (done)
+                    for (let i = 1; i <= 5; i++) {
+                        const circle = document.querySelector('.step-' + i);
+                        if (circle) {
+                            circle.classList.remove('active', 'completed', 'inactive');
+                            if (i < step) circle.classList.add('completed');
+                            else if (i === step) circle.classList.add('active');
+                            else circle.classList.add('inactive');
+                        }
+                        if (i < 5) {
+                            const line = document.querySelector('.step-line-' + i);
+                            if (line) {
+                                line.classList.remove('completed', 'inactive');
+                                if (i < step) line.classList.add('completed');
+                                else line.classList.add('inactive');
+                            }
+                        }
+                    }
+                }
+                // Example: updateProgressBar(1) for upload, updateProgressBar(2) for setup, etc.
+                // Call this from your file queue/setup/payment logic.
+                // For now, default to step 1 on load:
+                document.addEventListener('DOMContentLoaded', function() {
+                    updateProgressBar(1);
+                });
+            </script>
         </div>
     </div>
     <!-- Print Settings Modal -->
     <div class="modal fade" id="printModal" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 960px; width: 95vw;">
+        <div class="modal-dialog modal-dialog-centered" id="printModalDialog" style="max-width: 960px; width: 95vw;">
             <div class="modal-content"
                 style="height: 82vh; max-height: 640px; display: flex; flex-direction: column; overflow: hidden;">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fa-solid fa-print me-2"></i>Print Settings</h5><button
-                        type="button" class="btn-close" id="modalCloseBtn" data-bs-dismiss="modal"></button>
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title"><i class="fa-solid fa-print me-2"></i>Print Settings</h5>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle" 
+                            id="maximizeBtn" onclick="toggleMaximizeModal()" title="Maximize">
+                            <i class="fa-solid fa-maximize"></i>
+                        </button>
+                        <button type="button" class="btn-close" id="modalCloseBtn" data-bs-dismiss="modal"></button>
+                    </div>
                 </div>
                 <div class="modal-body p-0" style="flex: 1; overflow: hidden; display: flex;">
                     <div class="row g-0 h-100 w-100 m-0">
@@ -1300,6 +1649,31 @@
             </div>
         </div>
     </div>
+    <!-- Payment Overlay -->
+    <div class="payment-overlay" id="paymentOverlay" onclick="if(event.target === this) closePaymentOverlay('cancel')">
+        <div class="payment-card">
+            <div class="payment-header">
+                <div class="payment-title">Payment</div>
+                <button class="payment-close" type="button" onclick="closePaymentOverlay('cancel')" aria-label="Close">&times;</button>
+            </div>
+            <div class="payment-amount">
+                <div class="payment-label">Total Amount</div>
+                <div class="payment-value" id="paymentAmount">₹0</div>
+            </div>
+            <div class="payment-qr">
+                <div class="payment-qr-box">
+                    <div class="payment-qr-placeholder">DUMMY QR</div>
+                </div>
+            </div>
+            <div class="payment-timer">
+                Expires in <span id="paymentTimer">01:00</span>
+            </div>
+            <div class="payment-actions">
+                <button class="btn btn-outline-secondary" id="paymentCancelBtn" onclick="closePaymentOverlay('cancel')">Cancel</button>
+                <button class="btn btn-primary" id="paymentProceedBtn" onclick="confirmPaymentAndPrint()">Proceed</button>
+            </div>
+        </div>
+    </div>
     <!-- Login/Register Modal -->
     <div class="login-overlay" id="loginOverlay" onclick="if(event.target === this) toggleLoginModal()">
         <div class="login-card" id="loginCard">
@@ -1380,6 +1754,10 @@
         let currentFile = null;
         let previousFilesSignature = "";
         let selectedFiles = new Set();
+        let latestSessionTotal = 0;
+        let paymentTimerId = null;
+        let paymentSecondsRemaining = 0;
+        let paymentInFlight = false;
         const printModal = new bootstrap.Modal(document.getElementById('printModal'));
 
         // --- OLD PREVIEW LOGIC REMOVED --- 
@@ -1611,22 +1989,102 @@
         let previewScale = 1.0;
         let rotation = 0;
         let pageCards = [];   // wrapper divs for each page
-        let previewMode = 'width'; // 'width' or 'page'
+        let previewMode = 'page'; // 'page' (fit to page/portrait), 'width' (fit to width), or 'zoom' (custom zoom)
+        let ppsLocked = false;
 
         // ----------------------------------------------------------------
         //  OPEN
         // ----------------------------------------------------------------
+        function getJobIdFromFilename(filename) {
+            if (!filename) return '';
+            const idx = filename.indexOf('_');
+            return idx === -1 ? '' : filename.slice(0, idx);
+        }
+
+        async function loadSavedSettings(filename) {
+            const jobId = getJobIdFromFilename(filename);
+            if (!jobId) return null;
+            try {
+                const resp = await fetch(`/preview/${kioskId}/${jobId}.settings.json`, { cache: 'no-store' });
+                if (!resp.ok) return null;
+                return await resp.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function applySavedSettings(settings) {
+            if (!settings) return;
+
+            const sv = function (id, v) { var el = document.getElementById(id); if (el && v !== undefined && v !== null) el.value = v; };
+            const sc = function (id, v) { var el = document.getElementById(id); if (el && v !== undefined && v !== null) el.checked = !!v; };
+
+            sv('copies', settings.copies);
+            sv('colorSelect', settings.color);
+            sv('paperSize', settings.size);
+            sv('pps', settings.pages_per_sheet);
+
+            if (settings.pages_per_sheet !== undefined && settings.pages_per_sheet !== null) {
+                setPagesPerSheetLocked(true);
+            }
+
+            // Duplex
+            sc('sides', settings.sides && settings.sides !== 'one-sided');
+
+            // Pages selection
+            const pages = (settings.pages || 'all');
+            const pagesSelectEl = document.getElementById('pagesSelect');
+            const cpi = document.getElementById('customPagesInput');
+            const pageErrorEl = document.getElementById('pageError');
+            if (pagesSelectEl) {
+                if (pages && pages !== 'all') {
+                    pagesSelectEl.value = 'custom';
+                    if (cpi) {
+                        cpi.style.display = 'block';
+                        cpi.value = pages;
+                    }
+                } else {
+                    pagesSelectEl.value = 'all';
+                    if (cpi) cpi.style.display = 'none';
+                }
+            }
+            if (pageErrorEl) pageErrorEl.style.display = 'none';
+
+            // Optional settings (if present)
+            sv('layoutSelect', settings.layout);
+            sv('margins', settings.margins);
+            sv('scale', settings.scale);
+            sc('headersFooters', settings.headersFooters);
+            sc('backgroundGraphics', settings.backgroundGraphics);
+
+            enforceBwOnly();
+
+            const csg = document.getElementById('customScaleGroup');
+            const csi = document.getElementById('customScaleInput');
+            if (settings.scale === 'custom') {
+                if (csg) csg.style.display = 'flex';
+                if (csi && settings.customScale !== undefined && settings.customScale !== null) csi.value = settings.customScale;
+            } else {
+                if (csg) csg.style.display = 'none';
+            }
+        }
+
         async function openPrintUI(filename) {
             currentFile = filename;
             currentSheetIndex = 0;
             rotation = 0;
             previewScale = 1.0;
+            previewMode = 'page';  // Default to fit to page
             pageCards = [];
 
             printModal.show();
             clearPreviewBox();
             document.getElementById('sheetIndicator').innerText = 'Loading...';
             resetPrintControls();
+
+            // If the user has already configured this job, restore their choices.
+            const saved = await loadSavedSettings(filename);
+            if (saved) applySavedSettings(saved);
 
             const url = `/preview/${kioskId}/${filename}`;
             const ext = filename.split('.').pop().toLowerCase();
@@ -1674,12 +2132,32 @@
             sv('pagesSelect', 'all'); sv('paperSize', 'a4'); sv('pps', '1');
             sv('margins', 'default'); sv('scale', 'default');
             sc('sides', false); sc('headersFooters', false); sc('backgroundGraphics', true);
+            setPagesPerSheetLocked(false);
             var pCount = document.getElementById('finalPageCount'); if (pCount) pCount.innerText = '--';
             var cpi = document.getElementById('customPagesInput'); if (cpi) cpi.style.display = 'none';
+            var pe = document.getElementById('pageError'); if (pe) pe.style.display = 'none';
             var csg = document.getElementById('customScaleGroup'); if (csg) csg.style.display = 'none';
             var ms = document.getElementById('moreSettings');
             if (ms && ms.classList.contains('show'))
                 new bootstrap.Collapse(ms, { hide: true });
+        }
+
+        function setPagesPerSheetLocked(locked) {
+            ppsLocked = !!locked;
+            const pps = document.getElementById('pps');
+            if (pps) {
+                pps.disabled = ppsLocked;
+                pps.title = ppsLocked ? 'Locked by setup' : '';
+            }
+        }
+
+        function enforceBwOnly() {
+            const colorSelect = document.getElementById('colorSelect');
+            if (!colorSelect) return;
+            if (colorSelect.value === 'color') {
+                alert('Color printing is not available. Please choose Black and white.');
+                colorSelect.value = 'bw';
+            }
         }
 
         function loadPdfJs() {
@@ -1709,9 +2187,17 @@
         //  RENDERING — all pages stacked vertically, continuous scroll
         // ----------------------------------------------------------------
         function updatePreviewSettings() {
-            if (!pdfDoc) return;
-            totalSheets = pdfDoc.numPages;
-            renderAllPages();
+            if (pdfDoc) {
+                totalSheets = pdfDoc.numPages;
+                renderAllPages();
+            } else if (currentFile) {
+                // For images, re-render with new preview settings
+                const ext = currentFile.split('.').pop().toLowerCase();
+                if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                    const url = `/preview/${kioskId}/${currentFile}`;
+                    renderImagePreview(url);
+                }
+            }
         }
 
         async function renderAllPages() {
@@ -1844,7 +2330,7 @@
             }
 
             document.getElementById('sheetIndicator').innerText =
-                'Zoom: ' + Math.round(previewScale * 100) + '%';
+                pdfDoc.numPages + ' Page' + (pdfDoc.numPages !== 1 ? 's' : '');
         }
 
         function renderImagePreview(url) {
@@ -1860,14 +2346,38 @@
 
             var img = document.createElement('img');
             img.src = url;
-            img.style.maxWidth = '100%';
-            img.style.height = 'auto';
             img.style.display = 'block';
+            
+            // Apply scale based on preview mode
+            if (previewMode === 'page') {
+                // Fit image to page (A4)
+                const baseW = 595.28;
+                const baseH = 841.89;
+                const layout = document.getElementById('layoutSelect') ? document.getElementById('layoutSelect').value : 'portrait';
+                
+                let availW = layout === 'landscape' ? baseH : baseW;
+                let availH = layout === 'portrait' ? baseH : baseW;
+                
+                // When loading, we don't know image size yet, so set max constraints
+                img.style.maxWidth = (availW * previewScale) + 'px';
+                img.style.maxHeight = (availH * previewScale) + 'px';
+            } else if (previewMode === 'width') {
+                // Fit to width
+                img.style.maxWidth = (600 * previewScale) + 'px';
+                img.style.height = 'auto';
+            } else {
+                img.style.maxWidth = (400 * previewScale) + 'px';
+                img.style.height = 'auto';
+            }
+            
+            img.style.width = 'auto';
+            img.style.height = 'auto';
+            
             card.appendChild(img);
             wrap.appendChild(card);
             pageCards = [card];
 
-            document.getElementById('sheetIndicator').innerText = '1 image';
+            document.getElementById('sheetIndicator').innerText = '1 Page';
             totalSheets = 1;
             currentSheetIndex = 0;
         }
@@ -1912,31 +2422,72 @@
 
 
         // --- UPDATE PRICE & PAGE COUNT ---
+        function parseCustomPages(rangeVal, maxPages) {
+            const out = { count: maxPages, valid: true };
+            if (!maxPages || maxPages < 1) {
+                out.count = 1;
+                return out;
+            }
+
+            const raw = (rangeVal || '').trim();
+            if (!raw) {
+                return { count: maxPages, valid: false };
+            }
+
+            const selected = new Set();
+            try {
+                raw.split(',').forEach(part => {
+                    const token = part.trim();
+                    if (!token) return;
+
+                    if (token.includes('-')) {
+                        const parts = token.split('-');
+                        if (parts.length !== 2) throw new Error('bad range');
+                        const a = parseInt((parts[0] || '').trim(), 10);
+                        const b = parseInt((parts[1] || '').trim(), 10);
+                        if (isNaN(a) || isNaN(b)) throw new Error('bad range');
+
+                        let start = Math.min(a, b);
+                        let end = Math.max(a, b);
+                        start = Math.max(1, start);
+                        end = Math.min(maxPages, end);
+                        if (start > end) throw new Error('empty range');
+
+                        for (let p = start; p <= end; p++) selected.add(p);
+                    } else {
+                        const p = parseInt(token, 10);
+                        if (!isNaN(p) && p >= 1 && p <= maxPages) selected.add(p);
+                    }
+                });
+            } catch (e) {
+                return { count: maxPages, valid: false };
+            }
+
+            if (selected.size === 0) return { count: maxPages, valid: false };
+            return { count: selected.size, valid: true };
+        }
+
         function updatePrice() {
             if (!currentFile) return;
 
             // 1. Calculate Physical Pages locally for display
             var numPages = (pdfDoc) ? pdfDoc.numPages : 1;
             var pagesSelect = document.getElementById('pagesSelect').value;
+            var pageErrorEl = document.getElementById('pageError');
+            var customPagesInput = document.getElementById('customPagesInput');
+            var customPagesRaw = customPagesInput ? customPagesInput.value : '';
+            var customPagesParsed = null;
 
             if (pagesSelect === 'custom') {
-                var rangeVal = document.getElementById('customPagesInput').value.trim();
-                // Simple parser for ranges like "1-5, 7, 9-10"
-                if (rangeVal) {
-                    try {
-                        var count = 0;
-                        var parts = rangeVal.split(',');
-                        parts.forEach(function (p) {
-                            var range = p.split('-').map(x => parseInt(x.trim()));
-                            if (range.length === 2 && !isNaN(range[0]) && !isNaN(range[1])) {
-                                count += (Math.abs(range[1] - range[0]) + 1);
-                            } else if (range.length === 1 && !isNaN(range[0])) {
-                                count++;
-                            }
-                        });
-                        if (count > 0) numPages = count;
-                    } catch (e) { }
+                customPagesParsed = parseCustomPages(customPagesRaw, numPages);
+                if (customPagesParsed.valid) {
+                    numPages = customPagesParsed.count;
+                    if (pageErrorEl) pageErrorEl.style.display = 'none';
+                } else {
+                    if (pageErrorEl) pageErrorEl.style.display = 'block';
                 }
+            } else {
+                if (pageErrorEl) pageErrorEl.style.display = 'none';
             }
 
             var pps = parseInt(document.getElementById('pps') ? document.getElementById('pps').value : 1) || 1;
@@ -1964,8 +2515,8 @@
                 sides: document.getElementById('sides') && document.getElementById('sides').checked ? 'two-sided-long-edge' : 'one-sided'
             };
 
-            if (document.getElementById('pagesSelect').value === 'custom') {
-                params.pages = document.getElementById('customPagesInput').value;
+            if (document.getElementById('pagesSelect').value === 'custom' && customPagesParsed && customPagesParsed.valid) {
+                params.pages = customPagesRaw;
             }
 
             fetch("/price", {
@@ -1992,6 +2543,8 @@
         function toggleCustomPages() {
             const val = document.getElementById('pagesSelect').value;
             document.getElementById('customPagesInput').style.display = val === 'custom' ? 'block' : 'none';
+            const err = document.getElementById('pageError');
+            if (err && val !== 'custom') err.style.display = 'none';
             updatePrice();
         }
 
@@ -2002,6 +2555,7 @@
         }
 
         function partialDone() {
+            enforceBwOnly();
             const colorMode = document.getElementById('colorSelect').value;
             const copies = document.getElementById('copies').value;
             const pps = document.getElementById('pps').value;
@@ -2009,6 +2563,13 @@
             const sidesEl = document.getElementById('sides');
             const sidesVal = sidesEl && sidesEl.checked ? 'two-sided-long-edge' : 'one-sided';
             let pages = "all";
+
+            const layout = document.getElementById('layoutSelect') ? document.getElementById('layoutSelect').value : 'portrait';
+            const margins = document.getElementById('margins') ? document.getElementById('margins').value : 'default';
+            const scale = document.getElementById('scale') ? document.getElementById('scale').value : 'default';
+            const customScale = document.getElementById('customScaleInput') ? document.getElementById('customScaleInput').value : '';
+            const headersFooters = document.getElementById('headersFooters') ? document.getElementById('headersFooters').checked : false;
+            const backgroundGraphics = document.getElementById('backgroundGraphics') ? document.getElementById('backgroundGraphics').checked : true;
 
             if (pagesSelect === 'custom') {
                 pages = document.getElementById('customPagesInput').value;
@@ -2023,7 +2584,13 @@
                     pages: pages,
                     sides: sidesVal,
                     pages_per_sheet: pps,
-                    size: document.getElementById('paperSize').value
+                    size: document.getElementById('paperSize').value,
+                    layout: layout,
+                    margins: margins,
+                    scale: scale,
+                    customScale: customScale,
+                    headersFooters: headersFooters,
+                    backgroundGraphics: backgroundGraphics
                 })
             }).then(() => {
                 previousFilesSignature = "";
@@ -2041,20 +2608,184 @@
                 if (d.ready) {
                     btn.disabled = false;
                     btn.innerHTML = `Pay & Print <i class="fa-solid fa-print ms-2"></i>`;
+                    latestSessionTotal = Number(d.total) || 0;
                     totalDisplay.innerText = `\u20B9${d.total}`;
                     totalDisplay.classList.add('text-success');
                     totalDisplay.classList.remove('text-muted');
                 } else {
                     btn.disabled = true;
                     btn.innerHTML = `Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i>`;
+                    latestSessionTotal = 0;
                     totalDisplay.classList.remove('text-success');
                 }
             }).catch(console.error);
         }
 
+        function formatPaymentTimer(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function setPaymentTimerDisplay(seconds) {
+            const timer = document.getElementById('paymentTimer');
+            if (timer) {
+                timer.textContent = formatPaymentTimer(seconds);
+            }
+        }
+
+        function openPaymentOverlay() {
+            const overlay = document.getElementById('paymentOverlay');
+            const amount = document.getElementById('paymentAmount');
+
+            if (!overlay || !amount) return;
+
+            amount.textContent = `\u20B9${latestSessionTotal}`;
+            paymentSecondsRemaining = 60;
+            setPaymentTimerDisplay(paymentSecondsRemaining);
+            overlay.classList.add('active');
+
+            if (typeof updateProgressBar === 'function') {
+                updateProgressBar(3);
+            }
+
+            if (paymentTimerId) {
+                clearInterval(paymentTimerId);
+            }
+
+            paymentTimerId = setInterval(() => {
+                paymentSecondsRemaining -= 1;
+                setPaymentTimerDisplay(paymentSecondsRemaining);
+                if (paymentSecondsRemaining <= 0) {
+                    closePaymentOverlay('expired');
+                }
+            }, 1000);
+        }
+
+        function closePaymentOverlay(reason) {
+            const overlay = document.getElementById('paymentOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+
+            if (paymentTimerId) {
+                clearInterval(paymentTimerId);
+                paymentTimerId = null;
+            }
+
+            paymentSecondsRemaining = 0;
+            paymentInFlight = false;
+
+            const proceedBtn = document.getElementById('paymentProceedBtn');
+            if (proceedBtn) {
+                proceedBtn.disabled = false;
+                proceedBtn.textContent = 'Proceed';
+            }
+
+            if (typeof updateProgressBar === 'function') {
+                updateProgressBar(2);
+            }
+        }
+
+        function getFilesForPrintRequest() {
+            if (selectedFiles.size > 0) {
+                return Array.from(selectedFiles);
+            }
+            return null;
+        }
+
+        async function confirmPaymentAndPrint() {
+            if (paymentInFlight) return;
+
+            if (!confirm('Proceed to print?')) {
+                return;
+            }
+
+            const proceedBtn = document.getElementById('paymentProceedBtn');
+            if (proceedBtn) {
+                proceedBtn.disabled = true;
+                proceedBtn.textContent = 'Printing...';
+            }
+
+            paymentInFlight = true;
+
+            if (typeof updateProgressBar === 'function') {
+                updateProgressBar(4);
+            }
+
+            const payload = {};
+            const files = getFilesForPrintRequest();
+            if (files) payload.files = files;
+
+            try {
+                const resp = await fetch(`/print/${kioskId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await resp.json();
+                if (!resp.ok || data.status === 'error') {
+                    throw new Error(data.message || 'Print failed');
+                }
+
+                closePaymentOverlay('success');
+                if (typeof updateProgressBar === 'function') {
+                    updateProgressBar(5);
+                }
+            } catch (err) {
+                console.error('Print error:', err);
+                alert('Print failed. Please try again.');
+                closePaymentOverlay('failed');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const proceedBtn = document.getElementById('proceedBtn');
+            if (proceedBtn) {
+                proceedBtn.addEventListener('click', () => {
+                    if (!proceedBtn.disabled) {
+                        openPaymentOverlay();
+                    }
+                });
+            }
+
+            const colorSelect = document.getElementById('colorSelect');
+            if (colorSelect) {
+                colorSelect.addEventListener('change', () => {
+                    enforceBwOnly();
+                    updatePrice();
+                });
+            }
+        });
+
         loadFiles();
         setInterval(loadFiles, 3000);
         setInterval(checkSession, 3000);
+
+        // --- LIVE DATE/TIME UPDATE ---
+        function updateLiveDateTime() {
+            const now = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            const dayName = days[now.getDay()];
+            const date = String(now.getDate()).padStart(2, '0');
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const liveDateTime = document.getElementById('liveDateTime');
+            if (liveDateTime) {
+                liveDateTime.innerHTML = `
+                    <div style="line-height: 1.2;">
+                        <div>${dayName}, ${date} ${month} ${year}</div>
+                        <div style="font-size: 0.95rem;">${hours}:${minutes}</div>
+                    </div>
+                `;
+            }
+        }
 
         // --- THEME TOGGLE ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -2066,7 +2797,30 @@
                 
                 themeToggleBtn.addEventListener('change', toggleTheme);
             }
+            
+            // Initialize live date/time and update every second
+            updateLiveDateTime();
+            setInterval(updateLiveDateTime, 1000);
         });
+
+        // --- MODAL MAXIMIZE/MINIMIZE ---
+        function toggleMaximizeModal() {
+            const dialog = document.getElementById('printModalDialog');
+            const btn = document.getElementById('maximizeBtn');
+            const isMaximized = dialog.classList.contains('modal-maximized');
+            
+            if (isMaximized) {
+                dialog.classList.remove('modal-maximized');
+                btn.classList.remove('minimized');
+                btn.innerHTML = '<i class="fa-solid fa-maximize"></i>';
+                btn.title = 'Maximize';
+            } else {
+                dialog.classList.add('modal-maximized');
+                btn.classList.add('minimized');
+                btn.innerHTML = '<i class="fa-solid fa-minimize"></i>';
+                btn.title = 'Minimize';
+            }
+        }
 
         // --- LOGIN / REGISTER LOGIC ---
         function togglePass(inputId, icon) {
