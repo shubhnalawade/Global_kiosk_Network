@@ -2024,9 +2024,7 @@
             sv('paperSize', settings.size);
             sv('pps', settings.pages_per_sheet);
 
-            if (settings.pages_per_sheet !== undefined && settings.pages_per_sheet !== null) {
-                setPagesPerSheetLocked(true);
-            }
+            // Allow users to adjust pages-per-sheet when reopening settings.
 
             // Duplex
             sc('sides', settings.sides && settings.sides !== 'one-sided');
@@ -2724,9 +2722,21 @@
                     body: JSON.stringify(payload)
                 });
 
-                const data = await resp.json();
-                if (!resp.ok || data.status === 'error') {
-                    throw new Error(data.message || 'Print failed');
+                const rawText = await resp.text();
+                let data = null;
+                try {
+                    data = rawText ? JSON.parse(rawText) : null;
+                } catch (parseErr) {
+                    data = null;
+                }
+
+                if (!resp.ok) {
+                    const serverMsg = data && data.message ? data.message : rawText;
+                    throw new Error(serverMsg || `Print failed (${resp.status})`);
+                }
+
+                if (!data || data.status === 'error') {
+                    throw new Error((data && data.message) || 'Print failed');
                 }
 
                 closePaymentOverlay('success');
@@ -2735,7 +2745,7 @@
                 }
             } catch (err) {
                 console.error('Print error:', err);
-                alert('Print failed. Please try again.');
+                alert(`Print failed: ${err.message || 'Please try again.'}`);
                 closePaymentOverlay('failed');
             }
         }

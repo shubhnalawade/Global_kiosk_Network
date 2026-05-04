@@ -27,10 +27,21 @@ import math
 import socket
 import shutil
 import subprocess
+from datetime import datetime
 
 import qrcode
 from io import BytesIO
-from PyPDF2 import PdfReader
+try:
+    from pypdf import PdfReader, PdfWriter, Transformation
+    _PDF_LIB = "pypdf"
+except Exception:
+    try:
+        from PyPDF2 import PdfReader, PdfWriter, Transformation
+        _PDF_LIB = "PyPDF2"
+    except Exception:
+        from PyPDF2 import PdfReader, PdfWriter
+        Transformation = None
+        _PDF_LIB = "PyPDF2"
 from flask import (
     Flask, request, render_template, jsonify, session,
     send_from_directory, send_file, redirect, url_for, make_response
@@ -123,14 +134,16 @@ def _list_printers() -> list:
             capture_output=True,
             text=True,
         )
-        return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+        names = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+        return ["Save as PDF"] + names
 
     result = subprocess.run(
         ["bash", "-lc", "lpstat -p | awk '{print $2}'"],
         capture_output=True,
         text=True,
     )
-    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    names = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    return ["Save as PDF"] + names
 
 
 def _resolve_sumatra_path(printer_cfg: dict) -> str:
@@ -162,6 +175,152 @@ def _normalize_paper(value: str) -> str:
     return mapping.get(key, "")
 
 
+def _paper_size_points(paper_key: str) -> tuple:
+    """Return (width, height) in PDF points for common paper sizes."""
+    key = (paper_key or "").strip().lower()
+    sizes = {
+        "a4": (595.28, 841.89),
+        "a3": (841.89, 1190.55),
+        "letter": (612.0, 792.0),
+        "legal": (612.0, 1008.0),
+    }
+    return sizes.get(key, sizes["a4"])
+
+
+def _get_margin_points(margins: str) -> float:
+    margin_key = (margins or "").strip().lower()
+    if margin_key == "none":
+        return 0.0
+    if margin_key == "min":
+        return 10.0
+    return 20.0
+
+
+def _get_nup_grid(pages_per_sheet: int, layout: str) -> tuple:
+    layout_key = (layout or "portrait").strip().lower()
+    if pages_per_sheet <= 1:
+        return (1, 1)
+    if pages_per_sheet == 2:
+        return (2, 1) if layout_key == "landscape" else (1, 2)
+    if pages_per_sheet == 4:
+        return (2, 2)
+    if pages_per_sheet == 6:
+        return (3, 2) if layout_key == "landscape" else (2, 3)
+    if pages_per_sheet >= 9:
+        return (3, 3) if pages_per_sheet < 16 else (4, 4)
+    return (1, 1)
+
+
+def _compose_nup_pdf(input_path: str, settings: dict, output_path: str) -> None:
+    reader = PdfReader(input_path)
+    total_pages = len(reader.pages)
+    if total_pages == 0:
+        raise RuntimeError("No pages to print")
+
+    pages_range = _parse_pages_range(settings.get("pages"), total_pages)
+    if not pages_range:
+        pages_range = list(range(1, total_pages + 1))
+
+    try:
+        pages_per_sheet = int(settings.get("pages_per_sheet") or 1)
+    except Exception:
+        pages_per_sheet = 1
+
+    if pages_per_sheet < 1:
+        pages_per_sheet = 1
+
+    layout = settings.get("layout") or "portrait"
+    sheet_w, sheet_h = _paper_size_points(settings.get("size"))
+    if str(layout).strip().lower() == "landscape":
+        sheet_w, sheet_h = sheet_h, sheet_w
+
+    cols, rows = _get_nup_grid(pages_per_sheet, layout)
+    cell_w = sheet_w / cols
+    cell_h = sheet_h / rows
+    margin = _get_margin_points(settings.get("margins"))
+
+    scale_mode = settings.get("scale")
+    scale_factor = 1.0
+    if scale_mode == "custom":
+        try:
+            scale_factor = float(settings.get("customScale") or 100) / 100.0
+        except Exception:
+            scale_factor = 1.0
+
+    writer = PdfWriter()
+    for chunk_start in range(0, len(pages_range), pages_per_sheet):
+        sheet = writer.add_blank_page(width=sheet_w, height=sheet_h)
+        chunk = pages_range[chunk_start:chunk_start + pages_per_sheet]
+
+        for idx, page_num in enumerate(chunk):
+            src_page = reader.pages[page_num - 1]
+            src_w = float(src_page.mediabox.width)
+            src_h = float(src_page.mediabox.height)
+
+            col = idx % cols
+            row = idx // cols
+            row = min(row, rows - 1)
+
+            usable_w = max(cell_w - (2 * margin), 1)
+            usable_h = max(cell_h - (2 * margin), 1)
+            base_scale = min(usable_w / src_w, usable_h / src_h)
+            scale = max(base_scale * scale_factor, 0.01)
+
+            draw_w = src_w * scale
+            draw_h = src_h * scale
+
+            offset_x = col * cell_w + margin + (usable_w - draw_w) / 2
+            offset_y = sheet_h - ((row + 1) * cell_h) + margin + (usable_h - draw_h) / 2
+
+            _merge_page_onto_sheet(sheet, src_page, scale, offset_x, offset_y)
+
+    with open(output_path, "wb") as out_file:
+        writer.write(out_file)
+
+
+def _merge_page_onto_sheet(sheet, src_page, scale: float, offset_x: float, offset_y: float) -> None:
+    if hasattr(sheet, "merge_transformed_page") and Transformation is not None:
+        transform = Transformation().scale(scale).translate(offset_x, offset_y)
+        sheet.merge_transformed_page(src_page, transform)
+        return
+
+    if hasattr(sheet, "merge_scaled_translated_page"):
+        sheet.merge_scaled_translated_page(src_page, scale, offset_x, offset_y)
+        return
+
+    try:
+        if hasattr(src_page, "copy"):
+            page = src_page.copy()
+        else:
+            import copy
+            page = copy.copy(src_page)
+
+        if Transformation is not None and hasattr(page, "add_transformation"):
+            page.add_transformation(Transformation().scale(scale).translate(offset_x, offset_y))
+        else:
+            if hasattr(page, "scale"):
+                page.scale(scale)
+            if hasattr(page, "translate"):
+                page.translate(offset_x, offset_y)
+
+        if hasattr(sheet, "merge_page"):
+            sheet.merge_page(page)
+        else:
+            sheet.mergePage(page)
+    except Exception as exc:
+        raise RuntimeError(f"N-up merge failed: {exc}")
+
+
+def _apply_copies_to_pdf(input_path: str, copies: int, output_path: str) -> None:
+    reader = PdfReader(input_path)
+    writer = PdfWriter()
+    for _ in range(max(1, copies)):
+        for page in reader.pages:
+            writer.add_page(page)
+    with open(output_path, "wb") as out_file:
+        writer.write(out_file)
+
+
 def _load_job_settings(kiosk_dir: str, job_id: str) -> dict:
     path = os.path.join(kiosk_dir, f"{job_id}.settings.json")
     if not os.path.exists(path):
@@ -171,6 +330,43 @@ def _load_job_settings(kiosk_dir: str, job_id: str) -> dict:
             return json.load(f)
     except Exception:
         return {}
+
+
+def _parse_pages_range(pages_range, max_pages: int) -> list:
+    """Parse a page range string like "1-3, 5" into a sorted 1-based list."""
+    if max_pages <= 0:
+        return []
+    if not pages_range:
+        return []
+
+    pages_range = str(pages_range).strip().lower()
+    if not pages_range or pages_range == "all":
+        return []
+
+    selected = set()
+    try:
+        for part in pages_range.split(","):
+            token = part.strip()
+            if not token:
+                continue
+            if "-" in token:
+                a_str, b_str = token.split("-", 1)
+                a = int(a_str.strip())
+                b = int(b_str.strip())
+                start = max(1, min(a, b))
+                end = min(max_pages, max(a, b))
+                if start > end:
+                    continue
+                for page in range(start, end + 1):
+                    selected.add(page)
+            else:
+                page = int(token)
+                if 1 <= page <= max_pages:
+                    selected.add(page)
+    except Exception:
+        return []
+
+    return sorted(selected)
 
 
 def _build_sumatra_settings(settings: dict) -> str:
@@ -789,6 +985,9 @@ def print_jobs(kiosk_id):
             continue
         if "_" not in name or name.endswith(".meta") or name.endswith(".json"):
             continue
+        ext = name.rsplit(".", 1)[-1].lower()
+        if ext not in ALLOWED_EXTENSIONS:
+            continue
         path = os.path.join(kiosk_dir, name)
         if os.path.isfile(path):
             printable.append((name, path))
@@ -819,17 +1018,58 @@ def print_jobs(kiosk_id):
     sumatra_path = _resolve_sumatra_path(printer_cfg) if backend == "sumatra" else ""
 
     log_path = os.path.join(kiosk_dir, "print_debug.log")
+    work_dir = os.path.join(kiosk_dir, "print_work")
+    os.makedirs(work_dir, exist_ok=True)
     printed = []
     failed = []
     for name, path in printable:
         job_id = name.split("_")[0]
         settings = _load_job_settings(kiosk_dir, job_id)
+        stamp = datetime.now().isoformat(timespec="seconds")
 
         try:
+            if printer_name.lower() == "save as pdf":
+                output_dir = os.path.join(kiosk_dir, "print_outputs")
+                os.makedirs(output_dir, exist_ok=True)
+
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                base_name = f"{job_id}_print_{timestamp}.pdf"
+                temp_path = os.path.join(work_dir, f"{job_id}_nup_{timestamp}.pdf")
+
+                _compose_nup_pdf(path, settings, temp_path)
+
+                copies = int(settings.get("copies") or 1)
+                if copies > 1:
+                    out_path = os.path.join(output_dir, base_name)
+                    _apply_copies_to_pdf(temp_path, copies, out_path)
+                else:
+                    out_path = os.path.join(output_dir, base_name)
+                    os.replace(temp_path, out_path)
+
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"{stamp} SAVE PDF: {out_path}\n")
+                printed.append(name)
+                continue
+
             if backend == "sumatra":
                 if not sumatra_path:
                     raise RuntimeError("SumatraPDF not found. Set its path in the admin panel.")
-                settings_arg = _build_sumatra_settings(settings)
+                print_path = path
+                settings_for_print = dict(settings or {})
+                try:
+                    pages_per_sheet = int(settings.get("pages_per_sheet") or 1)
+                except Exception:
+                    pages_per_sheet = 1
+                if pages_per_sheet > 1:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    print_path = os.path.join(work_dir, f"{job_id}_nup_{timestamp}.pdf")
+                    _compose_nup_pdf(path, settings, print_path)
+                    # Avoid double-nup/rotation; composed PDF already matches layout.
+                    settings_for_print.pop("pages_per_sheet", None)
+                    settings_for_print.pop("layout", None)
+                    settings_for_print.pop("pages", None)
+
+                settings_arg = _build_sumatra_settings(settings_for_print)
                 cmd = [
                     sumatra_path,
                     "-silent",
@@ -838,37 +1078,46 @@ def print_jobs(kiosk_id):
                 ]
                 if settings_arg:
                     cmd.extend(["-print-settings", settings_arg])
-                cmd.append(path)
+                cmd.append(print_path)
                 with open(log_path, "a") as log_file:
-                    log_file.write(f"SUMATRA CMD: {cmd}\n")
-                    log_file.write(f"SETTINGS: {settings}\n")
+                    log_file.write(f"{stamp} SUMATRA CMD: {cmd}\n")
+                    log_file.write(f"{stamp} SETTINGS: {settings_for_print}\n")
                 result = subprocess.run(cmd, capture_output=True, text=True)
                 if result.stdout or result.stderr:
                     with open(log_path, "a") as log_file:
                         if result.stdout:
-                            log_file.write(f"SUMATRA OUT: {result.stdout}\n")
+                            log_file.write(f"{stamp} SUMATRA OUT: {result.stdout}\n")
                         if result.stderr:
-                            log_file.write(f"SUMATRA ERR: {result.stderr}\n")
+                            log_file.write(f"{stamp} SUMATRA ERR: {result.stderr}\n")
                 with open(log_path, "a") as log_file:
-                    log_file.write(f"SUMATRA RC: {result.returncode}\n")
+                    log_file.write(f"{stamp} SUMATRA RC: {result.returncode}\n")
                 if result.returncode != 0:
                     raise RuntimeError(result.stderr.strip() or "SumatraPDF print failed")
             else:
                 cmd = ["lp", "-d", printer_name]
-                cmd.extend(_build_cups_args(settings))
+                settings_for_print = dict(settings or {})
+                try:
+                    pages_per_sheet = int(settings.get("pages_per_sheet") or 1)
+                except Exception:
+                    pages_per_sheet = 1
+                if pages_per_sheet > 1:
+                    settings_for_print.pop("pages_per_sheet", None)
+                    settings_for_print.pop("layout", None)
+                    settings_for_print.pop("pages", None)
+                cmd.extend(_build_cups_args(settings_for_print))
                 cmd.append(path)
                 with open(log_path, "a") as log_file:
-                    log_file.write(f"CUPS CMD: {cmd}\n")
-                    log_file.write(f"SETTINGS: {settings}\n")
+                    log_file.write(f"{stamp} CUPS CMD: {cmd}\n")
+                    log_file.write(f"{stamp} SETTINGS: {settings_for_print}\n")
                 result = subprocess.run(cmd, capture_output=True, text=True)
                 if result.stdout or result.stderr:
                     with open(log_path, "a") as log_file:
                         if result.stdout:
-                            log_file.write(f"CUPS OUT: {result.stdout}\n")
+                            log_file.write(f"{stamp} CUPS OUT: {result.stdout}\n")
                         if result.stderr:
-                            log_file.write(f"CUPS ERR: {result.stderr}\n")
+                            log_file.write(f"{stamp} CUPS ERR: {result.stderr}\n")
                 with open(log_path, "a") as log_file:
-                    log_file.write(f"CUPS RC: {result.returncode}\n")
+                    log_file.write(f"{stamp} CUPS RC: {result.returncode}\n")
                 if result.returncode != 0:
                     raise RuntimeError(result.stderr.strip() or "CUPS print failed")
 
